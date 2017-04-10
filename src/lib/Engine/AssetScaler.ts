@@ -3,7 +3,7 @@ export class AssetScaler {
     /*=============================
     **Fields**
     =============================*/
-    private readonly _scaleRatio: number = window.devicePixelRatio / 3;
+    static readonly spriteScaleRatio: number = window.devicePixelRatio / 3;
 
     /*=============================
     **Constructors
@@ -19,9 +19,29 @@ export class AssetScaler {
     **Methods**
     =============================*/
 
-    scaleAsset(asset) {
-        asset.scale.setTo(this._scaleRatio, this._scaleRatio);
+    static scaleSprite(sprite: Phaser.Sprite) {
+        sprite.scale.setTo(this.spriteScaleRatio, this.spriteScaleRatio);
+
+       /* this._width = window.innerWidth * window.devicePixelRatio;
+        this._height = window.innerHeight * window.devicePixelRatio;
+        game.scale.setGameSize(this._width, this._height);
+
+        this._aspect_ratio = this._width / this._height;
+
+        if (this._aspect_ratio > 1) scale_ratio = this._height / 2048;
+        else scale_ratio = this._width / 2048;
+
+        //game.ball.scale.set(scale_ratio);*/
     } 
+
+    static scaleBackground(background: Phaser.Image, game: Phaser.Game)
+    {
+        background.scale.setTo
+        (
+            game.width / background.width,
+            game.height / game.height
+        )
+    }
     
 }
 
