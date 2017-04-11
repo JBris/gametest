@@ -5,25 +5,20 @@ import { MainMenu } from './lib/States/MainMenu';
 
 export class Breakout extends Phaser.Game {
 
-
     /*=============================
     **Fields**
     =============================*/
-    private _gameName: string;
-    private _gameDescription: string;
-    private _playerName: string;
 
     /*=============================
     **Constructors
     =============================*/
 
-    constructor() {
-        super(Config.width, Config.height, Config.renderer, null, null, Config.transparent, Config.antialias);
+    constructor(config:Config) {
+        super(config.Width, config.Height, config.Renderer,null, null, config.Transparent, config.AntiAlias);
         this.state.add('Boot', Boot, false);
         this.state.add('Preload', Preload, false);
         this.state.add('MainMenu', MainMenu, false);
         this.state.start('Boot');
-
     }
 
     /*=============================

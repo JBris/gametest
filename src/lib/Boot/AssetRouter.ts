@@ -1,4 +1,4 @@
-export class AssetBooter {
+export class AssetRouter {
 
     /*=============================
     **Fields**
@@ -14,8 +14,6 @@ export class AssetBooter {
     /*=============================
     **Constructors
     =============================*/
-
-    constructor() {    }
 
     /*=============================
     **Properties**

@@ -1,20 +1,22 @@
-import { AssetBooter } from '../Engine/AssetBooter';
-import { ImageScaler } from '../Engine/ImageScaler';
-import { Breakout } from '../../Breakout';
-import { Config } from '../../../config/Config';
+import { AssetLoader } from '../Boot/AssetLoader';
+import { BreakoutScalingManager } from '../Objects/Scaling/BreakoutScalingManager';
 
-export class Boot extends Phaser.State {
+export class Boot extends Phaser.State   {
 
     /*=============================
     **Fields**
     =============================*/
-
+    private _assetLoader :AssetLoader;
+    private _scaleManager : BreakoutScalingManager;
     /*=============================
     **Constructors
     =============================*/
 
     constructor() {
         super();
+        this.game.stage.backgroundColor = '#337799';
+        this._assetLoader = new AssetLoader(this.game);
+        this._scaleManager = new BreakoutScalingManager(this.game,this.game.width,this.game.height);
     }
 
     /*=============================
@@ -27,16 +29,18 @@ export class Boot extends Phaser.State {
 
     preload()
     {
-        this.game.load.spritesheet('ball', AssetBooter.spriteRoute + 'ball.png', Config.frameSize, Config.frameSize);
-        this.game.stage.backgroundColor = '#337799';
+        this._scaleManager.scaleGameScreen();
+        this._assetLoader.loadSpriteSheet('ball', 'png');
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        ImageScaler.setScaledGame(this.game);
+        
     }
 
     create() {
         this.game.state.start("Preload");
 
     }
+
+
 }
 
 

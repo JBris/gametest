@@ -1,7 +1,5 @@
-import { Config } from '../../../config/Config';
-import { ImageScaler } from '../Engine/ImageScaler';
-import { AssetBooter } from '../Engine/AssetBooter';
-import { Breakout } from '../../Breakout';
+import { AssetLoader } from '../Boot/AssetLoader';
+import { BallFactory } from '../Objects/Ball/Factory/BallFactory';
 
 export class Preload extends Phaser.State {
 
@@ -9,12 +7,16 @@ export class Preload extends Phaser.State {
     **Fields**
     =============================*/
     private _loadingSprite: Phaser.Sprite;
+    private _ballFactory: BallFactory;
+    private _assetLoader: AssetLoader;
+
     /*=============================
     **Constructors
     =============================*/
 
     constructor() {
         super();
+        this._assetLoader = new AssetLoader(this.game);
     }
 
     /*=============================
@@ -26,9 +28,11 @@ export class Preload extends Phaser.State {
     =============================*/
 
     preload() {
-        this._loadingSprite = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'ball');
-        this._loadingSprite.animations.add('sleep', [1, 3, 1, 3], 24);
-        this._loadingSprite.animations.play('sleep',24,true);
+        this._ballFactory = new BallFactory(this.game);
+        this._loadingSprite = this._ballFactory.createBall(this.game,this.game.world.centerX, this.game.world.centerY,0,0.2,0.2,0,0,'ball');
+        if (this._loadingSprite.animations.getAnimation('sleep') !== undefined && this._loadingSprite.animations.getAnimation('sleep') !== null)
+            this._loadingSprite.animations.play('sleep', 24, true);
+
         //sprites
         this.loadSprites();
 
@@ -60,54 +64,53 @@ export class Preload extends Phaser.State {
 
     loadSprites()
     {
-        this.game.load.spritesheet('blue-brick', AssetBooter.spriteRoute + 'blue-brick.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('bullet', AssetBooter.spriteRoute + 'bullet.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('gold-brick', AssetBooter.spriteRoute + 'gold-brick.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('green-brick', AssetBooter.spriteRoute + 'green-brick.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('paddle', AssetBooter.spriteRoute + 'paddle.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('shadow', AssetBooter.spriteRoute + 'shadow.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('skullface', AssetBooter.spriteRoute + 'skullface.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('teal-brick', AssetBooter.spriteRoute + 'teal-brick.png', Config.frameSize, Config.frameSize);
+        this._assetLoader.loadSpriteSheet('blue-brick', 'png');
+        this._assetLoader.loadSpriteSheet('bullet', 'png');
+        this._assetLoader.loadSpriteSheet('gold-brick', 'png');
+        this._assetLoader.loadSpriteSheet('green-brick', 'png');
+        this._assetLoader.loadSpriteSheet('paddle', 'png');
+        this._assetLoader.loadSpriteSheet('shadow', 'png');
+        this._assetLoader.loadSpriteSheet('skullface', 'png');
+        this._assetLoader.loadSpriteSheet('teal-brick', 'png');
     }
 
     loadLogos()
     {
-        this.game.load.spritesheet('title', AssetBooter.logoRoute + 'title.png', 128, 100);
-        this.game.load.spritesheet('score', AssetBooter.logoRoute + 'score.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('lives', AssetBooter.logoRoute + 'lives.png', Config.frameSize, Config.frameSize);
-
+        this._assetLoader.loadSpriteSheet('title', 'png');
+        this._assetLoader.loadSpriteSheet('score', 'png');
+        this._assetLoader.loadSpriteSheet('lives', 'png');
     } 
 
     loadButtons()
     {
-        this.game.load.spritesheet('play-button', AssetBooter.buttonRoute + 'play-button.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('restart-button', AssetBooter.buttonRoute + 'restart-button.png', Config.frameSize, 88);
-        this.game.load.spritesheet('off-button', AssetBooter.buttonRoute + 'off-button.png', Config.frameSize, 77);
-        this.game.load.spritesheet('options-button', AssetBooter.buttonRoute + 'options-button.png', Config.frameSize, 77);
+        this._assetLoader.loadSpriteSheet('play-button', 'png');
+        this._assetLoader.loadSpriteSheet('restart-button', 'png');
+        this._assetLoader.loadSpriteSheet('off-button', 'png');
+        this._assetLoader.loadSpriteSheet('options-button', 'png');
     }
 
     loadBackgrounds()
     {
-        this.game.load.image('1st-sky', AssetBooter.backgroundRoute + '1st-sky.jpg');
-        this.game.load.image('2nd-sky', AssetBooter.backgroundRoute + '2nd-sky.jpg');
-        this.game.load.image('3rd-sky', AssetBooter.backgroundRoute + '3rd-sky.jpg');
-        this.game.load.image('final-sky', AssetBooter.backgroundRoute + 'final-sky.jpg');
+        this._assetLoader.loadImage('1st-sky', 'jpg');
+        this._assetLoader.loadImage('2nd-sky', 'jpg');
+        this._assetLoader.loadImage('3rd-sky', 'jpg');
+        this._assetLoader.loadImage('final-sky', 'jpg');
     }
 
     loadSoundEffects()
     {
-        this.game.load.audio('ball-to-boss', [AssetBooter.mpg3SoundRoute + 'ball-to-boss.mpg3', AssetBooter.oggSoundRoute + 'ball-to-boss.ogg']);
-        this.game.load.audio('ball-to-brick', [AssetBooter.mpg3SoundRoute + 'ball-to-brick.mpg3', AssetBooter.oggSoundRoute + 'ball-to-brick.ogg']);
-        this.game.load.audio('ball-to-paddle', [AssetBooter.mpg3SoundRoute + 'ball-to-paddle.mpg3', AssetBooter.oggSoundRoute + 'ball-to-paddle.ogg']);
-        this.game.load.audio('evil-laugh', [AssetBooter.mpg3SoundRoute + 'evil-laugh.mpg3', AssetBooter.oggSoundRoute + 'evil-laugh.ogg']);
-        this.game.load.audio('evil-laugh-short', [AssetBooter.mpg3SoundRoute + 'evil-laugh-short.mpg3', AssetBooter.oggSoundRoute + 'evil-laugh-short.ogg']);
+        this._assetLoader.loadAudio('ball-to-boss', 'mp3', 'ogg');
+        this._assetLoader.loadAudio('ball-to-brick', 'mp3', 'ogg');
+        this._assetLoader.loadAudio('ball-to-paddle', 'mp3', 'ogg');
+        this._assetLoader.loadAudio('evil-laugh', 'mp3', 'ogg');
+        this._assetLoader.loadAudio('evil-laugh-short', 'mp3', 'ogg');
     }
 
     loadMusic()
     {
-        this.game.load.audio('opening', [AssetBooter.mpg3MusicRoute + 'opening_glorious_morning.mpg3', AssetBooter.oggMusicRoute + 'opening_glorious_morning.ogg']);
-        this.game.load.audio('stage', [AssetBooter.mpg3MusicRoute + 'stage_electrical_adventures.mpg3', AssetBooter.oggMusicRoute + 'stage_electrical_adventures.ogg']);
-        this.game.load.audio('boss', [AssetBooter.mpg3MusicRoute + 'boss_Endgame.mpg3', AssetBooter.oggMusicRoute + 'boss_Endgame.ogg']);
-        this.game.load.audio('final', [AssetBooter.mpg3MusicRoute + 'final_parago.mpg3', AssetBooter.oggMusicRoute + 'final_parago.ogg']);
+        this._assetLoader.loadAudio('opening_glorious_morning', 'mp3', 'ogg');
+        this._assetLoader.loadAudio('stage_electrical_adventures', 'mp3', 'ogg');
+        this._assetLoader.loadAudio('boss_Endgame', 'mp3', 'ogg');
+        this._assetLoader.loadAudio('final_parago', 'mp3', 'ogg');
     }
 }
