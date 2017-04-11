@@ -19,19 +19,19 @@ export class ImageScaler {
     **Methods**
     =============================*/
 
-    static scaleSprite(sprite: Phaser.Sprite) {
+    static scaleSprite(sprite: Phaser.Sprite, game: Phaser.Game) {
         sprite.scale.setTo(this.spriteScaleRatio, this.spriteScaleRatio);
 
-       /* this._width = window.innerWidth * window.devicePixelRatio;
-        this._height = window.innerHeight * window.devicePixelRatio;
-        game.scale.setGameSize(this._width, this._height);
+       /* game.width = window.innerWidth * window.devicePixelRatio;
+        game.height = window.innerHeight * window.devicePixelRatio;
+        game.scale.setGameSize(game.width, game.height);
 
-        this._aspect_ratio = this._width / this._height;
+        let aspect_ratio : number = game.width / game.height;
+        let scale_ratio = 0;
+        if (aspect_ratio > 1) scale_ratio = game.height / 2048;
+        else scale_ratio = game.width / 2048;
 
-        if (this._aspect_ratio > 1) scale_ratio = this._height / 2048;
-        else scale_ratio = this._width / 2048;
-
-        //game.ball.scale.set(scale_ratio);*/
+        sprite.scale.set(scale_ratio);*/
     } 
 
     static setScaledGame(game : Phaser.Game)

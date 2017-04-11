@@ -1,18 +1,33 @@
 import { AssetBooter } from '../Engine/AssetBooter';
 import { ImageScaler } from '../Engine/ImageScaler';
 import { Breakout } from '../../Breakout';
+import { Config } from '../../../config/Config';
 
 export class Boot extends Phaser.State {
+
+    /*=============================
+    **Fields**
+    =============================*/
+
+    /*=============================
+    **Constructors
+    =============================*/
+
     constructor() {
         super();
-
     }
+
+    /*=============================
+    **Properties**
+    =============================*/
+
+    /*=============================
+    **Methods**
+    =============================*/
 
     preload()
     {
-        document.title = "booting...";
-        this.game.load.image('1st-sky', AssetBooter.backgroundRoute + '1st-sky.jpg');
-        this.game.stage.backgroundColor = '#000000';
+        this.game.stage.backgroundColor = '#337799';
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         ImageScaler.setScaledGame(this.game);
     }

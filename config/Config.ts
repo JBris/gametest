@@ -14,7 +14,7 @@ export class Config{
     static antialias:     boolean= false;
     static numberOfLives: number = 5 ;
     static readonly numberOfStages: number = 3;
-    static frameSize :  number = 32;
+    static frameSize :  number = 64;
 
     /*=============================
     **Constructors**

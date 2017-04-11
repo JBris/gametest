@@ -9,6 +9,8 @@ export class AssetBooter {
     static readonly oggMusicRoute: string = 'assets/music/ogg/';
     static readonly spriteRoute: string = 'assets/img/sprites/';
     static readonly backgroundRoute: string = 'assets/img/backgrounds/';
+    static readonly logoRoute: string = 'assets/img/logos/';
+    static readonly buttonRoute: string = 'assets/img/buttons/';
     /*=============================
     **Constructors
     =============================*/
