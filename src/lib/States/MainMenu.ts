@@ -1,4 +1,6 @@
 import { ImageScaler } from '../Engine/ImageScaler';
+import { Config } from '../../../config/Config';
+import { IPlayer } from '../Objects/Player/IPlayer'
 
 export class MainMenu extends Phaser.State
 {
@@ -7,15 +9,16 @@ export class MainMenu extends Phaser.State
     =============================*/
     private _background: Phaser.Image;
     private _title: Phaser.Sprite;
-    private _playButton: Phaser.Sprite;
-    private _offButton: Phaser.Sprite;
+    private _playButton: Phaser.Button;
+    private _offButton: Phaser.Button;
     private _music: Phaser.Sound;
+    private _player: IPlayer;
 
     /*=============================
     **Constructors
     =============================*/
 
-    constructor() {
+    constructor(config? : Config, player?: Player) {
         super();
     }
 
@@ -32,6 +35,14 @@ export class MainMenu extends Phaser.State
         //background
         this._background = this.game.add.image(0, 0, '1st-sky');
         ImageScaler.addScaledBackground(this._background, this.game);
+
+        //logo
+        this._title = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'title');
+        ImageScaler.scaleSprite(this._title, this.game);
+   
+        this._title.anchor.set(0.5, 0.5);
+        this._title.animations.add('flash', [0, 1, 2, 1,0], 24);
+        this._title.animations.play('flash', 24, true);
     }
 
     create()
@@ -40,20 +51,27 @@ export class MainMenu extends Phaser.State
         this._music = this.game.add.audio('opening', 1, true);
         this._music.onDecoded.add(() => this._music.fadeIn(6000), this);
 
-        //sprites
-        var ball = this.game.add.sprite(this.game.world.width * 0.5, this.game.world.height - 25, 'ball', 2);
-        //ImageScaler.scaleSprite(ball, this.game);
-       
+        //buttons
+        this._playButton = this.game.add.button(this._title.x + (this.game.world.width * 0.3), this._title.y, 'play-button', this.beginGame, this, 1, 0, 1, 0);
+        this._playButton.anchor.set(0.5, 0.5);
+        ImageScaler.scaleSprite(this._playButton, this.game);
 
 
-        //ball.animations.add('wobble', [0, 1, 0, 2, 0, 1, 0, 2, 0], 24);
-        ball.anchor.set(0.5);
-        this.game.physics.enable(ball, Phaser.Physics.ARCADE);
-        ball.body.collideWorldBounds = true;
-        ball.body.bounce.set(1);
-        ball.checkWorldBounds = true;
-        //ball.events.onOutOfBounds.add(ballLeaveScreen, this);
+        this._offButton = this.game.add.button(this._playButton.x, this._title.y + (this.game.world.height * 0.3), 'off-button', this.endGame, this, 1, 0, 1, 0);
+        this._offButton.anchor.set(0.5, 0.5);
+        ImageScaler.scaleSprite(this._offButton, this.game);
+
     }
+
+    beginGame()
+    {
+        
+    }
+
+    endGame() {
+        this.game.destroy();
+    }
+
 }
 
 /*Ball.MainMenu = function(game) {};

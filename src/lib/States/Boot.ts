@@ -27,6 +27,7 @@ export class Boot extends Phaser.State {
 
     preload()
     {
+        this.game.load.spritesheet('ball', AssetBooter.spriteRoute + 'ball.png', Config.frameSize, Config.frameSize);
         this.game.stage.backgroundColor = '#337799';
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         ImageScaler.setScaledGame(this.game);

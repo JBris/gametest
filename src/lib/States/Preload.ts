@@ -8,7 +8,7 @@ export class Preload extends Phaser.State {
     /*=============================
     **Fields**
     =============================*/
-
+    private _loadingSprite: Phaser.Sprite;
     /*=============================
     **Constructors
     =============================*/
@@ -26,6 +26,9 @@ export class Preload extends Phaser.State {
     =============================*/
 
     preload() {
+        this._loadingSprite = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'ball');
+        this._loadingSprite.animations.add('sleep', [1, 3, 1, 3], 24);
+        this._loadingSprite.animations.play('sleep',24,true);
         //sprites
         this.loadSprites();
 
@@ -57,7 +60,6 @@ export class Preload extends Phaser.State {
 
     loadSprites()
     {
-        this.game.load.spritesheet('ball', AssetBooter.spriteRoute + 'ball.png', Config.frameSize, Config.frameSize);
         this.game.load.spritesheet('blue-brick', AssetBooter.spriteRoute + 'blue-brick.png', Config.frameSize, Config.frameSize);
         this.game.load.spritesheet('bullet', AssetBooter.spriteRoute + 'bullet.png', Config.frameSize, Config.frameSize);
         this.game.load.spritesheet('gold-brick', AssetBooter.spriteRoute + 'gold-brick.png', Config.frameSize, Config.frameSize);
@@ -70,14 +72,18 @@ export class Preload extends Phaser.State {
 
     loadLogos()
     {
-        this.game.load.spritesheet('title', AssetBooter.logoRoute + 'title.png', Config.frameSize, Config.frameSize);
+        this.game.load.spritesheet('title', AssetBooter.logoRoute + 'title.png', 128, 100);
+        this.game.load.spritesheet('score', AssetBooter.logoRoute + 'score.png', Config.frameSize, Config.frameSize);
+        this.game.load.spritesheet('lives', AssetBooter.logoRoute + 'lives.png', Config.frameSize, Config.frameSize);
+
     } 
 
     loadButtons()
     {
         this.game.load.spritesheet('play-button', AssetBooter.buttonRoute + 'play-button.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('restart-button', AssetBooter.buttonRoute + 'restart-button.png', Config.frameSize, Config.frameSize);
-        this.game.load.spritesheet('off-button', AssetBooter.buttonRoute + 'off-button.png', Config.frameSize, Config.frameSize);
+        this.game.load.spritesheet('restart-button', AssetBooter.buttonRoute + 'restart-button.png', Config.frameSize, 88);
+        this.game.load.spritesheet('off-button', AssetBooter.buttonRoute + 'off-button.png', Config.frameSize, 77);
+        this.game.load.spritesheet('options-button', AssetBooter.buttonRoute + 'options-button.png', Config.frameSize, 77);
     }
 
     loadBackgrounds()
