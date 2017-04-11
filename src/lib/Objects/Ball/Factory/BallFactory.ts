@@ -25,10 +25,10 @@ export class BallFactory extends Phaser.GameObjectFactory
         super(game);
         this._ballType = ballType;
 
-        this.createBall(x,y, relativeScalingXValue,relativeScalingYValue,baseVelocityX,baseVelocityY,key,frame);
+        this.createBall(x,y, relativeScalingXValue,relativeScalingYValue,baseVelocityX,baseVelocityY,baseVelocityY,key,frame);
     }
 
-    createBall(game: Phaser.Game, x?: number, y?: number, ballType?: number, relativeScalingXValue?: number, relativeScalingYValue?: number, baseVelocityX?: number, baseVelocityY?: number,
+    createBall(x?: number, y?: number, ballType?: number, relativeScalingXValue?: number, relativeScalingYValue?: number, baseVelocityX?: number, baseVelocityY?: number,
         key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number): Ball
     {
         if (this._ballType === 1)

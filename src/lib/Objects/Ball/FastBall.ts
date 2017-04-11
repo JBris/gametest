@@ -51,7 +51,7 @@ export class FastBall extends Ball{
             this.relativeScalingYValue = 0.1;
     }
 
-    scaleSprite(game: Phaser.Game) {
+    scaleSprite(game: Phaser.Game) 
      {
             this.width = game.world.width * this.relativeScalingXValue;
             this.height = game.world.height * this.relativeScalingYValue;

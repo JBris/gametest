@@ -52,13 +52,14 @@ export class NormalBall extends Ball{
     }
 
     scaleSprite(game: Phaser.Game) {
-     {
-            this.width = game.world.width * this.relativeScalingXValue;
-            this.height = game.world.height * this.relativeScalingYValue;
-     }
+        this.width = game.world.width * this.relativeScalingXValue;
+        this.height = game.world.height * this.relativeScalingYValue;
+    }
 
 
-    
+
 }
+
+
 
 

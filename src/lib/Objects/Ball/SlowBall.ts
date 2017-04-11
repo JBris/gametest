@@ -1,6 +1,6 @@
 import { Ball } from './Ball';
 
-export class SlowBall extends Ball{
+export class SlowBall extends Ball {
 
     /*=============================
     **Fields**
@@ -51,13 +51,12 @@ export class SlowBall extends Ball{
     }
 
     scaleSprite(game: Phaser.Game) {
-     {
-            this.width = game.world.width * this.relativeScalingXValue;
-            this.height = game.world.height * this.relativeScalingYValue;
-     }
+        this.width = game.world.width * this.relativeScalingXValue;
+        this.height = game.world.height * this.relativeScalingYValue;
+    }
 
 
-    
+
 }
 
 

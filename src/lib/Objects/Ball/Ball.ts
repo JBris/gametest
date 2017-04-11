@@ -1,6 +1,6 @@
 import { iUsesRelativeScaling } from '../Scaling/iUsesRelativeScaling';
 
-export abstract class Ball extends Phaser.Sprite, implements iUsesRelativeScaling {
+export abstract class Ball extends Phaser.Sprite implements iUsesRelativeScaling {
 
     relativeScalingXValue: number;
     relativeScalingYValue: number;
