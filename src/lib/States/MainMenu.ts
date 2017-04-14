@@ -1,13 +1,9 @@
 import { Breakout } from '../../Breakout';
-import { Player } from '../Objects/Player/Player';
 import { BreakoutPlayer } from '../Objects/Player/BreakoutPlayer'
-import { BreakoutLeaderBoard } from '../Objects/Player/BreakoutLeaderBoard';
 import { BreakoutButton } from '../Objects/Button/BreakoutButton';
-import { StartButton } from '../Objects/Button/StartButton';
-import { OffButton } from '../Objects/Button/OffButton';
-import { OptionsButton } from '../Objects/Button/OptionsButton';
 import { BreakoutLogo } from '../Objects/Logo/BreakoutLogo';
 import { Title } from '../Objects/Logo/Title';
+import { ButtonParameters } from '../Objects/Button/ButtonParameters';
 
 export class MainMenu extends Phaser.State
 {
@@ -16,17 +12,17 @@ export class MainMenu extends Phaser.State
     =============================*/
     private _game: Breakout;
     private _background: Phaser.Image;
-    private _playButton: StartButton;
-    private _offButton: OffButton;
-    private _optionsButton: OptionsButton;
+    private _playButton: BreakoutButton;
+    private _offButton: BreakoutButton;
+    private _optionsButton: BreakoutButton;
     private _music: Phaser.Sound;
     private _title: BreakoutLogo;
-    private _player: Player;
+
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(game: Breakout, player?: Player) {
+    constructor(game: Breakout) {
         super();
         this._game = game;
     }
@@ -59,18 +55,15 @@ export class MainMenu extends Phaser.State
         this._music.fadeIn(6000);
 
         //buttons
-        this._playButton = new StartButton (this.game,this._title.x + (this.game.world.width * 0.3), this._title.y, 'play-button', 0.1,0.1,this.prepareBeginGame, this,1,0,1,0);
-        this._playButton.scaleGameElement(this.game);
-        this.game.add.existing(this._playButton);
+        
+        this._playButton = this._game.MegaFactory.buttonFactory.createProduct("start", new ButtonParameters(this.game, this._title.x + (this.game.world.width * 0.3), this._title.y,
+            'play-button', 0.1, 0.1, this.prepareBeginGame, this, 1, 0, 1, 0));
 
-        this._offButton = new OffButton(this.game, this._title.x + (this.game.world.width * 0.3), this._playButton.y + (2 * this._playButton.height), 'off-button', 0.1, 0.1, this.endGame, this, 1, 0, 1, 0);
-        this._offButton.scaleGameElement(this.game);
-        this.game.add.existing(this._offButton);
+        this._offButton = this._game.MegaFactory.buttonFactory.createProduct("off", new ButtonParameters(this.game, this._title.x + (this.game.world.width * 0.3),
+            this._playButton.y + (2 * this._playButton.height), 'off-button', 0.1, 0.1, this.endGame, this, 0, 1, 0, 1));
 
-        this._optionsButton = new OptionsButton(this.game, this._title.x - (this.game.world.width * 0.3), this._title.y, 'options-button', 0.1, 0.1, this.options, this, 1, 0, 1, 0);
-        this._optionsButton.scaleGameElement(this.game);
-        this.game.add.existing(this._optionsButton);
-
+        this._optionsButton = this._game.MegaFactory.buttonFactory.createProduct("options", new ButtonParameters(this.game,
+            this._title.x - (this.game.world.width * 0.3), this._title.y, 'options-button', 0.1, 0.1, this.options, this, 1, 0, 1, 0));  
     }
 
     prepareBeginGame()
@@ -88,14 +81,14 @@ export class MainMenu extends Phaser.State
         {
             name = prompt("Player, please enter your name:");
         }
-        this._player = new BreakoutPlayer(name, this._game.BreakoutConfig.PlayerNumberOfLives, 0);
-        this.beginGame(this._player, this._game);
+        this._game.PlayerList.addPlayer( new BreakoutPlayer(name, this._game.BreakoutConfig.PlayerNumberOfLives, 0) );
+        this.beginGame(this._game);
     }
 
-    beginGame(player: Player, game: Breakout)
+    beginGame(game: Breakout)
     {
         this._music.stop();
-        this.game.state.start("Game",true, false, this._game, player,1);  
+        this.game.state.start("Game",true, false, this._game, 1);  
     }
 
     options() {

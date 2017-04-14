@@ -11,6 +11,8 @@ import { BreakoutGameEngine } from './lib/Objects/Engine/BreakoutGameEngine';
 import { iMegaFactory } from './lib/Objects/Engine/iMegaFactory';
 import { BreakoutMegaFactory } from './lib/Objects/Engine/BreakoutMegaFactory';
 
+import { PlayerList } from './lib/Objects/Player/PlayerList';
+
 export class Breakout extends Phaser.Game {
 
     /*=============================
@@ -19,6 +21,7 @@ export class Breakout extends Phaser.Game {
     private _breakoutConfig : Config;
     private _gameEngine: iGameEngine;
     private _megaFactory: iMegaFactory;
+    private _playerList: PlayerList;
 
     /*=============================
     **Constructors
@@ -30,6 +33,7 @@ export class Breakout extends Phaser.Game {
         this._breakoutConfig = config;
         this._gameEngine = new BreakoutGameEngine(this);
         this._megaFactory = new BreakoutMegaFactory(this);
+        this._playerList = new PlayerList();
 
         this.state.add('Boot', Boot, false);
         this.state.add('Preload', Preload, false);
@@ -51,7 +55,10 @@ export class Breakout extends Phaser.Game {
     { return this._gameEngine;}
 
     get MegaFactory(): iMegaFactory
-    { return this._megaFactory;}
+    { return this._megaFactory; }
+
+    get PlayerList(): PlayerList
+    { return this._playerList; }
 
     //setters
 

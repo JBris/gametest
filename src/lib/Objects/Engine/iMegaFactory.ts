@@ -9,6 +9,7 @@ export interface iMegaFactory {
     paddleFactory: iBreakoutFactory;
     brickFactory: iBreakoutFactory;
     bossFactory: iBreakoutFactory;
+    buttonFactory: iBreakoutFactory;
 
     /*=============================
     **Properties**

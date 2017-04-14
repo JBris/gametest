@@ -24,7 +24,7 @@ export class BallParameters implements iBreakoutParameters{
 
     constructor(game: Phaser.Game, x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture,
         frame?: string | number, movementType?: iMovable, damage?: number, relativeScalingXValue?: number,
-        _relativeScalingYValue?: number, baseVelocityX?: number, baseVelocityY?: number) 
+        relativeScalingYValue?: number, baseVelocityX?: number, baseVelocityY?: number) 
     {
         this.game = game;
         this.x = x;
@@ -34,6 +34,7 @@ export class BallParameters implements iBreakoutParameters{
         this._movementType = movementType;
         this._damage = damage;
         this._relativeScalingXValue = relativeScalingXValue;
+        this._relativeScalingYValue = relativeScalingYValue;
         this._baseVelocityX = baseVelocityX;
         this._baseVelocityY = baseVelocityY;
     

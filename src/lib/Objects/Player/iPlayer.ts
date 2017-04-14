@@ -1,26 +1,16 @@
-import { Player } from './Player';
-
-export class BreakoutLeaderBoard {
+export interface iPlayer {
 
     /*=============================
     **Fields**
     =============================*/
-
-
-    /*=============================
-    **Constructors**
-    =============================*/
-
-
+     name: string;
+     score: number;
+     lives: number;
+     description?: string;
 
     /*=============================
     **Properties**
     =============================*/
-
-    //getters
-
-
-    //setters
 
     /*=============================
     **Methods**

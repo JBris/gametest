@@ -1,6 +1,6 @@
 import { Breakout } from '../../Breakout';
 
-import { Player } from '../Objects/Player/Player';
+import { iPlayer } from '../Objects/Player/iPlayer';
 import { Ball } from '../Objects/Ball/Ball';
 import { BallFactory } from '../Objects/Ball/BallFactory';
 import { StartButton } from '../Objects/Button/StartButton';
@@ -15,7 +15,7 @@ export class Game extends Phaser.State {
 
     private _playButton: StartButton;
     private _level: number;
-    private _player: Player;
+    private _player: iPlayer;
     private _background: Phaser.Image;
     private _music : Phaser.Sound;
     private _ball: Ball;
@@ -31,11 +31,10 @@ export class Game extends Phaser.State {
     **Constructors
     =============================*/
 
-    constructor(game: Breakout, player: Player, levelCount: number) {
+    constructor(game: Breakout, levelCount: number) {
         super();
         this._game = game;
         this._level = levelCount;
-        this._player = player;
     }
 
     /*=============================

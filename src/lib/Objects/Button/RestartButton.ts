@@ -1,4 +1,5 @@
 import { BreakoutButton } from './BreakoutButton';
+import { ButtonParameters } from './ButtonParameters';
 
 export class RestartButton extends BreakoutButton {
 
@@ -9,9 +10,8 @@ export class RestartButton extends BreakoutButton {
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game, x?: number, y?: number, key?: string, xScaleValue?: number, yScaleValue?: number, callback?: Function, context?: any, overframe?: number,
-        outframe?: number, downframe?: number, upframe?: number) {
-        super(game, x, y, key, xScaleValue,yScaleValue, callback, context, overframe, outframe, downframe, upframe);
+    constructor(buttonParamaters: ButtonParameters) {
+        super(buttonParamaters);
     }
 
     /*=============================

@@ -29,15 +29,11 @@ export class Preload extends Phaser.State {
 
     preload() {
 
-        this._loadingSprite = this._game.MegaFactory.ballFactory.createProduct("normal", new BallParameters(this._game, this.game.world.centerX,
-            this.game.world.centerY))
-//            this._ballFactory.createBall("normal", this.game.world.centerX, this.game.world.centerY, 'ball', null, 0, 0.15, 0.15, 0, 0, 0);
-        console.log(this._loadingSprite);
-        this.game.add.existing(this._loadingSprite);
-        this._loadingSprite.scaleGameElement(this.game);
-        this._loadingSprite.enableAnimations();
+        this._loadingSprite = this._game.MegaFactory.ballFactory.createProduct("normal", new BallParameters(this.game, this.game.world.centerX,
+            this.game.world.centerY, 'ball', 0, null, 0, 0.2,0.2,0, 0));
+
         if (this._loadingSprite.animations.getAnimation('sleep') !== undefined && this._loadingSprite.animations.getAnimation('sleep') !== null)
-        this._loadingSprite.animations.play('sleep', 24, true);
+            this._loadingSprite.animations.play('sleep', 24, true);
 
         //sprites
         this.loadSprites();

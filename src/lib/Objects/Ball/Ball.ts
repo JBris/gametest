@@ -1,7 +1,6 @@
 import { iMovable } from '../MovableBehaviour/iMovable';
 import { MediumMovement } from '../MovableBehaviour/MediumMovement';
 import { iScalable } from '../ScalingBehaviour/iScalable';
-
 import { BallParameters } from './BallParameters';
 
 export abstract class Ball extends Phaser.Sprite implements iScalable {
@@ -23,13 +22,12 @@ export abstract class Ball extends Phaser.Sprite implements iScalable {
     =============================*/
 
     constructor(ballParameters: BallParameters) {
-
         super(ballParameters.game, ballParameters.x, ballParameters.y, ballParameters.key, ballParameters.frame);
         this.z_params = ballParameters;
-
-        this.xScaleValue = this.z_params.RelativeScalingXValue;  
-        this.yScaleValue = this.z_params.RelativeScalingYValue;  
-        this.initDefaultBehaviour();
+        this.xScaleValue = this.z_params.RelativeScalingXValue;
+        this.yScaleValue = this.z_params.RelativeScalingYValue;
+        this.enableAnimations();
+        this.initBallPhysics();
     }
 
     /*=============================
@@ -39,7 +37,7 @@ export abstract class Ball extends Phaser.Sprite implements iScalable {
 
     //readonly
     get Params(): BallParameters
-    { return this.z_params;}
+    { return this.z_params; }
 
     //setters
 
@@ -47,7 +45,7 @@ export abstract class Ball extends Phaser.Sprite implements iScalable {
     **Methods**
     =============================*/
 
-     initBallPhysics() {
+    initBallPhysics() {
         this.anchor.set(0.5);
         this.game.physics.enable(this, Phaser.Physics.ARCADE);
         this.body.collideWorldBounds = true;
@@ -55,12 +53,11 @@ export abstract class Ball extends Phaser.Sprite implements iScalable {
         this.checkWorldBounds = true;
     }
 
-     setMovementType(movementType?: iMovable)
-     {
-         if (movementType === null || movementType === undefined)
-             movementType = new MediumMovement();
-         this.z_params.MovementType = movementType;
-     }
+    setMovementType(movementType?: iMovable) {
+        if (movementType === null || movementType === undefined)
+            movementType = new MediumMovement();
+        this.z_params.MovementType = movementType;
+    }
 
     abstract enableAnimations(): void;
 
@@ -76,10 +73,11 @@ export abstract class Ball extends Phaser.Sprite implements iScalable {
     }
 
     move(velocityX?: number, velocityY?: number) {
-        this.z_params.MovementType.move(this,velocityX, velocityY);
+        this.z_params.MovementType.move(this, velocityX, velocityY);
     }
 
     scaleGameElement(game: Phaser.Game) {
+           
         this.width = game.world.width * this.xScaleValue;
         this.height = game.world.height * this.yScaleValue;
     }

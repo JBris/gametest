@@ -1,4 +1,5 @@
 import { iScalable } from '../ScalingBehaviour/iScalable';
+import { ButtonParameters } from './ButtonParameters';
 
 export abstract class BreakoutButton extends Phaser.Button implements iScalable {
 
@@ -12,15 +13,13 @@ export abstract class BreakoutButton extends Phaser.Button implements iScalable 
     /*=============================
     **Constructors
     =============================*/
-
-    constructor(game: Phaser.Game, x?: number, y?: number, key?: string, xScaleValue?: number, yScaleValue?: number, callback?: Function, context?: any, overframe?: number,
-    outframe?: number, downframe?:number, upframe?: number) {
-        super(game,x,y,key,callback,context,overframe,outframe,downframe,upframe);
-
-        this.xScaleValue = xScaleValue;
-        this.yScaleValue = yScaleValue;
-
+    constructor(buttonParamaters: ButtonParameters) {
+        super(buttonParamaters.game, buttonParamaters.x, buttonParamaters.y, buttonParamaters.key, buttonParamaters.Callback, buttonParamaters.Context,
+            buttonParamaters.Overframe,buttonParamaters.Outframe,buttonParamaters.Downframe, buttonParamaters.Upframe);
+        this.xScaleValue = buttonParamaters.RelativeScalingXValue;
+        this.yScaleValue = buttonParamaters.RelativeScalingYValue;;
         this.anchor.set(0.5, 0.5);
+        this.scaleGameElement(buttonParamaters.game);
     }
 
     /*=============================
@@ -44,6 +43,7 @@ export abstract class BreakoutButton extends Phaser.Button implements iScalable 
         this.width = game.world.width * this.xScaleValue;
         this.height = game.world.height * this.yScaleValue;
     }
+
 }
 
 

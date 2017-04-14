@@ -1,16 +1,25 @@
-import { Player } from './Player';
+import { iPlayer } from './iPlayer';
 
-export class BreakoutPlayer extends Player {
+export class BreakoutPlayer implements iPlayer {
 
     /*=============================
     **Fields**
     =============================*/
 
+    name: string;
+    score: number;
+    lives: number;
+    description?: string;
+
     /*=============================
     **Constructors**
     =============================*/
-    constructor(name: string, score: number, lives: number, description?: string) {
-        super(name,score,lives,description);
+
+    constructor(name:string, score:number, lives:number, description ?:string) {
+        this.name = name;
+        this.score = score;
+        this.lives = lives;
+        this.description = description;
     }
 
     /*=============================
