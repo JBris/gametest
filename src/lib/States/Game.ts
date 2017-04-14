@@ -53,6 +53,7 @@ export class Game extends Phaser.State {
         //music
         this._music = this.add.audio('stage_electrical_adventures', 1, true);
         this._music.fadeIn(6000);
+
         
     }
 

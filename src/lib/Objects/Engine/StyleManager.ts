@@ -18,6 +18,7 @@ export class StyleManager {
     static readonly fontStyle: string = "normal";
 
     private _presentedText: Phaser.Text;
+    private _paddingSize : number = 0.05;
 
     /*=============================
     **Constructors
@@ -33,7 +34,18 @@ export class StyleManager {
     =============================*/
     //getters
 
+    get PresentedText(): Phaser.Text
+    { return this._presentedText; }
+
+    get PaddingSize(): number
+    { return this._paddingSize; }
+
     //setters
+    set PresentedText(val: Phaser.Text)
+    { this._presentedText = val; }
+
+    set PaddingSize(val: number)
+    { this._paddingSize = val; }
 
     /*=============================
     **Methods**
@@ -43,10 +55,10 @@ export class StyleManager {
     {
 
         if (styles !== null || styles !==undefined)
-            this._presentedText = this._game.add.text(0 + 0.1 * this._game.world.width, 0 + 0.1 * this._game.world.height, text, styles);
+            this._presentedText = this._game.add.text(0 + this._paddingSize * this._game.world.width, 0 + this._paddingSize * this._game.world.height, text, styles);
         else
         {
-            this._presentedText = this._game.add.text(0 + 0.1 * this._game.world.width, 0 + 0.1 * this._game.world.height, text, null);
+            this._presentedText = this._game.add.text(0 + this._paddingSize * this._game.world.width, 0 + this._paddingSize * this._game.world.height, text, null);
 
             this.styleTextWithDefaults(this._presentedText);
         }
@@ -58,9 +70,9 @@ export class StyleManager {
     {
 
         if (styles !== null || styles !== undefined)
-            this._presentedText = this._game.add.text(this._game.world.width - 0.1 * this._game.world.width, 0 + 0.1 * this._game.world.height, text, styles);
+            this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width, 0 + this._paddingSize * this._game.world.height, text, styles);
         else {
-            this._presentedText = this._game.add.text(this._game.world.width - 0.1 * this._game.world.width, 0 + 0.1 * this._game.world.height, text, null);
+            this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width, 0 + this._paddingSize * this._game.world.height, text, null);
             this.styleTextWithDefaults(this._presentedText);
         }
 
@@ -71,9 +83,9 @@ export class StyleManager {
     {
 
         if (styles !== null || styles !== undefined)
-            this._presentedText = this._game.add.text(0 + 0.1 * this._game.world.width, this._game.world.height - 0.1 * this._game.world.height, text, styles);
+            this._presentedText = this._game.add.text(0 + this._paddingSize * this._game.world.width, this._game.world.height - this._paddingSize * this._game.world.height, text, styles);
         else {
-            this._presentedText = this._game.add.text(0 + 0.1 * this._game.world.width, this._game.world.height - 0.1 * this._game.world.height, text, null);
+            this._presentedText = this._game.add.text(0 + this._paddingSize * this._game.world.width, this._game.world.height - this._paddingSize * this._game.world.height, text, null);
             this.styleTextWithDefaults(this._presentedText);
         }
 
@@ -83,11 +95,11 @@ export class StyleManager {
     positionTextBottomRight(text: string, styles?: any): void {
 
         if (styles !== null || styles !== undefined)
-            this._presentedText = this._game.add.text(this._game.world.width - 0.1 * this._game.world.width,
-                this._game.world.height - 0.1 * this._game.world.height, text, styles);
+            this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width,
+                this._game.world.height - this._paddingSize * this._game.world.height, text, styles);
         else {
-            this._presentedText = this._game.add.text(this._game.world.width - 0.1 * this._game.world.width,
-                this._game.world.height - 0.1 * this._game.world.height, text, styles);
+            this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width,
+                this._game.world.height - this._paddingSize * this._game.world.height, text, styles);
 
             this.styleTextWithDefaults(this._presentedText);
         }

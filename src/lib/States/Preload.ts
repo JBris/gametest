@@ -87,6 +87,8 @@ export class Preload extends Phaser.State {
         this._game.GameEngine.assetLoader.loadButtons('restart-button', 'png', 200, 200);
         this._game.GameEngine.assetLoader.loadButtons('off-button', 'png', 220, 259);
         this._game.GameEngine.assetLoader.loadButtons('options-button', 'png', 200, 200);
+        this._game.GameEngine.assetLoader.loadButtons('pause-button', 'png', 152, 250);
+
     }
 
     loadBackgrounds()
