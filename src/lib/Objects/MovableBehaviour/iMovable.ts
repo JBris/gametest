@@ -1,17 +1,19 @@
-export interface iIsSprite {
+export interface iMovable {
 
     /*=============================
     **Fields**
     =============================*/
-    frameWidth: number;
-    frameHeight: number;
-
+    baseVelocityX: number;
+    baseVelocityY: number;
     /*=============================
     **Properties**
     =============================*/
+
     /*=============================
     **Methods**
-    =============================*/  
+    =============================*/
+    move(obj : Phaser.Sprite, velocityX?: number, velocityY?: number);
+ 
 }
 
 

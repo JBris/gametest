@@ -36,25 +36,25 @@ export class BreakoutConfig extends Config{
     =============================*/
     setBreakoutDefaults() {
 
-        if (this.z_width === null)
+        if (this.z_width === null || this.z_width === undefined)
             this.z_width = this._defaultWidth;
-        if (this.z_height === null)
+        if (this.z_height === null || this.z_height ===undefined)
             this.z_height = this._defaultHeight;
-        if (this.z_renderer === null)
+        if (this.z_renderer === null || this.z_renderer === undefined)
             this.z_renderer = this._defaultRenderer;
-        if (this.z_aspect_ratio === null)
+        if (this.z_aspect_ratio === null || this.z_aspect_ratio === undefined)
             this.z_aspect_ratio = this._defaultAspect_ratio;
-        if (this.z_transparent === null)
+        if (this.z_transparent === null || this.z_transparent === undefined)
             this.z_transparent = this._defaultTransparent;
-        if (this.z_antialias === null)
+        if (this.z_antialias === null || this.z_antialias === undefined)
             this.z_antialias = this._defaultAntialias;
-        if (this.z_playerNumberOfLives === null)
+        if (this.z_playerNumberOfLives === null || this.z_playerNumberOfLives === undefined)
             this.z_playerNumberOfLives = this._defaultNumberOfLives;
-        if (this.z_numberOfStages === null)
+        if (this.z_numberOfStages === null || this.z_numberOfStages === undefined)
             this.z_numberOfStages = this._defaultNumberOfStages;
-        if (this.z_frameSize === null)
+        if (this.z_frameSize === null || this.z_frameSize === undefined)
             this.z_frameSize = this._defaultFrameSize;
-        if (this.z_orientation === null)
+        if (this.z_orientation === null || this.z_orientation === undefined)
             this.z_orientation = this._defaultOrientation;
     }
 }

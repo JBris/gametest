@@ -1,4 +1,7 @@
 import { Ball } from './Ball';
+import { SlowMovement } from '../MovableBehaviour/SlowMovement';
+import { iMovable } from '../MovableBehaviour/iMovable';
+import { BallParameters } from './BallParameters';
 
 export class BigBall extends Ball{
 
@@ -6,17 +9,16 @@ export class BigBall extends Ball{
     **Fields**
     =============================*/
 
-
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game, x: number, y: number, relativeScalingXValue?: number, relativeScalingY?: number, baseVelocityX?: number, baseVelocityY?: number,
-        key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number) {
-        super(game, x, y, 2, relativeScalingXValue, relativeScalingY, baseVelocityX, baseVelocityY);
+    constructor(ballParameters: BallParameters) {
+        super(ballParameters);
+        this.z_defaultScale = 0.106;
+        this.z_defaultDamage = 2;
+        this.z_defaultMovementType = new SlowMovement();
     }
-
-
 
     /*=============================
     **Properties**
@@ -26,40 +28,16 @@ export class BigBall extends Ball{
     **Methods**
     =============================*/
 
-    initBallPhysics()  {
-        this.anchor.set(0.5);
-        this.game.physics.enable(this, Phaser.Physics.ARCADE);
-        this.body.collideWorldBounds = true;
-        this.body.bounce.set(1);
-        this.checkWorldBounds = true;
-    }
-
-    initBallAnimations() {
+    enableAnimations() {
         this.animations.add('ball-to-paddle', [3, 2, 1, 0], 24);
         this.animations.add('ball-to-brick', [3, 4, 1, 0], 24);
         this.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 24);
         this.animations.add('sleep', [1, 3, 1, 3], 24);
     }
-
-    initDefaultBehaviour() {
-        if (this.z_baseVelocityX === null)
-            this.z_baseVelocityX = -75;
-        if (this.z_baseVelocityY === null)
-            this.z_baseVelocityY = -300;
-        if (this.relativeScalingXValue === null)
-            this.relativeScalingXValue = 0.18;
-        if (this.relativeScalingYValue === null)
-            this.relativeScalingYValue = 0.18;
-    }
-
-    scaleSprite(game: Phaser.Game) 
-     {
-            this.width = game.world.width * this.relativeScalingXValue;
-            this.height = game.world.height * this.relativeScalingYValue;
-     }
-
-
-    
 }
+
+
+
+
 
 

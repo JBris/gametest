@@ -1,9 +1,9 @@
 import { Ball } from './Ball';
-import { MediumMovement } from '../MovableBehaviour/MediumMovement';
+import { FastMovement } from '../MovableBehaviour/FastMovement';
 import { iMovable } from '../MovableBehaviour/iMovable';
 import { BallParameters } from './BallParameters';
 
-export class NormalBall extends Ball{
+export class SmallBall extends Ball{
 
     /*=============================
     **Fields**
@@ -15,9 +15,9 @@ export class NormalBall extends Ball{
 
     constructor(ballParameters: BallParameters) {
         super(ballParameters);
-        this.z_defaultScale = 0.1;
+        this.z_defaultScale = 0.06;
         this.z_defaultDamage = 1;
-        this.z_defaultMovementType = new MediumMovement();
+        this.z_defaultMovementType = new FastMovement();
     }
 
     /*=============================
@@ -34,6 +34,7 @@ export class NormalBall extends Ball{
         this.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 24);
         this.animations.add('sleep', [1, 3, 1, 3], 24);
     }
+
 }
 
 

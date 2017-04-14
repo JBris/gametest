@@ -1,5 +1,4 @@
 import { AssetLoader } from '../Boot/AssetLoader';
-import { BreakoutScalingManager } from '../Objects/Scaling/BreakoutScalingManager';
 
 export class Boot extends Phaser.State   {
 
@@ -7,16 +6,12 @@ export class Boot extends Phaser.State   {
     **Fields**
     =============================*/
     private _assetLoader :AssetLoader;
-    private _scaleManager : BreakoutScalingManager;
     /*=============================
     **Constructors
     =============================*/
 
     constructor() {
         super();
-        this.game.stage.backgroundColor = '#337799';
-        this._assetLoader = new AssetLoader(this.game);
-        this._scaleManager = new BreakoutScalingManager(this.game,this.game.width,this.game.height);
     }
 
     /*=============================
@@ -29,15 +24,15 @@ export class Boot extends Phaser.State   {
 
     preload()
     {
-        this._scaleManager.scaleGameScreen();
-        this._assetLoader.loadSpriteSheet('ball', 'png');
+        this._assetLoader = new AssetLoader(this.game);
+        this.game.stage.backgroundColor = '#337799';
+        this.game._scaleManager.scaleGameScreen();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        
+        this._assetLoader.loadSpriteSheet('ball', 'png', 64, 64);
     }
 
     create() {
         this.game.state.start("Preload");
-
     }
 
 

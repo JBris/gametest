@@ -1,78 +1,93 @@
-import { iUsesRelativeScaling } from '../Scaling/iUsesRelativeScaling';
+import { iMovable } from '../MovableBehaviour/iMovable';
+import { MediumMovement } from '../MovableBehaviour/MediumMovement';
+import { iScalable } from '../ScalingBehaviour/iScalable';
 
-export abstract class Ball extends Phaser.Sprite implements iUsesRelativeScaling {
+import { BallParameters } from './BallParameters';
 
-    relativeScalingXValue: number;
-    relativeScalingYValue: number;
+export abstract class Ball extends Phaser.Sprite implements iScalable {
 
     /*=============================
     **Fields**
     =============================*/
-    protected z_baseVelocityX: number;
-    protected z_baseVelocityY: number;
-    protected z_ballType: number;
+
+    xScaleValue: number;
+    yScaleValue: number;
+    protected z_defaultScale: number;
+    protected z_defaultDamage: number;
+    protected z_defaultMovementType: iMovable;
+
+    protected z_params: BallParameters;
 
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game, x: number, y: number, ballType: number, relativeScalingXValue?: number, relativeScalingYValue?: number, baseVelocityX?: number, baseVelocityY?: number,
-        key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number) {
-        super(game, x, y, key, frame);
+    constructor(ballParameters: BallParameters) {
 
-        this.z_baseVelocityX = baseVelocityX;
-        this.z_baseVelocityY = baseVelocityY;
-        this.z_ballType = ballType;
+        super(ballParameters.game, ballParameters.x, ballParameters.y, ballParameters.key, ballParameters.frame);
+        this.z_params = ballParameters;
 
-        this.relativeScalingXValue = relativeScalingXValue;
-        this.relativeScalingYValue = relativeScalingYValue;
-
-        this.initBallPhysics();
-        this.initBallAnimations();
+        this.xScaleValue = this.z_params.RelativeScalingXValue;  
+        this.yScaleValue = this.z_params.RelativeScalingYValue;  
         this.initDefaultBehaviour();
-
     }
 
     /*=============================
     **Properties**
     =============================*/
     //getters
-    get BaseVelocityX(): number { return this.z_baseVelocityX; }
 
-    get BaseVelocityY(): number { return this.z_baseVelocityY; }
-
-    get BallType(): number { return this.z_ballType; }
+    //readonly
+    get Params(): BallParameters
+    { return this.z_params;}
 
     //setters
-
-    set BaseVelocityX(val: number) { this.z_baseVelocityX = val;}
-
-    set BaseVelocityY(val:number) { this.z_baseVelocityY = val;}
-
-    set BallType(val: number) { this.z_ballType = val; }
 
     /*=============================
     **Methods**
     =============================*/
 
-    abstract initBallPhysics(): void;
-    abstract initBallAnimations(): void;
-    abstract initDefaultBehaviour(): void;
-
-    ballMove(velocityX?: number, velocityY?: number) {
-        if (velocityX === null)
-            velocityX = this.z_baseVelocityX;
-
-        if (velocityY === null)
-            velocityY = this.z_baseVelocityY;
-
-        this.body.velocity.set(velocityX, velocityY);
+     initBallPhysics() {
+        this.anchor.set(0.5);
+        this.game.physics.enable(this, Phaser.Physics.ARCADE);
+        this.body.collideWorldBounds = true;
+        this.body.bounce.set(1);
+        this.checkWorldBounds = true;
     }
 
-    scaleSpriteRelatively(game: Phaser.Game) 
+     setMovementType(movementType?: iMovable)
+     {
+         if (movementType === null || movementType === undefined)
+             movementType = new MediumMovement();
+         this.z_params.MovementType = movementType;
+     }
+
+    abstract enableAnimations(): void;
+
+    initDefaultBehaviour() {
+        if (this.z_params.Damage === null)
+            this.z_params.Damage = this.z_defaultDamage;
+        if (this.xScaleValue === null)
+            this.xScaleValue = this.z_defaultScale;
+        if (this.yScaleValue === null)
+            this.yScaleValue = this.z_defaultScale;
+        if (this.z_params.MovementType === null || this.z_params.MovementType === undefined)
+            this.z_params.MovementType = this.z_defaultMovementType;
+    }
+
+    move(velocityX?: number, velocityY?: number) {
+        this.z_params.MovementType.move(this,velocityX, velocityY);
+    }
+
+    scaleGameElement(game: Phaser.Game) {
+        this.width = game.world.width * this.xScaleValue;
+        this.height = game.world.height * this.yScaleValue;
+    }
+
+    setScale(xScaleValue: number, yScaleValue: number)
     {
-            this.width = game.world.width * this.relativeScalingXValue;
-            this.height = game.world.height * this.relativeScalingYValue;
+        this.xScaleValue = xScaleValue;
+        this.yScaleValue = yScaleValue;
     }
 
 }

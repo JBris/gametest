@@ -1,13 +1,14 @@
 import { AssetLoader } from '../Boot/AssetLoader';
-import { BallFactory } from '../Objects/Ball/Factory/BallFactory';
+
+
+import { Ball } from '../Objects/Ball/Ball';
 
 export class Preload extends Phaser.State {
 
     /*=============================
     **Fields**
     =============================*/
-    private _loadingSprite: Phaser.Sprite;
-    private _ballFactory: BallFactory;
+    private _loadingSprite: Ball;
     private _assetLoader: AssetLoader;
 
     /*=============================
@@ -16,7 +17,6 @@ export class Preload extends Phaser.State {
 
     constructor() {
         super();
-        this._assetLoader = new AssetLoader(this.game);
     }
 
     /*=============================
@@ -28,10 +28,16 @@ export class Preload extends Phaser.State {
     =============================*/
 
     preload() {
+        this._assetLoader = new AssetLoader(this.game);
         this._ballFactory = new BallFactory(this.game);
-        this._loadingSprite = this._ballFactory.createBall(this.game.world.centerX, this.game.world.centerY,0,0.2,0.2,0,0,'ball');
+        console.log(this._ballFactory.game );
+        this._loadingSprite = this._ballFactory.createBall("normal", this.game.world.centerX, this.game.world.centerY, 'ball', null, 0, 0.15, 0.15, 0, 0, 0);
+        console.log(this._loadingSprite);
+        this.game.add.existing(this._loadingSprite);
+        this._loadingSprite.scaleGameElement(this.game);
+        this._loadingSprite.enableAnimations();
         if (this._loadingSprite.animations.getAnimation('sleep') !== undefined && this._loadingSprite.animations.getAnimation('sleep') !== null)
-            this._loadingSprite.animations.play('sleep', 24, true);
+        this._loadingSprite.animations.play('sleep', 24, true);
 
         //sprites
         this.loadSprites();
@@ -53,7 +59,7 @@ export class Preload extends Phaser.State {
     }
 
     create() {
-        this.game.camera.fade(0x000000, 1500);
+        this.game.camera.fade(0x000000, 3000);
         this.camera.onFadeComplete.add(this.launchMainMenu ,this);
     }
 
@@ -64,29 +70,27 @@ export class Preload extends Phaser.State {
 
     loadSprites()
     {
-        this._assetLoader.loadSpriteSheet('blue-brick', 'png');
-        this._assetLoader.loadSpriteSheet('bullet', 'png');
-        this._assetLoader.loadSpriteSheet('gold-brick', 'png');
-        this._assetLoader.loadSpriteSheet('green-brick', 'png');
-        this._assetLoader.loadSpriteSheet('paddle', 'png');
-        this._assetLoader.loadSpriteSheet('shadow', 'png');
-        this._assetLoader.loadSpriteSheet('skullface', 'png');
-        this._assetLoader.loadSpriteSheet('teal-brick', 'png');
+        this._assetLoader.loadSpriteSheet('blue-brick', 'png',64,64);
+        this._assetLoader.loadSpriteSheet('bullet', 'png', 64, 64);
+        this._assetLoader.loadSpriteSheet('gold-brick', 'png', 64, 64);
+        this._assetLoader.loadSpriteSheet('green-brick', 'png', 64, 64);
+        this._assetLoader.loadSpriteSheet('paddle', 'png', 64, 64);
+        this._assetLoader.loadSpriteSheet('shadow', 'png', 64, 64);
+        this._assetLoader.loadSpriteSheet('skullface', 'png', 64, 64);;
+        this._assetLoader.loadSpriteSheet('teal-brick', 'png', 64, 64);
     }
 
     loadLogos()
     {
-        this._assetLoader.loadSpriteSheet('title', 'png');
-        this._assetLoader.loadSpriteSheet('score', 'png');
-        this._assetLoader.loadSpriteSheet('lives', 'png');
+        this._assetLoader.loadLogos('title', 'png', 250, 117);
     } 
 
     loadButtons()
     {
-        this._assetLoader.loadSpriteSheet('play-button', 'png');
-        this._assetLoader.loadSpriteSheet('restart-button', 'png');
-        this._assetLoader.loadSpriteSheet('off-button', 'png');
-        this._assetLoader.loadSpriteSheet('options-button', 'png');
+        this._assetLoader.loadButtons('play-button', 'png', 200, 200);
+        this._assetLoader.loadButtons('restart-button', 'png', 200, 200);
+        this._assetLoader.loadButtons('off-button', 'png', 220, 259);
+        this._assetLoader.loadButtons('options-button', 'png', 200, 200);
     }
 
     loadBackgrounds()
@@ -99,18 +103,18 @@ export class Preload extends Phaser.State {
 
     loadSoundEffects()
     {
-        this._assetLoader.loadAudio('ball-to-boss', 'mp3', 'ogg');
-        this._assetLoader.loadAudio('ball-to-brick', 'mp3', 'ogg');
-        this._assetLoader.loadAudio('ball-to-paddle', 'mp3', 'ogg');
-        this._assetLoader.loadAudio('evil-laugh', 'mp3', 'ogg');
-        this._assetLoader.loadAudio('evil-laugh-short', 'mp3', 'ogg');
+        this._assetLoader.loadSound('ball-to-boss', 'mp3', 'ogg');
+        this._assetLoader.loadSound('ball-to-brick', 'mp3', 'ogg');
+        this._assetLoader.loadSound('ball-to-paddle', 'mp3', 'ogg');
+        this._assetLoader.loadSound('evil-laugh', 'mp3', 'ogg');
+        this._assetLoader.loadSound('evil-laugh-short', 'mp3', 'ogg');
     }
 
     loadMusic()
     {
-        this._assetLoader.loadAudio('opening_glorious_morning', 'mp3', 'ogg');
-        this._assetLoader.loadAudio('stage_electrical_adventures', 'mp3', 'ogg');
-        this._assetLoader.loadAudio('boss_Endgame', 'mp3', 'ogg');
-        this._assetLoader.loadAudio('final_parago', 'mp3', 'ogg');
+        this._assetLoader.loadMusic('opening_glorious_morning', 'mp3', 'ogg');
+        this._assetLoader.loadMusic('stage_electrical_adventures', 'mp3', 'ogg');
+        this._assetLoader.loadMusic('boss_Endgame', 'mp3', 'ogg');
+        this._assetLoader.loadMusic('final_parago', 'mp3', 'ogg');
     }
 }

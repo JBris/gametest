@@ -1,10 +1,11 @@
-export interface iUsesRelativeScaling {
+export interface iScalable  {
 
     /*=============================
     **Fields**
     =============================*/
-    relativeScalingXValue: number;
-    relativeScalingYValue: number;
+
+    xScaleValue: number;
+    yScaleValue: number;
 
     /*=============================
     **Properties**
@@ -13,9 +14,8 @@ export interface iUsesRelativeScaling {
     /*=============================
     **Methods**
     =============================*/
-    scaleSpriteRelatively(game:Phaser.Game);
-  
-    
+    setScale(xScaleValue: number, yScaleValue:number);
+    scaleGameElement(game : Phaser.Game );
 }
 
 
