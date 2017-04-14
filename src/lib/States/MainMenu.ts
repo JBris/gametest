@@ -1,9 +1,7 @@
-import { Config } from '../../../config/Config';
-import { BreakoutConfig } from '../../../config/BreakoutConfig';
+import { Breakout } from '../../Breakout';
 import { Player } from '../Objects/Player/Player';
 import { BreakoutPlayer } from '../Objects/Player/BreakoutPlayer'
 import { BreakoutLeaderBoard } from '../Objects/Player/BreakoutLeaderBoard';
-import { BreakoutScalingManager } from '../Objects/ScalingBehaviour/BreakoutScalingManager';
 import { BreakoutButton } from '../Objects/Button/BreakoutButton';
 import { StartButton } from '../Objects/Button/StartButton';
 import { OffButton } from '../Objects/Button/OffButton';
@@ -16,22 +14,21 @@ export class MainMenu extends Phaser.State
     /*=============================
     **Fields**
     =============================*/
+    private _game: Breakout;
     private _background: Phaser.Image;
     private _playButton: StartButton;
     private _offButton: OffButton;
     private _optionsButton: OptionsButton;
     private _music: Phaser.Sound;
-    private _scalingManager: BreakoutScalingManager;
     private _title: BreakoutLogo;
     private _player: Player;
-    private _config: Config;
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(config?: Config, player?: Player) {
+    constructor(game: Breakout, player?: Player) {
         super();
-        
+        this._game = game;
     }
 
     /*=============================
@@ -44,12 +41,10 @@ export class MainMenu extends Phaser.State
 
     preload()
     {
-        this._config = new BreakoutConfig();
-        this._scalingManager = new BreakoutScalingManager(this.game, this.game.world.width, this.game.world.height);
-        this._scalingManager.scaleGameScreen();
+        this._game.GameEngine.scalingManager.scaleGameScreen();
         //background
         this._background = this.game.add.image(0, 0, '1st-sky');
-        this._scalingManager.scaleBreakoutBackground(this._background);
+        this._game.GameEngine.scalingManager.scaleBreakoutBackground(this._background);
 
         //logo
         this._title = new Title(this.game, this.game.world.centerX, this.game.world.centerY, 'title', 0, 0.25, 0.25);
@@ -82,10 +77,10 @@ export class MainMenu extends Phaser.State
     {
         this._music.fadeOut(3000);
         this.game.camera.fade(0x000000, 2000);
-        this.camera.onFadeComplete.add(this.createPlayer,this,null,this._config);
+        this.camera.onFadeComplete.add(this.createPlayer, this, null, this._game);
     }
 
-    createPlayer(config : Config)
+    createPlayer(game : Breakout)
     {
 
         let name = "";
@@ -93,17 +88,17 @@ export class MainMenu extends Phaser.State
         {
             name = prompt("Player, please enter your name:");
         }
-        this._player = new BreakoutPlayer(name, config.PlayerNumberOfLives, 0);
-        this.beginGame(this._player, config);
+        this._player = new BreakoutPlayer(name, this._game.BreakoutConfig.PlayerNumberOfLives, 0);
+        this.beginGame(this._player, this._game);
     }
 
-    beginGame(player : Player, config : Config)
+    beginGame(player: Player, game: Breakout)
     {
         this._music.stop();
-        this.game.state.start("Game",true, false, player,1,this._config);  
+        this.game.state.start("Game",true, false, this._game, player,1);  
     }
 
-    options(config: Config) {
+    options() {
         //TODO
     }
 

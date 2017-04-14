@@ -1,6 +1,4 @@
-import { iBreakoutScalingManager } from './iBreakoutScalingManager';
-
-export class BreakoutScalingManager extends Phaser.ScaleManager implements iBreakoutScalingManager {
+export class ScalingManager extends Phaser.ScaleManager{
 
     /*=============================
     **Fields**

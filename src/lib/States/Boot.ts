@@ -1,17 +1,18 @@
-import { AssetLoader } from '../Boot/AssetLoader';
+import { Breakout } from '../../Breakout';
 
 export class Boot extends Phaser.State   {
 
     /*=============================
     **Fields**
     =============================*/
-    private _assetLoader :AssetLoader;
+    private _game: Breakout;
     /*=============================
     **Constructors
     =============================*/
 
-    constructor() {
+    constructor(game: Breakout) {
         super();
+        this._game = game;
     }
 
     /*=============================
@@ -24,15 +25,14 @@ export class Boot extends Phaser.State   {
 
     preload()
     {
-        this._assetLoader = new AssetLoader(this.game);
         this.game.stage.backgroundColor = '#337799';
-        this.game._scaleManager.scaleGameScreen();
+        this._game.GameEngine.scalingManager.scaleGameScreen();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this._assetLoader.loadSpriteSheet('ball', 'png', 64, 64);
+        this._game.GameEngine.assetLoader.loadSpriteSheet('ball', 'png', 64, 64);
     }
 
     create() {
-        this.game.state.start("Preload");
+        this.game.state.start("Preload", true, false, this._game);
     }
 
 

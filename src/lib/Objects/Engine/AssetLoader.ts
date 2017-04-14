@@ -6,12 +6,14 @@ export class AssetLoader {
     **Fields**
     =============================*/
     private _game: Phaser.Game;
+    private _assetRouter: AssetRouter;
 
     /*=============================
     **Constructors
     =============================*/
-    constructor(game: Phaser.Game) {
+    constructor(game: Phaser.Game, assetRouter : AssetRouter) {
         this._game = game;
+        this._assetRouter = assetRouter;
     }
     /*=============================
     **Properties**
@@ -21,30 +23,30 @@ export class AssetLoader {
     **Methods**
     =============================*/
     loadSpriteSheet(name: string, fileType: string, frameWidth:number,frameHeight : number) {
-        this._game.load.spritesheet(name, AssetRouter.spriteRoute + name +"."+ fileType, frameWidth, frameHeight);
+        this._game.load.spritesheet(name, this._assetRouter.SpriteRoute + name +"."+ fileType, frameWidth, frameHeight);
     }
 
     loadLogos(name: string, fileType: string, frameWidth: number, frameHeight: number) {
-        this._game.load.spritesheet(name, AssetRouter.logoRoute + name + "." + fileType, frameWidth, frameHeight);
+        this._game.load.spritesheet(name, this._assetRouter.LogoRoute + name + "." + fileType, frameWidth, frameHeight);
     }
 
     loadButtons(name: string, fileType: string, frameWidth: number, frameHeight: number) {
-        this._game.load.spritesheet(name, AssetRouter.buttonRoute + name + "." + fileType, frameWidth, frameHeight);
+        this._game.load.spritesheet(name, this._assetRouter.ButtonRoute + name + "." + fileType, frameWidth, frameHeight);
     }
 
     loadImage(name: string, fileType: string) 
     {
-        this._game.load.image(name, AssetRouter.backgroundRoute + name + "." + fileType);
+        this._game.load.image(name, this._assetRouter.BackgroundRoute + name + "." + fileType);
     }
 
     loadSound(name: string, fileType: string, altFileType:string) 
     {
-        this._game.load.audio(name, [AssetRouter.mpg3SoundRoute + name + fileType, AssetRouter.oggSoundRoute + name + "." + altFileType]);
+        this._game.load.audio(name, [this._assetRouter.Mpg3SoundRoute + name + fileType, this._assetRouter.OggSoundRoute + name + "." + altFileType]);
 
     }
 
     loadMusic(name: string, fileType: string, altFileType: string) {
-        this._game.load.audio(name, [AssetRouter.mpg3MusicRoute + name + fileType, AssetRouter.oggMusicRoute + name + "." + altFileType]);
+        this._game.load.audio(name, [this._assetRouter.Mpg3MusicRoute + name + fileType, this._assetRouter.OggMusicRoute + name + "." + altFileType]);
 
     }
 }

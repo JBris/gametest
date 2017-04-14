@@ -1,16 +1,16 @@
-import { iBreakoutParameters } from '../Engine/iBreakoutParameters';
+import { AssetRouter } from './AssetRouter';
+import { AssetLoader } from './AssetLoader';
+import { ScalingManager } from './ScalingManager';
 
-export interface iBreakoutFactory
-{
+export interface iGameEngine {
+
     /*=============================
     **Fields**
     =============================*/
     game: Phaser.Game;
-    /*=============================
-    **Constructor**
-    =============================*/
-
-    createProduct(productType: string, params: iBreakoutParameters): any;
+    assetRouter: AssetRouter;
+    assetLoader: AssetLoader;
+    scalingManager: ScalingManager;
 
     /*=============================
     **Properties**
@@ -19,4 +19,7 @@ export interface iBreakoutFactory
     /*=============================
     **Methods**
     =============================*/
+
 }
+
+
