@@ -20,7 +20,8 @@ export class ScalingManager extends Phaser.ScaleManager{
     **Methods**
     =============================*/
 
-    scaleGameScreen() {
+    scaleGameScreen(): void
+    {
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.scale.pageAlignHorizontally = true;
@@ -28,7 +29,7 @@ export class ScalingManager extends Phaser.ScaleManager{
         this.game.scale.refresh();
     }
 
-    scaleBreakoutBackground(background: Phaser.Image)
+    scaleBreakoutBackground(background: Phaser.Image) :void
     {
         background.scale.setTo
         (
@@ -36,6 +37,7 @@ export class ScalingManager extends Phaser.ScaleManager{
             this.game.height / background.height
         )
     }
+
 }
 
 

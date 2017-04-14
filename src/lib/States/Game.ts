@@ -1,9 +1,6 @@
 import { Breakout } from '../../Breakout';
 
-import { iPlayer } from '../Objects/Player/iPlayer';
 import { Ball } from '../Objects/Ball/Ball';
-import { BallFactory } from '../Objects/Ball/BallFactory';
-import { StartButton } from '../Objects/Button/StartButton';
 import { BreakoutButton } from '../Objects/Button/BreakoutButton';
 
 export class Game extends Phaser.State {
@@ -13,9 +10,8 @@ export class Game extends Phaser.State {
     =============================*/
     private _game: Breakout;
 
-    private _playButton: StartButton;
+    private _playButton: BreakoutButton;
     private _level: number;
-    private _player: iPlayer;
     private _background: Phaser.Image;
     private _music : Phaser.Sound;
     private _ball: Ball;
@@ -23,7 +19,7 @@ export class Game extends Phaser.State {
     private _scoreText: Phaser.Text;
     private _livesText: Phaser.Text;
     private _lifeLostText: Phaser.Text;
-    private _textStyle: Phaser.PhaserTextStyle = { font: '18px Arial', fill: '#0095DD' };
+    private _textStyle: Phaser.PhaserTextStyle = { font: '18px Arial', fill : '#0095DD'  };
     private _startButton: BreakoutButton;
     private _brickInfo: Object;
     private _bricks :Phaser.Group;
@@ -54,9 +50,9 @@ export class Game extends Phaser.State {
     create()
     {
 
-
-
-
+        //music
+        this._music = this.add.audio('stage_electrical_adventures', 1, true);
+        this._music.fadeIn(6000);
         
     }
 

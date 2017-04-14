@@ -1,6 +1,7 @@
 import { AssetRouter } from './AssetRouter';
 import { AssetLoader } from './AssetLoader';
 import { ScalingManager } from './ScalingManager';
+import { StyleManager } from './StyleManager';
 
 export interface iGameEngine {
 
@@ -11,6 +12,7 @@ export interface iGameEngine {
     assetRouter: AssetRouter;
     assetLoader: AssetLoader;
     scalingManager: ScalingManager;
+    styleManager: StyleManager;
 
     /*=============================
     **Properties**

@@ -1,7 +1,7 @@
 import { AssetRouter } from './AssetRouter';
 import { AssetLoader } from './AssetLoader';
 import { ScalingManager } from './ScalingManager';
-
+import { StyleManager } from './StyleManager';
 import { iGameEngine } from './iGameEngine';
 
 export class BreakoutGameEngine implements iGameEngine {
@@ -13,6 +13,7 @@ export class BreakoutGameEngine implements iGameEngine {
     assetRouter: AssetRouter;
     assetLoader: AssetLoader;
     scalingManager: ScalingManager;
+    styleManager: StyleManager;
 
     /*=============================
     **Constructors
@@ -22,7 +23,9 @@ export class BreakoutGameEngine implements iGameEngine {
     {
         this.assetRouter = new AssetRouter();
         this.assetLoader = new AssetLoader(game, this.assetRouter);
-        this.scalingManager = new ScalingManager(game,game.width,game.height);
+        this.scalingManager = new ScalingManager(game, game.width, game.height);
+        this.styleManager = new StyleManager(game);
+
     }
     /*=============================
     **Properties**
