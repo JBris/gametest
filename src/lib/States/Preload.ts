@@ -27,7 +27,7 @@ export class Preload extends Phaser.State {
     **Methods**
     =============================*/
 
-    preload() {
+    preload(): void  {
 
         this._loadingSprite = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this.game.world.centerX,
             this.game.world.centerY, 'ball', 0));
@@ -56,17 +56,17 @@ export class Preload extends Phaser.State {
         this.loadMusic();
     }
 
-    create() {
+    create(): void {
         this.camera.fade(0x000000, 3000);
         this.camera.onFadeComplete.addOnce(this.launchMainMenu ,this);
     }
 
-    launchMainMenu()
+    launchMainMenu()  :void 
     {
       this.game.state.start("MainMenu", true, false, this._game);
     }
 
-    loadSprites()
+    loadSprites(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('blue-brick', 'png',64,64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bullet', 'png', 64, 64);
@@ -78,12 +78,12 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('teal-brick', 'png', 64, 64);
     }
 
-    loadLogos()
+    loadLogos(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadLogos('title', 'png', 250, 117);
     } 
 
-    loadButtons()
+    loadButtons(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadButtons('play-button', 'png', 200, 200);
         this._game.BreakoutWorld.assetLoader.loadButtons('back-button', 'png', 200, 200);
@@ -93,7 +93,7 @@ export class Preload extends Phaser.State {
 
     }
 
-    loadBackgrounds()
+    loadBackgrounds(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadImage('1st-sky', 'jpg');
         this._game.BreakoutWorld.assetLoader.loadImage('2nd-sky', 'jpg');
@@ -101,7 +101,7 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadImage('final-sky', 'jpg');
     }
 
-    loadSoundEffects()
+    loadSoundEffects(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadSound('ball-to-boss', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('ball-to-brick', 'mp3', 'ogg');
@@ -110,7 +110,7 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSound('evil-laugh-short', 'mp3', 'ogg');
     }
 
-    loadMusic()
+    loadMusic(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadMusic('opening_glorious_morning', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadMusic('stage_electrical_adventures', 'mp3', 'ogg');

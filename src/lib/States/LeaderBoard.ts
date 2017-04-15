@@ -30,7 +30,7 @@ export class LeaderBoard extends Phaser.State
     **Methods**
     =============================*/
 
-    preload()
+    preload(): void 
     {
         this._game.BreakoutWorld.stageManager.CurrentStage = 0;
         let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
@@ -41,7 +41,7 @@ export class LeaderBoard extends Phaser.State
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
     }
 
-    create()
+    create(): void 
     {
         let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
 
@@ -61,7 +61,7 @@ export class LeaderBoard extends Phaser.State
         this._leaderBoard = this._game.BreakoutWorld.styleManager.positionTextTopLeft(this._game.PlayerList.displayPlayers(), null);
     }
 
-    launchMainMenu() {
+    launchMainMenu(): void {
         this._background.destroy();
         this._music.destroy();
         this.game.state.start("MainMenu", true, false, this._game);

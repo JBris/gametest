@@ -23,7 +23,7 @@ export class Boot extends Phaser.State   {
     **Methods**
     =============================*/
 
-    preload()
+    preload(): void 
     {
         this.game.stage.backgroundColor = '#337799';
         this._game.BreakoutWorld.scalingManager.scaleGameScreen();
@@ -31,7 +31,7 @@ export class Boot extends Phaser.State   {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('ball', 'png', 64, 64);
     }
 
-    create() {
+    create(): void  {
         this.game.state.start("Preload", true, false, this._game);
     }
 

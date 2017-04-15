@@ -39,7 +39,7 @@ export class MainMenu extends Phaser.State
     **Methods**
     =============================*/
 
-    preload()
+    preload(): void 
     {
         this.camera.onFadeComplete.forget();
         this._game.BreakoutWorld.stageManager.CurrentStage = 0;
@@ -63,7 +63,7 @@ export class MainMenu extends Phaser.State
 
     }
 
-    create()
+    create(): void 
     {
         let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         //music
@@ -93,14 +93,14 @@ export class MainMenu extends Phaser.State
 
     }
 
-    prepareBeginGame()
+    prepareBeginGame(): void 
     {
         this._music.fadeOut(4000);
         this.camera.fade(0x000000, 1000);
         this.camera.onFadeComplete.addOnce(this.createPlayer, this, null, this._game);
     }
 
-    createPlayer(game : Breakout)
+    createPlayer(game: Breakout): void 
     {
         let name = "";
         while (name === "")
@@ -111,7 +111,7 @@ export class MainMenu extends Phaser.State
         this.beginGame(this._game);
     }
 
-    beginGame(game: Breakout)
+    beginGame(game: Breakout): void 
     {
         this._background.destroy();
         this._music.destroy();
@@ -119,7 +119,7 @@ export class MainMenu extends Phaser.State
         this.game.state.start("Game",true, false, this._game);  
     }
 
-    addLeaderBoardText()
+    addLeaderBoardText(): void 
     {
         this._leaderBoard = this._game.BreakoutWorld.styleManager.positionTextBottomLeft(
             "LEADERBOARD", null);
@@ -127,7 +127,7 @@ export class MainMenu extends Phaser.State
         this._leaderBoard.events.onInputUp.add(this.viewLeaderBoard,this);
     }
 
-    viewLeaderBoard()
+    viewLeaderBoard(): void 
     {
 
         this._background.destroy();
@@ -135,11 +135,13 @@ export class MainMenu extends Phaser.State
         this.game.state.start("LeaderBoard", true, false, this._game);  
     }
 
-    options() {
-        //TODO
+    options(): void  {
+        this._background.destroy();
+        this._music.destroy();
+        this.game.state.start("Options", true, false, this._game);  
     }
 
-    endGame() {
+    endGame(): void {
         this.game.destroy();
     }
 

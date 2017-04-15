@@ -68,7 +68,7 @@ export class Game extends Phaser.State {
     // Preload, create, and update
     //===============================================================================================================//
     
-    preload()
+    preload(): void 
     {
         let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[levelNumber]);
@@ -86,7 +86,7 @@ export class Game extends Phaser.State {
         //can't set ball position y just yet
     }
 
-    create()
+    create(): void 
     {
         let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         //music
@@ -102,7 +102,7 @@ export class Game extends Phaser.State {
 
     }
 
-    update() {
+    update(): void {
         this.game.physics.arcade.collide(this._ball, this._paddle, this.ballHitPaddle);
         //this.game.physics.arcade.collide(this._ball, bricks, ballHitBrick);
         if (this._currentlyPlaying) {
@@ -125,7 +125,7 @@ export class Game extends Phaser.State {
         this._playButton.anchor.set(0.5, 0.5);
     }
 
-    startGame()
+    startGame(): void 
     {
         this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0, 0, 500, true);
         this._ball.Params.MovementType.move();
@@ -135,12 +135,14 @@ export class Game extends Phaser.State {
         this._playButton.destroy();
     }
 
-    ballHitPaddle()
+    ballHitPaddle(): void 
     {
-
+        if ("vibrate" in window.navigator) {
+            window.navigator.vibrate([100,,]);
+        }
     }
 
-    ballLeaveScreen()
+    ballLeaveScreen(): void 
     {
         this._ball.Params.MovementType.move(0, 0);
         this._game.PlayerList.MyPlayerList[0].lives -= 1;
@@ -158,7 +160,7 @@ export class Game extends Phaser.State {
         }
     }
 
-    setUpGameOver()
+    setUpGameOver(): void 
     {
         this._music.destroy();
         this.camera.resetFX();
