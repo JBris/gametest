@@ -41,7 +41,8 @@ export class MainMenu extends Phaser.State
 
     preload(): void 
     {
-        this.camera.onFadeComplete.forget();
+        this.camera.resetFX();
+
         this._game.BreakoutWorld.stageManager.CurrentStage = 0;
 
         let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;

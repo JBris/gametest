@@ -67,9 +67,8 @@ export class Game extends Phaser.State {
     //===============================================================================================================//
     // Preload, create, and update
     //===============================================================================================================//
-    
-    preload(): void 
-    {
+
+    preload(): void {
         let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[levelNumber]);
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
@@ -86,11 +85,10 @@ export class Game extends Phaser.State {
         //can't set ball position y just yet
     }
 
-    create(): void 
-    {
+    create(): void {
         let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         //music
-        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[levelNumber],1,true,true);
+        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[levelNumber], 1, true, true);
         this._music.play();
 
         this.loadButtons();
@@ -115,18 +113,16 @@ export class Game extends Phaser.State {
     //===============================================================================================================//
 
 
-    displayPlayButton(): void
-    {
+    displayPlayButton(): void {
         //start
         this._playButton = this._game.AddElement.buttonFactory.createProduct("play", new ButtonParameters(this.game,
             this.game.world.centerX, this.game.world.centerY, 'play-button', this.startGame, this, 1, 0, 1, 0));
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._playButton], 0, 0);
-        this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton],0.15,0.15,500,false);
+        this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0.15, 0.15, 500, false);
         this._playButton.anchor.set(0.5, 0.5);
     }
 
-    startGame(): void 
-    {
+    startGame(): void {
         this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0, 0, 500, true);
         this._ball.Params.MovementType.move();
         this.game.physics.arcade.checkCollision.down = false;
@@ -135,15 +131,13 @@ export class Game extends Phaser.State {
         this._playButton.destroy();
     }
 
-    ballHitPaddle(): void 
-    {
+    ballHitPaddle(): void {
         if ("vibrate" in window.navigator) {
-            window.navigator.vibrate([100,,]);
+            window.navigator.vibrate([100, ,]);
         }
     }
 
-    ballLeaveScreen(): void 
-    {
+    ballLeaveScreen(): void {
         this._ball.Params.MovementType.move(0, 0);
         this._game.PlayerList.MyPlayerList[0].lives -= 1;
         this._livesText.setText(String(this._game.PlayerList.MyPlayerList[0].lives) + " X", null);
@@ -151,17 +145,15 @@ export class Game extends Phaser.State {
         this._ball.reset(this._ballPositionX, this._ballPositionY);
         this._paddle.reset(this._paddlePositionX, this._paddlePositionY);
 
-        if (this._game.PlayerList.MyPlayerList[0].lives > 0)
-        {
-            this.displayPlayButton();
-        } else
-        {
+        if (this._game.PlayerList.MyPlayerList[0].lives > 0) {
+            this.relaunchGame();
+           // this.displayPlayButton();
+        } else {
             this.setUpGameOver();
         }
     }
 
-    setUpGameOver(): void 
-    {
+    setUpGameOver(): void {
         this._music.destroy();
         this.camera.resetFX();
         this.camera.fade(0x000000, 2000);
@@ -171,8 +163,29 @@ export class Game extends Phaser.State {
         laugh.play();
     }
 
-    launchMainMenu() {
-        this.game.state.start("MainMenu",true, false, this._game);
+    launchMainMenu() : void {
+        this.game.state.start("MainMenu", true, false, this._game);
+    }
+
+    prepareRelaunchGame() : void
+    {
+        this._music.fadeOut(4000);
+        this.camera.fade(0x000000, 1000);
+        this.camera.onFadeComplete.addOnce(this.relaunchGame, this);
+    }
+
+    relaunchGame(): void
+    {
+        this._background.destroy();
+        this._music.destroy();
+
+        this._game.BreakoutWorld.stageManager.CurrentStage += 1;
+        if (this._game.BreakoutWorld.stageManager.CurrentStage > this._game.BreakoutConfig.NumberOfStages)
+            this._game.BreakoutWorld.stageManager.CurrentStage = 1;
+
+        this._game.PlayerList.MyPlayerList[0].level += 1;
+
+        this.game.state.start("Game", true, false, this._game);
     }
 
 
