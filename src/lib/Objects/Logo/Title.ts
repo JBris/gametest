@@ -26,7 +26,7 @@ export class Title extends BreakoutLogo {
 
     enableFeatures():void
     {
-        this.animations.add('flash', [0, 1, 2, 1, 0], 24);
+        this.animations.add('flash', [0, 1, 2, 1, 0], 2);
         this.animations.play('flash', 24, true);
     }
 }

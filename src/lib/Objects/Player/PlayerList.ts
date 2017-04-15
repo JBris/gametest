@@ -65,6 +65,8 @@ export class PlayerList {
 
     displayPlayers(): string
     {
+        if (this._myPlayerList.length === 0) return "No players yet";
+
         let playerDisplay: string = "";
         for (let player of this._myPlayerList)
         {

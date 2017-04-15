@@ -20,9 +20,14 @@ export class Game extends Phaser.State {
     private _game: Breakout;
     private _background: Phaser.Image;
     private _music: Phaser.Sound;
+    private _currentlyPlaying: boolean;
 
     //Numbers
     private _scoreMultiplyer: number;
+    private _paddlePositionX: number;
+    private _paddlePositionY: number;
+    private _ballPositionX: number;
+    private _ballPositionY: number;
 
     //Buttons
     private _playButton: BreakoutButton;
@@ -55,69 +60,131 @@ export class Game extends Phaser.State {
     **Properties**
     =============================*/
 
+    /*=============================
+    **Methods**
+    =============================*/
+
+    //===============================================================================================================//
+    // Preload, create, and update
+    //===============================================================================================================//
+    
     preload()
     {
-        let levelNumber: number = this._game.GameEngine.stageManager.CurrentStage;
+        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
+        this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[levelNumber]);
+        this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
 
-        this._background = this.game.add.image(0, 0, this._game.GameEngine.stageManager.BackgroundList[levelNumber]);
-        this._game.GameEngine.scalingManager.scaleBreakoutBackground(this._background);
         this.game.camera.resetFX();
-        this.scale.onOrientationChange.add(this._game.GameEngine.scalingManager.scaleGameScreen, this);
-        this.scale.onOrientationChange.add(this._game.GameEngine.scalingManager.scaleBreakoutBackground, this);
+        this.camera.onFadeComplete.forget();
+        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleGameScreen, this);
+        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground, this);
         this._scoreMultiplyer = 1;
+
+        this._paddlePositionX = this.game.world.centerX;
+        this._paddlePositionY = this.game.world.height - this.game.world.height * 0.1;
+        this._ballPositionX = this.game.world.centerX;
+        //can't set ball position y just yet
     }
 
     create()
     {
-        let levelNumber: number = this._game.GameEngine.stageManager.CurrentStage;
+        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         //music
-        this._music = this.add.audio(this._game.GameEngine.stageManager.MusicList[levelNumber],1,true);
-        this._music.fadeIn(6000);
+        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[levelNumber],1,true,true);
+        this._music.play();
 
         this.loadButtons();
         this.loadText();
         this.loadSprites();
 
-        this.game.time.events.add(1000, this.displayPlayButton,this);
+        this.game.time.events.add(1000, this._game.BreakoutWorld.styleManager.fadeText, this, this._levelNumberText);
+        this.game.time.events.add(1000, this.displayPlayButton, this);
+
     }
+
+    update() {
+        this.game.physics.arcade.collide(this._ball, this._paddle, this.ballHitPaddle);
+        //this.game.physics.arcade.collide(this._ball, bricks, ballHitBrick);
+        if (this._currentlyPlaying) {
+            this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
+        }
+    }
+
+    //===============================================================================================================//
+    // Game actions
+    //===============================================================================================================//
+
 
     displayPlayButton(): void
     {
-        this._game.GameEngine.styleManager.fadeText(this._levelNumberText);
         //start
-        this._playButton = this._game.MegaFactory.buttonFactory.createProduct("play", new ButtonParameters(this.game,
+        this._playButton = this._game.AddElement.buttonFactory.createProduct("play", new ButtonParameters(this.game,
             this.game.world.centerX, this.game.world.centerY, 'play-button', this.startGame, this, 1, 0, 1, 0));
-        this._game.GameEngine.scalingManager.scaleGameElements(this.game, [this._playButton], 0, 0);
-        this._game.GameEngine.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton],0.15,0.15,2000,false);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._playButton], 0, 0);
+        this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton],0.15,0.15,500,false);
         this._playButton.anchor.set(0.5, 0.5);
     }
 
-    /*=============================
-    **Methods**
-    =============================*/
-
     startGame()
     {
-        this._playButton.destroy();
+        this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0, 0, 500, true);
         this._ball.Params.MovementType.move();
         this.game.physics.arcade.checkCollision.down = false;
         this._ball.events.onOutOfBounds.add(this.ballLeaveScreen, this);
+        this._currentlyPlaying = true;
+        this._playButton.destroy();
+    }
+
+    ballHitPaddle()
+    {
 
     }
 
     ballLeaveScreen()
     {
-        this._ball.Params.MovementType.move(0,0);
-        window.alert("lose");
+        this._ball.Params.MovementType.move(0, 0);
+        this._game.PlayerList.MyPlayerList[0].lives -= 1;
+        this._livesText.setText(String(this._game.PlayerList.MyPlayerList[0].lives) + " X", null);
+        this._game.BreakoutWorld.styleManager.damageFlash(2000);
+        this._ball.reset(this._ballPositionX, this._ballPositionY);
+        this._paddle.reset(this._paddlePositionX, this._paddlePositionY);
+
+        if (this._game.PlayerList.MyPlayerList[0].lives > 0)
+        {
+            this.displayPlayButton();
+        } else
+        {
+            this.setUpGameOver();
+        }
     }
+
+    setUpGameOver()
+    {
+        this.camera.resetFX();
+        this.camera.fade(0xff0000, 3000);
+        this._music.stop();
+
+        let laugh: Phaser.Sound = this.sound.add('evil-laugh-short', 1, false);
+        laugh.onStop.addOnce(this.launchMainMenu, this);
+        laugh.play();
+    }
+
+    launchMainMenu() {
+        this.game.state.start("MainMenu",true, false, this._game);
+    }
+
+
+    //===============================================================================================================//
+    //Loading resources...
+    //===============================================================================================================//
 
     loadText(): void
     {
         //text
-        this._scoreText = this._game.GameEngine.styleManager.positionTextTopLeft(String(this._game.PlayerList.MyPlayerList[0].score), null);
-        this._livesText = this._game.GameEngine.styleManager.positionTextBottomLeft(String(this._game.PlayerList.MyPlayerList[0].lives) + " X", null);
-        this._multiplyerText = this._game.GameEngine.styleManager.positionTextBottomRight("X " + String(this._scoreMultiplyer), null);
-        this._levelNumberText = this._game.GameEngine.styleManager.positionTextCenter(
+        this._scoreText = this._game.BreakoutWorld.styleManager.positionTextTopLeft(String(this._game.PlayerList.MyPlayerList[0].score), null);
+        this._livesText = this._game.BreakoutWorld.styleManager.positionTextBottomLeft(String(this._game.PlayerList.MyPlayerList[0].lives) + " X", null);
+        this._multiplyerText = this._game.BreakoutWorld.styleManager.positionTextBottomRight("X " + String(this._scoreMultiplyer), null);
+        this._levelNumberText = this._game.BreakoutWorld.styleManager.positionTextCenter(
             "Stage: " + String(this._game.PlayerList.MyPlayerList[0].level), null);
         this._levelNumberText.fontSize = "500%";
 
@@ -127,11 +194,11 @@ export class Game extends Phaser.State {
     {
         //buttons
         //pause
-        this._pauseButton = this._game.MegaFactory.buttonFactory.createProduct("pause", new ButtonParameters(this.game,
+        this._pauseButton = this._game.AddElement.buttonFactory.createProduct("pause", new ButtonParameters(this.game,
             this.game.world.width - 0.1 * this.game.world.width, 0 + 0.1 * this.game.world.height, 'pause-button', null, null, 1, 0, 1, 0));
 
         this._pauseButton.anchor.set(1, 0);
-        this._game.GameEngine.scalingManager.scaleGameElements(this.game, [this._pauseButton], 0.05, 0.05);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._pauseButton], 0.05, 0.05);
         this._pauseButton.inputEnabled = true;
         this._pauseButton.events.onInputUp.add(function () { this.game.paused = true; }, this);
         this.game.input.onDown.add(function () { if (this.game.paused) this.game.paused = false }, this);
@@ -140,22 +207,26 @@ export class Game extends Phaser.State {
     loadSprites(): void
     {
         //sprites
-        this._livesIcon = this._game.MegaFactory.ballFactory.createProduct("normal", new BallParameters(this.game, this._livesText.x + this._livesText.width,
+        this._livesIcon = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._livesText.x + this._livesText.width,
             this._livesText.y, 'paddle', 0, null, 0));
 
-        this._game.GameEngine.scalingManager.scaleGameElements(this.game, [this._livesIcon], 0.08, 0.08);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._livesIcon], 0.08, 0.08);
 
         this._livesIcon.anchor.set(0, 0.4);
         this._livesIcon.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 24);
         this._livesIcon.alpha = 0.35;
 
-        this._paddle = this.game.add.sprite(this.game.world.centerX, this.game.world.height - this.game.world.height * 0.1, 'paddle', 0);
-        this._game.GameEngine.scalingManager.scaleGameElements(this.game, [this._paddle], 0.1, 0.1);
+        this._paddle = this.game.add.sprite(this._paddlePositionX, this._paddlePositionY, 'paddle', 0);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._paddle], 0.1, 0.1);
         this._paddle.anchor.set(0.5, 0.5);
+        this.game.physics.enable(this._paddle, Phaser.Physics.ARCADE);
+        this._paddle.body.immovable = true;
 
-        this._ball = this._game.MegaFactory.ballFactory.createProduct("normal", new BallParameters(this.game, this._paddle.x,
-            this._paddle.y - this._paddle.height * 0.1, 'ball', 0, new MediumMovement(), 1));
-        this._game.GameEngine.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
+        this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;
+
+        this._ball = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._ballPositionX,
+            this._ballPositionY, 'ball', 0, new MediumMovement(-100, -350), 1));
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
         this._ball.anchor.set(0.5, 0.5);
     }
 

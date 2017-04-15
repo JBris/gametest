@@ -29,10 +29,10 @@ export class Preload extends Phaser.State {
 
     preload() {
 
-        this._loadingSprite = this._game.MegaFactory.ballFactory.createProduct("normal", new BallParameters(this.game, this.game.world.centerX,
+        this._loadingSprite = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this.game.world.centerX,
             this.game.world.centerY, 'ball', 0));
 
-        this._game.GameEngine.scalingManager.scaleGameElements(this.game,[this._loadingSprite],0.2,0.2);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game,[this._loadingSprite],0.2,0.2);
 
         if (this._loadingSprite.animations.getAnimation('sleep') !== undefined && this._loadingSprite.animations.getAnimation('sleep') !== null)
             this._loadingSprite.animations.play('sleep', 24, true);
@@ -57,8 +57,8 @@ export class Preload extends Phaser.State {
     }
 
     create() {
-        this.game.camera.fade(0x000000, 3000);
-        this.camera.onFadeComplete.add(this.launchMainMenu ,this);
+        this.camera.fade(0x000000, 3000);
+        this.camera.onFadeComplete.addOnce(this.launchMainMenu ,this);
     }
 
     launchMainMenu()
@@ -68,53 +68,53 @@ export class Preload extends Phaser.State {
 
     loadSprites()
     {
-        this._game.GameEngine.assetLoader.loadSpriteSheet('blue-brick', 'png',64,64);
-        this._game.GameEngine.assetLoader.loadSpriteSheet('bullet', 'png', 64, 64);
-        this._game.GameEngine.assetLoader.loadSpriteSheet('gold-brick', 'png', 64, 64);
-        this._game.GameEngine.assetLoader.loadSpriteSheet('green-brick', 'png', 64, 64);
-        this._game.GameEngine.assetLoader.loadSpriteSheet('paddle', 'png', 64, 64);
-        this._game.GameEngine.assetLoader.loadSpriteSheet('shadow', 'png', 64, 64);
-        this._game.GameEngine.assetLoader.loadSpriteSheet('skullface', 'png', 64, 64);;
-        this._game.GameEngine.assetLoader.loadSpriteSheet('teal-brick', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('blue-brick', 'png',64,64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bullet', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('gold-brick', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('green-brick', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('paddle', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('shadow', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('skullface', 'png', 64, 64);;
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('teal-brick', 'png', 64, 64);
     }
 
     loadLogos()
     {
-        this._game.GameEngine.assetLoader.loadLogos('title', 'png', 250, 117);
+        this._game.BreakoutWorld.assetLoader.loadLogos('title', 'png', 250, 117);
     } 
 
     loadButtons()
     {
-        this._game.GameEngine.assetLoader.loadButtons('play-button', 'png', 200, 200);
-        this._game.GameEngine.assetLoader.loadButtons('restart-button', 'png', 200, 200);
-        this._game.GameEngine.assetLoader.loadButtons('off-button', 'png', 220, 259);
-        this._game.GameEngine.assetLoader.loadButtons('options-button', 'png', 200, 200);
-        this._game.GameEngine.assetLoader.loadButtons('pause-button', 'png', 152, 250);
+        this._game.BreakoutWorld.assetLoader.loadButtons('play-button', 'png', 200, 200);
+        this._game.BreakoutWorld.assetLoader.loadButtons('restart-button', 'png', 200, 200);
+        this._game.BreakoutWorld.assetLoader.loadButtons('off-button', 'png', 220, 259);
+        this._game.BreakoutWorld.assetLoader.loadButtons('options-button', 'png', 200, 200);
+        this._game.BreakoutWorld.assetLoader.loadButtons('pause-button', 'png', 152, 250);
 
     }
 
     loadBackgrounds()
     {
-        this._game.GameEngine.assetLoader.loadImage('1st-sky', 'jpg');
-        this._game.GameEngine.assetLoader.loadImage('2nd-sky', 'jpg');
-        this._game.GameEngine.assetLoader.loadImage('3rd-sky', 'jpg');
-        this._game.GameEngine.assetLoader.loadImage('final-sky', 'jpg');
+        this._game.BreakoutWorld.assetLoader.loadImage('1st-sky', 'jpg');
+        this._game.BreakoutWorld.assetLoader.loadImage('2nd-sky', 'jpg');
+        this._game.BreakoutWorld.assetLoader.loadImage('3rd-sky', 'jpg');
+        this._game.BreakoutWorld.assetLoader.loadImage('final-sky', 'jpg');
     }
 
     loadSoundEffects()
     {
-        this._game.GameEngine.assetLoader.loadSound('ball-to-boss', 'mp3', 'ogg');
-        this._game.GameEngine.assetLoader.loadSound('ball-to-brick', 'mp3', 'ogg');
-        this._game.GameEngine.assetLoader.loadSound('ball-to-paddle', 'mp3', 'ogg');
-        this._game.GameEngine.assetLoader.loadSound('evil-laugh', 'mp3', 'ogg');
-        this._game.GameEngine.assetLoader.loadSound('evil-laugh-short', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('ball-to-boss', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('ball-to-brick', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('ball-to-paddle', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('evil-laugh', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('evil-laugh-short', 'mp3', 'ogg');
     }
 
     loadMusic()
     {
-        this._game.GameEngine.assetLoader.loadMusic('opening_glorious_morning', 'mp3', 'ogg');
-        this._game.GameEngine.assetLoader.loadMusic('stage_electrical_adventures', 'mp3', 'ogg');
-        this._game.GameEngine.assetLoader.loadMusic('boss_Endgame', 'mp3', 'ogg');
-        this._game.GameEngine.assetLoader.loadMusic('final_parago', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadMusic('opening_glorious_morning', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadMusic('stage_electrical_adventures', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadMusic('boss_Endgame', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadMusic('final_parago', 'mp3', 'ogg');
     }
 }

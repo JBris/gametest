@@ -51,10 +51,10 @@ export class Breakout extends Phaser.Game {
     get BreakoutConfig(): Config
     { return this._breakoutConfig;}
 
-    get GameEngine(): iGameEngine
+    get BreakoutWorld(): iGameEngine
     { return this._gameEngine;}
 
-    get MegaFactory(): iMegaFactory
+    get AddElement(): iMegaFactory
     { return this._megaFactory; }
 
     get PlayerList(): PlayerList

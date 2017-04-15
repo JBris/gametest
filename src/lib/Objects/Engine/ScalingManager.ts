@@ -57,8 +57,6 @@ export class ScalingManager extends Phaser.ScaleManager{
         let scaledWidth: number = game.world.width * xScaleValue;
         let height: number = game.world.height * yScaleValue * this._ratio;
 
-        let num: number = 0;
-
         for (let element of elements) {
             let scaleTween: Phaser.Tween = game.add.tween(element).to({ width: scaledWidth, height: height }, duration, Phaser.Easing.Linear.None, true);
 

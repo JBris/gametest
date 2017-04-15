@@ -26,9 +26,9 @@ export class Boot extends Phaser.State   {
     preload()
     {
         this.game.stage.backgroundColor = '#337799';
-        this._game.GameEngine.scalingManager.scaleGameScreen();
+        this._game.BreakoutWorld.scalingManager.scaleGameScreen();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this._game.GameEngine.assetLoader.loadSpriteSheet('ball', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('ball', 'png', 64, 64);
     }
 
     create() {

@@ -50,6 +50,11 @@ export class StyleManager {
     **Methods**
     =============================*/
 
+    damageFlash(duration : number) :void
+    {
+        this._game.camera.flash(0xff0000, duration);
+    }
+
     fadeText(text : Phaser.Text) : void
     {
         this._game.add.tween(text).to({ y: 0 }, 1500, Phaser.Easing.Linear.None, true);
