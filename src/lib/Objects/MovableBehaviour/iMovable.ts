@@ -13,7 +13,8 @@ export interface iMovable {
     /*=============================
     **Methods**
     =============================*/
-    move(velocityX?: number, velocityY?: number);
+    setVelocity(velocityX: number, velocityY: number):void;
+    move(velocityX?: number, velocityY?: number): void;
  
 }
 

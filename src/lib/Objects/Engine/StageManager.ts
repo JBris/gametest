@@ -1,4 +1,4 @@
-export class StageManager extends Phaser.Stage
+export class StageManager
 {
     /*=============================
     **Fields**
@@ -11,7 +11,6 @@ export class StageManager extends Phaser.Stage
     =============================*/
     constructor(game :Phaser.Game)
     {
-        super(game);
         this._musicList = new Array<string>();
         this._backgroundList = new Array<string>();
         this._currentStage = 0;

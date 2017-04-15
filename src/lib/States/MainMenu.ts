@@ -25,7 +25,6 @@ export class MainMenu extends Phaser.State
     constructor(game: Breakout) {
         super();
         this._game = game;
-        this._game.GameEngine.stageManager.CurrentStage = 0;
     }
 
     /*=============================
@@ -38,6 +37,8 @@ export class MainMenu extends Phaser.State
 
     preload()
     {
+        this._game.GameEngine.stageManager.CurrentStage = 0;
+
         let currentStage: number = this._game.GameEngine.stageManager.CurrentStage;
 
         this._game.GameEngine.scalingManager.scaleGameScreen();
@@ -90,20 +91,19 @@ export class MainMenu extends Phaser.State
 
     createPlayer(game : Breakout)
     {
-
         let name = "";
         while (name === "")
         {
             name = prompt("Player, please enter your name:");
         }
-        this._game.PlayerList.addPlayer( new BreakoutPlayer(name, 0, this._game.BreakoutConfig.PlayerNumberOfLives) );
+        this._game.PlayerList.addPlayer( new BreakoutPlayer(name, 0, this._game.BreakoutConfig.PlayerNumberOfLives,1) );
         this.beginGame(this._game);
     }
 
     beginGame(game: Breakout)
     {
-        this._music.stop();
         this._game.GameEngine.stageManager.CurrentStage = 1;
+        this._music.stop();
         this.game.state.start("Game",true, false, this._game);  
     }
 

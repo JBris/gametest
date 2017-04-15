@@ -16,10 +16,11 @@ export class BreakoutPlayer implements iPlayer {
     **Constructors**
     =============================*/
 
-    constructor(name:string, score:number, lives:number, description ?:string) {
+    constructor(name:string, score:number, lives:number, level:number, description ?:string) {
         this.name = name;
         this.score = score;
         this.lives = lives;
+        this.level = level;
         this.description = description;
     }
 

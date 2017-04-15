@@ -50,6 +50,26 @@ export class StyleManager {
     **Methods**
     =============================*/
 
+    fadeText(text : Phaser.Text) : void
+    {
+        this._game.add.tween(text).to({ y: 0 }, 1500, Phaser.Easing.Linear.None, true);
+        this._game.add.tween(text).to({ alpha: 0 }, 1500, Phaser.Easing.Linear.None, true);
+    }
+
+    positionTextCenter(text: string, styles?: any): Phaser.Text {
+
+        if (styles !== null && styles !== undefined)
+            this._presentedText = this._game.add.text(this._game.world.centerX, this._game.world.centerY, text, styles);
+        else {
+            this._presentedText = this._game.add.text(this._game.world.centerX, this._game.world.centerY, text, null);
+
+            this.styleTextWithDefaults(this._presentedText);
+        }
+
+        this._presentedText.anchor.set(0.5, 0.5);
+        return this._presentedText;
+    }
+
     positionTextTopLeft(text: string, styles? :any): Phaser.Text
     {
 

@@ -35,6 +35,13 @@ export abstract class Move implements iMovable {
             this.baseVelocityY = this.z_defaultVelocityY;
     }
 
+    setVelocity(velocityX: number, velocityY: number): void
+    {
+        this.baseVelocityX = velocityX;
+        this.baseVelocityY = velocityY;
+    }
+
+
     move(velocityX?: number, velocityY?: number) : void {
         if (velocityX === null || velocityX === undefined)
             velocityX = this.baseVelocityX;
