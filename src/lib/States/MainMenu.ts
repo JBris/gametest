@@ -12,10 +12,14 @@ export class MainMenu extends Phaser.State
     =============================*/
     private _game: Breakout;
     private _background: Phaser.Image;
+    private _music: Phaser.Sound;
+
+    private _leaderBoard: Phaser.Text;
+
     private _playButton: BreakoutButton;
     private _offButton: BreakoutButton;
     private _optionsButton: BreakoutButton;
-    private _music: Phaser.Sound;
+
     private _title: BreakoutLogo;
 
     /*=============================
@@ -43,10 +47,14 @@ export class MainMenu extends Phaser.State
         let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
 
         this._game.BreakoutWorld.scalingManager.scaleGameScreen();
+        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleGameScreen, this);
+        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground, this);
+
         //background
 
-        this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[currentStage]);
+        this._background = this.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[currentStage]);
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
+
 
         //logo
         this._title = new Title(this.game, this.game.world.centerX, this.game.world.centerY, 'title', 0);
@@ -79,14 +87,16 @@ export class MainMenu extends Phaser.State
 
        this._offButton.anchor.set(0.5, 1);
 
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._playButton, this._offButton, this._optionsButton], 0.1, 0.1);
+       this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._playButton, this._offButton, this._optionsButton], 0.1, 0.1);
+
+       if (this._game.PlayerList.MyPlayerList.length > 0) this.addLeaderBoardText();
 
     }
 
     prepareBeginGame()
     {
-        this._music.fadeOut(3000);
-        this.camera.fade(0x000000, 2000);
+        this._music.fadeOut(4000);
+        this.camera.fade(0x000000, 1000);
         this.camera.onFadeComplete.addOnce(this.createPlayer, this, null, this._game);
     }
 
@@ -103,9 +113,26 @@ export class MainMenu extends Phaser.State
 
     beginGame(game: Breakout)
     {
+        this._background.destroy();
+        this._music.destroy();
         this._game.BreakoutWorld.stageManager.CurrentStage = 1;
-        this._music.stop();
         this.game.state.start("Game",true, false, this._game);  
+    }
+
+    addLeaderBoardText()
+    {
+        this._leaderBoard = this._game.BreakoutWorld.styleManager.positionTextBottomLeft(
+            "LEADERBOARD", null);
+        this._leaderBoard.inputEnabled = true;
+        this._leaderBoard.events.onInputUp.add(this.viewLeaderBoard,this);
+    }
+
+    viewLeaderBoard()
+    {
+
+        this._background.destroy();
+        this._music.destroy();
+        this.game.state.start("LeaderBoard", true, false, this._game);  
     }
 
     options() {

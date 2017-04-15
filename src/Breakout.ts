@@ -1,6 +1,7 @@
 import { Boot } from './lib/States/Boot';
 import { Preload } from './lib/States/Preload';
 import { MainMenu } from './lib/States/MainMenu';
+import { LeaderBoard } from './lib/States/LeaderBoard';
 import { Game } from './lib/States/Game';
 
 import { Config } from '../config/Config';
@@ -39,6 +40,7 @@ export class Breakout extends Phaser.Game {
         this.state.add('Preload', Preload, false);
         this.state.add('MainMenu', MainMenu, false);
         this.state.add('Game', Game, false);
+        this.state.add('LeaderBoard', LeaderBoard, false);
         this.state.start('Boot',true,false, this);
     }
 

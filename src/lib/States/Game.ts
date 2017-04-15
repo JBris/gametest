@@ -160,9 +160,9 @@ export class Game extends Phaser.State {
 
     setUpGameOver()
     {
+        this._music.destroy();
         this.camera.resetFX();
-        this.camera.fade(0xff0000, 3000);
-        this._music.stop();
+        this.camera.fade(0x000000, 2000);
 
         let laugh: Phaser.Sound = this.sound.add('evil-laugh-short', 1, false);
         laugh.onStop.addOnce(this.launchMainMenu, this);

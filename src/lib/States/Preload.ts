@@ -86,7 +86,7 @@ export class Preload extends Phaser.State {
     loadButtons()
     {
         this._game.BreakoutWorld.assetLoader.loadButtons('play-button', 'png', 200, 200);
-        this._game.BreakoutWorld.assetLoader.loadButtons('restart-button', 'png', 200, 200);
+        this._game.BreakoutWorld.assetLoader.loadButtons('back-button', 'png', 200, 200);
         this._game.BreakoutWorld.assetLoader.loadButtons('off-button', 'png', 220, 259);
         this._game.BreakoutWorld.assetLoader.loadButtons('options-button', 'png', 200, 200);
         this._game.BreakoutWorld.assetLoader.loadButtons('pause-button', 'png', 152, 250);
