@@ -1,4 +1,5 @@
 import { AssetRouter } from './AssetRouter';
+import { StageManager } from './StageManager';
 
 export class AssetLoader {
 
@@ -7,13 +8,14 @@ export class AssetLoader {
     =============================*/
     private _game: Phaser.Game;
     private _assetRouter: AssetRouter;
-
+    private _stageManager: StageManager;
     /*=============================
     **Constructors
     =============================*/
-    constructor(game: Phaser.Game, assetRouter : AssetRouter) {
+    constructor(game: Phaser.Game, assetRouter: AssetRouter, stageManager: StageManager) {
         this._game = game;
         this._assetRouter = assetRouter;
+        this._stageManager = stageManager;
     }
     /*=============================
     **Properties**
@@ -37,6 +39,7 @@ export class AssetLoader {
     loadImage(name: string, fileType: string) 
     {
         this._game.load.image(name, AssetRouter.backgroundRoute + name + "." + fileType);
+        this._stageManager.BackgroundList.push(name);
     }
 
     loadSound(name: string, fileType: string, altFileType:string) 
@@ -47,7 +50,7 @@ export class AssetLoader {
 
     loadMusic(name: string, fileType: string, altFileType: string) {
         this._game.load.audio(name, [AssetRouter.mpg3MusicRoute + name + fileType, AssetRouter.oggMusicRoute + name + "." + altFileType]);
-
+        this._stageManager.MusicList.push(name);
     }
 }
 

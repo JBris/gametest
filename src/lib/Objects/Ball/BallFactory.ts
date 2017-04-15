@@ -12,7 +12,7 @@ export class BallFactory extends Phaser.GameObjectFactory implements iBreakoutFa
     /*=============================
     **Fields**
     =============================*/
-    ball: Phaser.Sprite;
+    ball: Ball;
 
     /*=============================
     **Constructors
@@ -32,7 +32,7 @@ export class BallFactory extends Phaser.GameObjectFactory implements iBreakoutFa
            this.ball = new SmallBall(ballParamaters);
     
        this.ball = new NormalBall(ballParamaters);
-
+       this.ball.Params.MovementType.movableSprite = this.ball;
        return this.game.add.existing(this.ball);
     }
 

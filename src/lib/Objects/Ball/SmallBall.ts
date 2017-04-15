@@ -15,11 +15,9 @@ export class SmallBall extends Ball{
 
     constructor(ballParameters: BallParameters) {
         super(ballParameters);
-        this.z_defaultScale = 0.06;
         this.z_defaultDamage = 1;
         this.z_defaultMovementType = new FastMovement();
         this.initDefaultBehaviour();
-        this.scaleGameElement(ballParameters.game);
     }
 
     /*=============================

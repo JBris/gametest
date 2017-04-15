@@ -6,6 +6,7 @@ export interface iPlayer {
      name: string;
      score: number;
      lives: number;
+     level: number;
      description?: string;
 
     /*=============================

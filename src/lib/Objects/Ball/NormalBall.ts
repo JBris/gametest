@@ -16,11 +16,9 @@ export class NormalBall extends Ball{
     constructor(ballParameters: BallParameters) {
         super(ballParameters);
 
-        this.z_defaultScale = 0.2;
         this.z_defaultDamage = 1;
         this.z_defaultMovementType = new MediumMovement();
         this.initDefaultBehaviour();
-        this.scaleGameElement(ballParameters.game);
     }
 
     /*=============================

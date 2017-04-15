@@ -3,6 +3,7 @@ import { AssetLoader } from './AssetLoader';
 import { ScalingManager } from './ScalingManager';
 import { StyleManager } from './StyleManager';
 import { iGameEngine } from './iGameEngine';
+import { StageManager } from './StageManager';
 
 export class BreakoutGameEngine implements iGameEngine {
 
@@ -14,6 +15,7 @@ export class BreakoutGameEngine implements iGameEngine {
     assetLoader: AssetLoader;
     scalingManager: ScalingManager;
     styleManager: StyleManager;
+    stageManager: StageManager;
 
     /*=============================
     **Constructors
@@ -22,7 +24,8 @@ export class BreakoutGameEngine implements iGameEngine {
     constructor(game :Phaser.Game)
     {
         this.assetRouter = new AssetRouter();
-        this.assetLoader = new AssetLoader(game, this.assetRouter);
+        this.stageManager = new StageManager(game);
+        this.assetLoader = new AssetLoader(game, this.assetRouter, this.stageManager);
         this.scalingManager = new ScalingManager(game, game.width, game.height);
         this.styleManager = new StyleManager(game);
 

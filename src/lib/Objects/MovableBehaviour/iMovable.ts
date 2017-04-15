@@ -3,6 +3,7 @@ export interface iMovable {
     /*=============================
     **Fields**
     =============================*/
+    movableSprite: Phaser.Sprite;
     baseVelocityX: number;
     baseVelocityY: number;
     /*=============================
@@ -12,7 +13,7 @@ export interface iMovable {
     /*=============================
     **Methods**
     =============================*/
-    move(obj : Phaser.Sprite, velocityX?: number, velocityY?: number);
+    move(velocityX?: number, velocityY?: number);
  
 }
 

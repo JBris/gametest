@@ -65,10 +65,10 @@ export class PlayerList {
 
     displayPlayers(): string
     {
-        let playerDisplay: string = "Name              Score" + '\n';
+        let playerDisplay: string = "";
         for (let player of this._myPlayerList)
         {
-            playerDisplay = player.name + "              " + player.score + '\n';
+            playerDisplay = "Name: " + player.name + " Score: " + player.score + "Level" + player.level + '\n';
         }
 
         return playerDisplay;

@@ -38,6 +38,16 @@ export class ScalingManager extends Phaser.ScaleManager{
         )
     }
 
+    scaleGameElements(game: Phaser.Game, elements: Array<any>, xScaleValue: number, yScaleValue: number) {
+        let ratio = window.innerWidth / innerHeight;
+
+        for (let element of elements)
+        {
+            element.width = game.world.width * xScaleValue;
+            element.height = game.world.height * yScaleValue * ratio;
+        }
+    }
+
 }
 
 

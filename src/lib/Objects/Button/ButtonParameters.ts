@@ -10,8 +10,6 @@ export class ButtonParameters implements iBreakoutParameters{
     y: number;
     key?: string;
     frame?: string | number;
-    private _relativeScalingXValue: number;
-    private _relativeScalingYValue: number;
     private _callback: Function;
     private _context: any;
     private _overframe: number;
@@ -23,15 +21,13 @@ export class ButtonParameters implements iBreakoutParameters{
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game, x?: number, y?: number, key?: string, xScaleValue?: number, yScaleValue?: number, callback?: Function, context?: any, overframe?: number,
+    constructor(game: Phaser.Game, x?: number, y?: number, key?: string, callback?: Function, context?: any, overframe?: number,
         outframe?: number, downframe?: number, upframe?: number) 
     {
         this.game=game;
         this.x=x;
         this.y=y;
         this.key = key;
-        this._relativeScalingXValue= xScaleValue;
-        this._relativeScalingYValue = yScaleValue;
         this._callback = callback;
         this._context = context;
         this._overframe= overframe;
@@ -44,12 +40,6 @@ export class ButtonParameters implements iBreakoutParameters{
     **Properties**
     =============================*/
     //getters
-
-    get RelativeScalingXValue(): number
-    { return this._relativeScalingXValue; }
-
-    get RelativeScalingYValue(): number
-    { return this._relativeScalingYValue; }
 
     get Callback(): Function
     { return this._callback; }
@@ -70,12 +60,6 @@ export class ButtonParameters implements iBreakoutParameters{
     { return this._upframe; }
 
     //setters
-
-    set RelativeScalingXValue(val: number)
-    { this._relativeScalingXValue = val; }
-
-    set RelativeScalingYValue(val: number)
-    { this._relativeScalingYValue = val; }
 
     set Callback(val: Function)
     { this._callback = val; }

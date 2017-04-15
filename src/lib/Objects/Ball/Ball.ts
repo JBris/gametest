@@ -1,17 +1,13 @@
 import { iMovable } from '../MovableBehaviour/iMovable';
 import { MediumMovement } from '../MovableBehaviour/MediumMovement';
-import { iScalable } from '../ScalingBehaviour/iScalable';
 import { BallParameters } from './BallParameters';
 
-export abstract class Ball extends Phaser.Sprite implements iScalable {
+export abstract class Ball extends Phaser.Sprite  {
 
     /*=============================
     **Fields**
     =============================*/
 
-    xScaleValue: number;
-    yScaleValue: number;
-    protected z_defaultScale: number;
     protected z_defaultDamage: number;
     protected z_defaultMovementType: iMovable;
 
@@ -24,8 +20,6 @@ export abstract class Ball extends Phaser.Sprite implements iScalable {
     constructor(ballParameters: BallParameters) {
         super(ballParameters.game, ballParameters.x, ballParameters.y, ballParameters.key, ballParameters.frame);
         this.z_params = ballParameters;
-        this.xScaleValue = this.z_params.RelativeScalingXValue;
-        this.yScaleValue = this.z_params.RelativeScalingYValue;
         this.enableAnimations();
         this.initBallPhysics();
     }
@@ -64,30 +58,9 @@ export abstract class Ball extends Phaser.Sprite implements iScalable {
     initDefaultBehaviour() {
         if (this.z_params.Damage === null)
             this.z_params.Damage = this.z_defaultDamage;
-        if (this.xScaleValue === null)
-            this.xScaleValue = this.z_defaultScale;
-        if (this.yScaleValue === null)
-            this.yScaleValue = this.z_defaultScale;
         if (this.z_params.MovementType === null || this.z_params.MovementType === undefined)
             this.z_params.MovementType = this.z_defaultMovementType;
     }
-
-    move(velocityX?: number, velocityY?: number) {
-        this.z_params.MovementType.move(this, velocityX, velocityY);
-    }
-
-    scaleGameElement(game: Phaser.Game) {
-           
-        this.width = game.world.width * this.xScaleValue;
-        this.height = game.world.height * this.yScaleValue;
-    }
-
-    setScale(xScaleValue: number, yScaleValue: number)
-    {
-        this.xScaleValue = xScaleValue;
-        this.yScaleValue = yScaleValue;
-    }
-
 }
 
 

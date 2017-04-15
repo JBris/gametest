@@ -30,7 +30,9 @@ export class Preload extends Phaser.State {
     preload() {
 
         this._loadingSprite = this._game.MegaFactory.ballFactory.createProduct("normal", new BallParameters(this.game, this.game.world.centerX,
-            this.game.world.centerY, 'ball', 0, null, 0, 0.2,0.2,0, 0));
+            this.game.world.centerY, 'ball', 0));
+
+        this._game.GameEngine.scalingManager.scaleGameElements(this.game,[this._loadingSprite],0.2,0.2);
 
         if (this._loadingSprite.animations.getAnimation('sleep') !== undefined && this._loadingSprite.animations.getAnimation('sleep') !== null)
             this._loadingSprite.animations.play('sleep', 24, true);

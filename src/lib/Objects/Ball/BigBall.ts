@@ -15,11 +15,9 @@ export class BigBall extends Ball{
 
     constructor(ballParameters: BallParameters) {
         super(ballParameters);
-        this.z_defaultScale = 0.106;
         this.z_defaultDamage = 2;
         this.z_defaultMovementType = new SlowMovement();
         this.initDefaultBehaviour();
-        this.scaleGameElement(ballParameters.game);
     }
 
     /*=============================

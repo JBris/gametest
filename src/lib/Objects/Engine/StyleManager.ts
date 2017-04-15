@@ -7,8 +7,7 @@ export class StyleManager {
 
     //default styles
     static readonly font: string = "Signika, sans-serif";
-    static readonly fontSizePercentage: string = "200%";
-    static readonly fontSizeEm: string = "1.6em%";
+    static readonly fontSize: string = "200%";
     static readonly fill: string = "#ffffff";
     static readonly textColour: string = "#DEAE36";
     static readonly leftAlign: string = "left";
@@ -51,10 +50,10 @@ export class StyleManager {
     **Methods**
     =============================*/
 
-    positionTextTopLeft(text: string, styles? :any): void
+    positionTextTopLeft(text: string, styles? :any): Phaser.Text
     {
 
-        if (styles !== null || styles !==undefined)
+        if (styles !== null && styles !==undefined)
             this._presentedText = this._game.add.text(0 + this._paddingSize * this._game.world.width, 0 + this._paddingSize * this._game.world.height, text, styles);
         else
         {
@@ -64,12 +63,13 @@ export class StyleManager {
         }
 
         this._presentedText.anchor.set(0, 0);
+        return this._presentedText;
     }
 
-    positionTextTopRight(text: string, styles?: any): void
+    positionTextTopRight(text: string, styles?: any): Phaser.Text
     {
 
-        if (styles !== null || styles !== undefined)
+        if (styles !== null && styles !== undefined)
             this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width, 0 + this._paddingSize * this._game.world.height, text, styles);
         else {
             this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width, 0 + this._paddingSize * this._game.world.height, text, null);
@@ -77,12 +77,14 @@ export class StyleManager {
         }
 
         this._presentedText.anchor.set(1, 0);
+        return this._presentedText;
+
     }
 
-    positionTextBottomLeft(text: string, styles?: any): void
+    positionTextBottomLeft(text: string, styles?: any): Phaser.Text
     {
 
-        if (styles !== null || styles !== undefined)
+        if (styles !== null && styles !== undefined)
             this._presentedText = this._game.add.text(0 + this._paddingSize * this._game.world.width, this._game.world.height - this._paddingSize * this._game.world.height, text, styles);
         else {
             this._presentedText = this._game.add.text(0 + this._paddingSize * this._game.world.width, this._game.world.height - this._paddingSize * this._game.world.height, text, null);
@@ -90,12 +92,14 @@ export class StyleManager {
         }
 
         this._presentedText.anchor.set(0, 1);
+        return this._presentedText;
     }
 
-    positionTextBottomRight(text: string, styles?: any): void {
+    positionTextBottomRight(text: string, styles?: any): Phaser.Text
+    {
 
-        if (styles !== null || styles !== undefined)
-            this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width,
+        if (styles !== null && styles !== undefined)
+            this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width * 2,
                 this._game.world.height - this._paddingSize * this._game.world.height, text, styles);
         else {
             this._presentedText = this._game.add.text(this._game.world.width - this._paddingSize * this._game.world.width,
@@ -105,6 +109,7 @@ export class StyleManager {
         }
 
         this._presentedText.anchor.set(1, 1);
+        return this._presentedText;
     }
 
     styleTextWithDefaults(text :Phaser.Text):void
@@ -112,8 +117,7 @@ export class StyleManager {
         this._presentedText.font = StyleManager.font;
         this._presentedText.fill = StyleManager.fill;
         this._presentedText.addColor(StyleManager.textColour, 0);
-        this._presentedText.fontSize = StyleManager.fontSizePercentage;
-        this._presentedText.fontSize = StyleManager.fontSizeEm;
+        this._presentedText.fontSize = StyleManager.fontSize;
         this._presentedText.addFontStyle(StyleManager.fontStyle, 0);
         this._presentedText.addFontWeight(StyleManager.fontWeight, 0);
         this._presentedText.smoothed = true;

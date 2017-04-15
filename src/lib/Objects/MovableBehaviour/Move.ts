@@ -5,8 +5,11 @@ export abstract class Move implements iMovable {
     /*=============================
     **Fields**
     =============================*/
+    movableSprite: Phaser.Sprite;
     baseVelocityX: number;
     baseVelocityY: number;
+    protected z_defaultVelocityX: number;
+    protected z_defaultVelocityY: number;
 
     /*=============================
     **Constructors**
@@ -23,12 +26,25 @@ export abstract class Move implements iMovable {
     /*=============================
     **Methods**
     =============================*/
+    protected initDefaultVelocities() : void
+    {
+        if (this.baseVelocityX === null || this.baseVelocityX === undefined)
+            this.baseVelocityX = this.z_defaultVelocityX;
 
-    move(obj: Phaser.Sprite, velocityX?: number, velocityY?: number) {
-        this.ballMove(obj, velocityX, velocityY);
+        if (this.baseVelocityY === null || this.baseVelocityY === undefined)
+            this.baseVelocityY = this.z_defaultVelocityY;
     }
 
-    abstract ballMove(obj: Phaser.Sprite, velocityX?: number, velocityY?: number)
+    move(velocityX?: number, velocityY?: number) : void {
+        if (velocityX === null || velocityX === undefined)
+            velocityX = this.baseVelocityX;
+
+        if (velocityY === null || velocityY === undefined)
+            velocityY = this.baseVelocityY;
+
+        this.movableSprite.body.velocity.set(velocityX, velocityY);
+    }
+
 }
 
 

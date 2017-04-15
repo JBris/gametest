@@ -9,8 +9,8 @@ export class Title extends BreakoutLogo {
     **Constructors
     =============================*/
 
-    constructor(game : Phaser.Game, x: number, y : number, key :string , frame? : string | number, xScaleValue?: number, yScaleValue?:number, callback?:Function) {
-        super(game,x,y,key,frame,xScaleValue,yScaleValue);
+    constructor(game : Phaser.Game, x: number, y : number, key :string , frame? : string | number, callback?:Function) {
+        super(game,x,y,key,frame);
     }
 
     /*=============================
