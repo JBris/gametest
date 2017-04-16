@@ -30,10 +30,10 @@ export class NormalBall extends Ball{
     =============================*/
 
     enableAnimations() {
-        this.animations.add('ball-to-paddle', [3, 2, 1, 0], 24);
-        this.animations.add('ball-to-brick', [3, 4, 1, 0], 24);
-        this.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 24);
-        this.animations.add('sleep', [1, 3, 1, 3], 24);
+        this.animations.add('ball-to-paddle', [3, 2, 1, 0], 2);
+        this.animations.add('ball-to-brick', [3, 4, 1, 0], 2);
+        this.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 2);
+        this.animations.add('sleep', [1, 3, 1, 3], 2);
     }
 }
 

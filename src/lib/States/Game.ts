@@ -31,6 +31,7 @@ export class Game extends Phaser.State {
     private _multiplierTextWidth: number;
     private _multiplierTextHeight: number;
     private _levelNumber: number;
+
     //Buttons
     private _playButton: BreakoutButton;
     private _pauseButton: BreakoutButton;
@@ -44,7 +45,6 @@ export class Game extends Phaser.State {
     private _boss: Phaser.Sprite;
     private _livesIcon: Ball;
     private _bricks: Phaser.Group;
-    private _bullets: Phaser.Group;
     private _brickMovement: Phaser.Tween;
 
     //Text
@@ -115,11 +115,11 @@ export class Game extends Phaser.State {
         this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle,null, this);
         this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null, this);
         this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
-        this.game.physics.arcade.collide(this._paddle, this._bullets, this.paddleHitByProjectile, null, this);
 
         if (this._currentlyPlaying) {
             this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
         }
+
     }
 
 
@@ -238,7 +238,15 @@ export class Game extends Phaser.State {
         this.updateScore(10);
         this._ballTouchedPaddle = false;
 
-        brick.kill()
+        let rndNum: number = this.game.rnd.integerInRange(0, 3);
+        if (rndNum === 1) {
+            let enemyProjectile: Phaser.Sprite = this.game.add.sprite(brick.x, brick.y, 'ball');
+            this.game.physics.enable(enemyProjectile, Phaser.Physics.ARCADE);
+            enemyProjectile.body.gravity.y = 80;
+
+        }
+        brick.kill();
+
         if (this._bricks.countLiving() <= 0) {
             this.introduceBoss();
         }
@@ -252,11 +260,11 @@ export class Game extends Phaser.State {
         this.prepareRelaunchGame();        
     }
 
-    paddleHitByProjectile(ball : Ball, bullet: Phaser.Sprite) : void
+   /* paddleHitByProjectile(ball : Ball, bullet: Phaser.Sprite) : void
     {
         this._currentlyPlaying = false;
         this.game.time.events.add(Phaser.Timer.SECOND * 2, this.beginPlaying, this);
-    }
+    }*/
 
 
    //===============================================================================================================//
@@ -286,19 +294,6 @@ export class Game extends Phaser.State {
         this._brickMovement = this.game.add.tween(this._bricks).to({ x: this.game.width * 0.15 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000,true).start();
     }
 
-    loadBullets()
-    {
-        this._bullets = this.game.add.group();
-        this._bullets.enableBody = true;
-        this._bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this._bullets.createMultiple(30, 'bullet');
-        this._bullets.setAll('anchor.x', 0.5);
-        this._bullets.setAll('anchor.y', 1);
-        this._bullets.setAll('outOfBoundsKill', true);
-        this._bullets.setAll('checkWorldBounds', true);
-
-    }
-
     introduceBoss(): void
     {
 
@@ -315,10 +310,9 @@ export class Game extends Phaser.State {
 
     }
 
-    projectileAttack()
-    {
+ 
 
-    }
+
 
     //===============================================================================================================//
     //update UI
@@ -441,7 +435,6 @@ export class Game extends Phaser.State {
         this._boss.body.bounce.set(1);
 
         //projectiles
-        this.loadBullets();
 
         //bricks
         this.loadBricks();
