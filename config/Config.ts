@@ -16,6 +16,7 @@ export abstract class Config {
     protected z_numberOfStages: number;
     protected z_frameSize: number;
     protected z_orientation: number;
+    protected z_playerNewLife: number;
 
     //Default Values
     protected z_defaultWidth: number;
@@ -29,12 +30,13 @@ export abstract class Config {
     protected z_defaultNumberOfStages: number;
     protected z_defaultFrameSize: number;
     protected z_defaultOrientation: number;
+    protected z_defaultPlayerNewLife: number;
 
     /*=============================
     **Constructors**
     =============================*/
     constructor(width?: number, height?: number, renderer?: number, aspect_ratio?: number, transparent?: boolean, antialias?: boolean, 
-        playerNumberOfLives?: number, playerMaximumSettableLives? : number, numberOfStages?: number, defaultFrameSize?: number, orientation?:number)
+        playerNumberOfLives?: number, playerMaximumSettableLives? : number, numberOfStages?: number, defaultFrameSize?: number, orientation?:number, newLife?: number)
     {
         this.z_width = width;
         this.z_height = height;
@@ -47,6 +49,8 @@ export abstract class Config {
         this.z_numberOfStages = numberOfStages;
         this.z_frameSize = defaultFrameSize;
         this.z_orientation = orientation;
+        this.z_playerNewLife = newLife;
+
     }
 
     /*=============================
@@ -102,6 +106,10 @@ export abstract class Config {
         return this.z_orientation;
     }
 
+    get ValueForNewLife(): number {
+        return this.z_playerNewLife;
+    }
+
     //setters
 
     set Width(val: number) {
@@ -148,6 +156,10 @@ export abstract class Config {
         this.z_orientation = val;
     }
 
+    set ValueForNewLife(val: number) {
+        this.z_playerNewLife = val;
+    }
+
     /*=============================
     **Methods**
     =============================*/
@@ -176,6 +188,8 @@ export abstract class Config {
             this.z_frameSize = this.z_defaultFrameSize;
         if (this.z_orientation === null || this.z_orientation === undefined)
             this.z_orientation = this.z_defaultOrientation;
+        if (this.z_playerNewLife === null || this.z_playerNewLife === undefined)
+            this.z_playerNewLife = this.z_defaultPlayerNewLife;
     }
 
 }

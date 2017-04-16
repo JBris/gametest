@@ -24,6 +24,7 @@ export class BreakoutConfig extends Config{
          this.z_defaultNumberOfStages = 3;
          this.z_defaultFrameSize = 64;
          this.z_defaultOrientation = 0;
+         this.z_defaultPlayerNewLife = 2500;
 
          this.setGameDefaults();
     }

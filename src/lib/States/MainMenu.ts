@@ -108,7 +108,8 @@ export class MainMenu extends Phaser.State
         {
             name = prompt("Player, please enter your name:");
         }
-        this._game.PlayerList.addPlayer( new BreakoutPlayer(name, 0, this._game.BreakoutConfig.PlayerNumberOfLives,1) );
+        this._game.PlayerList.addPlayer(new BreakoutPlayer(name, 0, this._game.BreakoutConfig.PlayerNumberOfLives,
+            1,0, this._game.BreakoutConfig.ValueForNewLife));
         this.beginGame(this._game);
     }
 

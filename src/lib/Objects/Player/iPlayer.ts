@@ -7,15 +7,18 @@ export interface iPlayer {
      score: number;
      lives: number;
      level: number;
+     newLifePool?: number;
+     newLifeRequiredValue?: number;
      description?: string;
 
     /*=============================
     **Properties**
     =============================*/
-
+    
     /*=============================
     **Methods**
     =============================*/
+     checkLife(valueToIncreaseLife : number) : boolean;
 }
 
 
