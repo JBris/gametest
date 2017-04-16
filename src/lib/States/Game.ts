@@ -69,6 +69,7 @@ export class Game extends Phaser.State {
     //===============================================================================================================//
 
     preload(): void {
+        this._currentlyPlaying = false;
         let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[levelNumber]);
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
@@ -83,6 +84,10 @@ export class Game extends Phaser.State {
         this._paddlePositionY = this.game.world.height - this.game.world.height * 0.1;
         this._ballPositionX = this.game.world.centerX;
         //can't set ball position y just yet
+
+        this.loadButtons();
+        this.loadText();
+        this.loadSprites();
     }
 
     create(): void {
@@ -91,17 +96,13 @@ export class Game extends Phaser.State {
         this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[levelNumber], 1, true, true);
         this._music.play();
 
-        this.loadButtons();
-        this.loadText();
-        this.loadSprites();
-
         this.game.time.events.add(1000, this._game.BreakoutWorld.styleManager.fadeText, this, this._levelNumberText);
         this.game.time.events.add(1000, this.displayPlayButton, this);
 
     }
 
     update(): void {
-        this.game.physics.arcade.collide(this._ball, this._paddle, this.ballHitPaddle);
+        this.game.physics.arcade.collide(this._ball, this._paddle, this.ballHitPaddle,null, this);
         //this.game.physics.arcade.collide(this._ball, bricks, ballHitBrick);
         if (this._currentlyPlaying) {
             this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
@@ -112,6 +113,9 @@ export class Game extends Phaser.State {
     // Game actions
     //===============================================================================================================//
 
+    //===============================================================================================================//
+    //start game
+    //===============================================================================================================//
 
     displayPlayButton(): void {
         //start
@@ -124,21 +128,20 @@ export class Game extends Phaser.State {
 
     startGame(): void {
         this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0, 0, 500, true);
-        this._ball.Params.MovementType.move();
+        this._ball.MovementType.move();
         this.game.physics.arcade.checkCollision.down = false;
         this._ball.events.onOutOfBounds.add(this.ballLeaveScreen, this);
         this._currentlyPlaying = true;
         this._playButton.destroy();
     }
 
-    ballHitPaddle(): void {
-        if ("vibrate" in window.navigator) {
-            window.navigator.vibrate([100, ,]);
-        }
-    }
+    //===============================================================================================================//
+    //lose game
+    //===============================================================================================================//
 
     ballLeaveScreen(): void {
-        this._ball.Params.MovementType.move(0, 0);
+        this._currentlyPlaying = false;
+        this._ball.MovementType.move(0, 0);
         this._game.PlayerList.MyPlayerList[0].lives -= 1;
         this._livesText.setText(String(this._game.PlayerList.MyPlayerList[0].lives) + " X", null);
         this._game.BreakoutWorld.styleManager.damageFlash(2000);
@@ -146,8 +149,7 @@ export class Game extends Phaser.State {
         this._paddle.reset(this._paddlePositionX, this._paddlePositionY);
 
         if (this._game.PlayerList.MyPlayerList[0].lives > 0) {
-            this.relaunchGame();
-           // this.displayPlayButton();
+            this.displayPlayButton();
         } else {
             this.setUpGameOver();
         }
@@ -163,19 +165,21 @@ export class Game extends Phaser.State {
         laugh.play();
     }
 
-    launchMainMenu() : void {
+    launchMainMenu(): void {
         this.game.state.start("MainMenu", true, false, this._game);
     }
 
-    prepareRelaunchGame() : void
-    {
+    //===============================================================================================================//
+    //game loop
+    //===============================================================================================================//
+
+    prepareRelaunchGame(): void {
         this._music.fadeOut(4000);
         this.camera.fade(0x000000, 1000);
         this.camera.onFadeComplete.addOnce(this.relaunchGame, this);
     }
 
-    relaunchGame(): void
-    {
+    relaunchGame(): void {
         this._background.destroy();
         this._music.destroy();
 
@@ -187,6 +191,23 @@ export class Game extends Phaser.State {
 
         this.game.state.start("Game", true, false, this._game);
     }
+
+   //===============================================================================================================//
+   //collisions
+   //===============================================================================================================//
+
+    ballHitPaddle(): void {
+        if ("vibrate" in window.navigator) {
+            window.navigator.vibrate([100, ,]);
+        }
+        if (this._currentlyPlaying) this._ball.collide("paddle");
+    }
+
+
+
+
+
+
 
 
     //===============================================================================================================//
@@ -236,6 +257,7 @@ export class Game extends Phaser.State {
         this._paddle.anchor.set(0.5, 0.5);
         this.game.physics.enable(this._paddle, Phaser.Physics.ARCADE);
         this._paddle.body.immovable = true;
+        this._paddle.body.setSize(this._paddle.body.width, this._paddle.body.height/4);
 
         this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;
 

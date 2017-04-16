@@ -1,8 +1,9 @@
 import { iMovable } from '../MovableBehaviour/iMovable';
 import { MediumMovement } from '../MovableBehaviour/MediumMovement';
 import { BallParameters } from './BallParameters';
+import { iCollidable } from '../CollidableBehaviour/iCollidable';
 
-export abstract class Ball extends Phaser.Sprite  {
+export abstract class Ball extends Phaser.Sprite implements iCollidable  {
 
     /*=============================
     **Fields**
@@ -10,8 +11,8 @@ export abstract class Ball extends Phaser.Sprite  {
 
     protected z_defaultDamage: number;
     protected z_defaultMovementType: iMovable;
-
-    protected z_params: BallParameters;
+    protected z_movementType: iMovable;
+    protected z_attackPower: number;
 
     /*=============================
     **Constructors
@@ -19,7 +20,8 @@ export abstract class Ball extends Phaser.Sprite  {
 
     constructor(ballParameters: BallParameters) {
         super(ballParameters.game, ballParameters.x, ballParameters.y, ballParameters.key, ballParameters.frame);
-        this.z_params = ballParameters;
+        this.z_movementType = ballParameters.MovementType;
+        this.z_attackPower = ballParameters.Damage;
         this.enableAnimations();
         this.initBallPhysics();
     }
@@ -27,13 +29,22 @@ export abstract class Ball extends Phaser.Sprite  {
     /*=============================
     **Properties**
     =============================*/
-    //getters
 
-    //readonly
-    get Params(): BallParameters
-    { return this.z_params; }
+    //getters
+    get MovementType(): iMovable
+    { return this.z_movementType; }
+
+    get Damage(): number
+    { return this.z_attackPower; }
 
     //setters
+
+    set MovementType(val: iMovable)
+    { this.z_movementType = val; }
+
+    set Damage(val: number)
+    { this.z_attackPower = val; }
+
 
     /*=============================
     **Methods**
@@ -45,21 +56,35 @@ export abstract class Ball extends Phaser.Sprite  {
         this.body.collideWorldBounds = true;
         this.body.bounce.set(1);
         this.checkWorldBounds = true;
+        this.body.setSize(this.body.width, this.body.height / 4);
+
     }
 
     setMovementType(movementType?: iMovable) {
         if (movementType === null || movementType === undefined)
             movementType = new MediumMovement();
-        this.z_params.MovementType = movementType;
+        this.z_movementType = movementType;
     }
 
     abstract enableAnimations(): void;
 
     initDefaultBehaviour() {
-        if (this.z_params.Damage === null)
-            this.z_params.Damage = this.z_defaultDamage;
-        if (this.z_params.MovementType === null || this.z_params.MovementType === undefined)
-            this.z_params.MovementType = this.z_defaultMovementType;
+        if (this.z_attackPower === null || this.z_attackPower === undefined)
+            this.z_attackPower = this.z_defaultDamage;
+        if (this.z_movementType === null || this.z_movementType === undefined)
+            this.z_movementType = this.z_defaultMovementType;
+    }
+
+    collide(collidedWith: string)
+    {
+        if (collidedWith == "paddle")
+        {
+            if (this.animations.getAnimation('ball-to-paddle') !== undefined && this.animations.getAnimation('ball-to-paddle') !== null)
+            {
+                this.animations.play('ball-to-paddle');
+            }
+            if (this.game.cache.checkSoundKey('ball-to-paddle')) this.game.sound.play('ball-to-paddle');
+        }
     }
 }
 

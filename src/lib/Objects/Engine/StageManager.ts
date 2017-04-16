@@ -5,6 +5,7 @@ export class StageManager
     =============================*/
     private _musicList: Array<string>;
     private _backgroundList: Array<string>;
+    private _bossList: Array<string>;
     private _currentStage: number;
     /*=============================
     **Constructors**
@@ -13,6 +14,8 @@ export class StageManager
     {
         this._musicList = new Array<string>();
         this._backgroundList = new Array<string>();
+        this._bossList = new Array<string>();
+        this._bossList.push('skullface');
         this._currentStage = 0;
     }
     /*=============================
@@ -25,6 +28,9 @@ export class StageManager
     get BackgroundList(): Array<string>
     { return this._backgroundList; }
 
+    get BossList(): Array<string>
+    { return this._bossList; }
+
     get CurrentStage(): number
     { return this._currentStage; }
 
@@ -35,6 +41,9 @@ export class StageManager
 
     set BackgroundList(val: Array<string>) 
     { this._backgroundList = val; }
+
+    set BossList(val: Array<string>)
+    { this._bossList = val; }
 
     set CurrentStage(val: number)
     { this._currentStage = val; }

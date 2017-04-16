@@ -28,6 +28,12 @@ export class AssetLoader {
         this._game.load.spritesheet(name, AssetRouter.spriteRoute + name +"."+ fileType, frameWidth, frameHeight);
     }
 
+    loadBossSpriteSheet(name: string, fileType: string, frameWidth: number, frameHeight: number) {
+        this._game.load.spritesheet(name, AssetRouter.spriteRoute + name + "." + fileType, frameWidth, frameHeight);
+        this._stageManager.BossList.push(name);
+
+    }
+
     loadLogos(name: string, fileType: string, frameWidth: number, frameHeight: number) {
         this._game.load.spritesheet(name, AssetRouter.logoRoute + name + "." + fileType, frameWidth, frameHeight);
     }

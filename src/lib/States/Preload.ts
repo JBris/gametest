@@ -73,9 +73,13 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('gold-brick', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('green-brick', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('paddle', 'png', 64, 64);
-        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('shadow', 'png', 64, 64);
-        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('skullface', 'png', 64, 64);;
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('teal-brick', 'png', 64, 64);
+
+        //bosses
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('skullface', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('eye', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('shadow', 'png', 64, 64);
+
     }
 
     loadLogos(): void 
