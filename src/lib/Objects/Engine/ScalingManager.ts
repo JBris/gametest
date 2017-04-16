@@ -27,7 +27,6 @@ export class ScalingManager extends Phaser.ScaleManager{
         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
-        this.game.scale.onSizeChange.add(this.scaleGameScreen);
         this.game.scale.refresh();
     }
 
@@ -79,6 +78,7 @@ export class ScalingManager extends Phaser.ScaleManager{
             growth.start();   
         }
     }
+
 }
 
 

@@ -31,6 +31,8 @@ export class Game extends Phaser.State {
     private _multiplierTextWidth: number;
     private _multiplierTextHeight: number;
     private _levelNumber: number;
+    private _bulletTime = 0;
+    private _firingTimer = 0;
 
     //Buttons
     private _playButton: BreakoutButton;
@@ -46,7 +48,8 @@ export class Game extends Phaser.State {
     private _livesIcon: Ball;
     private _bricks: Phaser.Group;
     private _brickMovement: Phaser.Tween;
-
+    private _projectiles: Phaser.Group;
+    private _projectile: Phaser.Sprite;
     //Text
     private _levelNumberText: Phaser.Text;
     private _scoreText: Phaser.Text;
@@ -77,6 +80,7 @@ export class Game extends Phaser.State {
     //===============================================================================================================//
 
     preload(): void {
+
         this._currentlyPlaying = false;
         this._ballTouchedPaddle = true;
         this._levelNumber = this._game.BreakoutWorld.stageManager.CurrentStage;
@@ -115,9 +119,15 @@ export class Game extends Phaser.State {
         this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle,null, this);
         this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null, this);
         this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
+        this.game.physics.arcade.collide(this._paddle, this._projectiles, this.projectileCollidesPaddle, null, this);
 
         if (this._currentlyPlaying) {
             this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
+
+            if (this.game.time.now > this._firingTimer) {
+                this.enemyFires();
+            }
+
         }
 
     }
@@ -260,11 +270,12 @@ export class Game extends Phaser.State {
         this.prepareRelaunchGame();        
     }
 
-   /* paddleHitByProjectile(ball : Ball, bullet: Phaser.Sprite) : void
+    projectileCollidesPaddle(paddle : Phaser.Sprite, bullet: Phaser.Sprite) : void
     {
+        bullet.kill();
         this._currentlyPlaying = false;
         this.game.time.events.add(Phaser.Timer.SECOND * 2, this.beginPlaying, this);
-    }*/
+    }
 
 
    //===============================================================================================================//
@@ -286,6 +297,9 @@ export class Game extends Phaser.State {
                 this._brick = this._bricks.create(xPosition, yPosition, 'blue-brick');
                 this._brick.body.bounce.set(1);
                 this._brick.body.immovable = true;
+                this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._brick],0.08,0.08);
+                let float = this._brick.animations.add('float', [0, 1, 0, 1, 0, 1, 0, 1], 2,true);
+                float.play();
                 xPosition = this._brick.x + this.game.world.width * 0.1;
             }
             yPosition = this._brick.y + this.game.world.height * 0.1;
@@ -294,9 +308,51 @@ export class Game extends Phaser.State {
         this._brickMovement = this.game.add.tween(this._bricks).to({ x: this.game.width * 0.15 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000,true).start();
     }
 
+    loadProjectiles()
+    {
+        // The enemy's bullets
+        this._projectiles = this.game.add.group();
+        this._projectiles.enableBody = true;
+        this._projectiles.physicsBodyType = Phaser.Physics.ARCADE;
+        this._projectiles.createMultiple(30, 'ball', 0);
+        this._projectiles.visible = true;
+        this._projectiles.setAll('anchor.x', 0.5);
+        this._projectiles.setAll('anchor.y', 1);
+  //      this._projectiles.setAll('outOfBoundsKill', true);
+    //    this._projectiles.setAll('checkWorldBounds', true);
+
+    }
+
+    enemyFires()
+    {
+        this._projectile = this._projectiles.getFirstExists(true, true);
+
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._projectile], 0.08, 0.08);
+
+        let livingEnemies: Array<Phaser.Sprite> = new Array<Phaser.Sprite>();
+
+        this._bricks.forEachAlive(function (projectile) {
+            livingEnemies.push(projectile);
+        }, this, this._projectile);
+
+        if (livingEnemies.length > 0) {
+            let random : number = this.game.rnd.integerInRange(0, livingEnemies.length - 1);
+
+            // randomly select one of them
+            let shooter :Phaser.Sprite = livingEnemies[random];
+            // And fire the bullet from this enemy
+            this._projectile.reset(shooter.body.x, shooter.body.y);
+            this._projectile.visible = true;
+            console.log(this._projectile);
+            this.game.physics.arcade.moveToObject(this._projectile , this._paddle, 120);
+            this._firingTimer = this.game.time.now + 2000;
+        }
+
+    }
+
     introduceBoss(): void
     {
-
+        //boss.Speak();
         //this.game.sound.play(this._game.BreakoutWorld.stageManager.BossSoundList[this._levelNumber - 1], 1, false);
         let moveDown : Phaser.Tween = this.game.add.tween(this._boss).to({ y: 0 + 0.25 * this.game.world.height }, 3000, Phaser.Easing.Linear.None);
         let moveBackAndForth: Phaser.Tween = this.game.add.tween(this._boss).to({ x: this.game.width * 0.9 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
@@ -307,11 +363,10 @@ export class Game extends Phaser.State {
         this._bossText.addColor("#19cb65", 0);
         this._bossText.fontSize = "300%";
         this._game.BreakoutWorld.styleManager.fadeText(this._bossText, 3000);
+        this._boss.animations.add("float", [0,0,0,, 1, 1, ,1], 1, true).play();
+
 
     }
-
- 
-
 
 
     //===============================================================================================================//
@@ -435,6 +490,7 @@ export class Game extends Phaser.State {
         this._boss.body.bounce.set(1);
 
         //projectiles
+        this.loadProjectiles();
 
         //bricks
         this.loadBricks();

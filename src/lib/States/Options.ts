@@ -16,15 +16,18 @@ export class Options extends Phaser.State
 
     private _backButton: BreakoutButton;
 
-    //Orientation
-    private _orientationText: Phaser.Text;
-    private _portraitOption: Phaser.Text;
-    private _landscapeOption: Phaser.Text;
-
     //Lives
     private _playerStartLives: Phaser.Text;
     private _playerDecrementLives: Phaser.Text;
     private _playerIncrementLives: Phaser.Text;
+
+    //New Lives Ceiling
+    private _playerNewLivesCeiling: Phaser.Text;
+    private _playerDecrementNewLives: Phaser.Text;
+    private _playerIncrementNewLives: Phaser.Text;
+
+    //Refresh Screen
+    private _refreshScreenText: Phaser.Text;
 
     /*=============================
     **Constructors
@@ -71,16 +74,12 @@ export class Options extends Phaser.State
         //Lives
         this.setLivesText();
 
-        //Orientation
-        this.setOrientationText();
-    }
+        //NewLivesCeiling
+        this.setNewLivesCeilingText();
 
-    setOrientationLandscape(): void {
-        //
-    }
+        //refreshScreen
+        this.setRefreshScreenText();
 
-    setOrientationPortrait(orientation: string): void {
-        //
     }
 
 
@@ -97,6 +96,23 @@ export class Options extends Phaser.State
         if (this._game.BreakoutConfig.PlayerNumberOfLives > this._game.BreakoutConfig.PlayerMaximumSettableNumberOfLives)
             this._game.BreakoutConfig.PlayerNumberOfLives = this._game.BreakoutConfig.PlayerMaximumSettableNumberOfLives;
         this._playerStartLives.setText("Lives " + this._game.BreakoutConfig.PlayerNumberOfLives, null);
+    }
+
+    decreaseNewLivesCeiling(): void {
+        this._game.BreakoutConfig.ValueForNewLife -= 100;
+        if (this._game.BreakoutConfig.ValueForNewLife < 1000) this._game.BreakoutConfig.ValueForNewLife = 1000;
+        this._playerNewLivesCeiling.setText("Points for Life " + this._game.BreakoutConfig.ValueForNewLife, null);
+    }
+
+    IncreaseNewLivesCeiling(): void {
+        this._game.BreakoutConfig.ValueForNewLife += 100;
+        if (this._game.BreakoutConfig.ValueForNewLife > 30000) this._game.BreakoutConfig.ValueForNewLife = 30000;
+        this._playerNewLivesCeiling.setText("Points for Life " + this._game.BreakoutConfig.ValueForNewLife, null);
+    }
+
+    refreshScreen(): void {
+        this._game.BreakoutWorld.scalingManager.scaleGameScreen();
+
     }
 
     launchMainMenu() :void {
@@ -116,12 +132,12 @@ export class Options extends Phaser.State
         this._playerStartLives.x = 0 + 0.2 * this.game.world.width;
         this._playerStartLives.y = 0 + 0.1 * this.game.world.height;
 
-        this._playerDecrementLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
+        this._playerDecrementNewLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             "<", null);
-        this._playerDecrementLives.inputEnabled = true;
-        this._playerDecrementLives.events.onInputUp.add(this.decreaseLives, this, null);
-        this._playerDecrementLives.x = this._playerStartLives.x - 0.5 * this._playerStartLives.width;
-        this._playerDecrementLives.y = 0 + 0.1 * this.game.world.height;
+        this._playerDecrementNewLives.inputEnabled = true;
+        this._playerDecrementNewLives.events.onInputUp.add(this.decreaseLives, this, null);
+        this._playerDecrementNewLives.x = this._playerStartLives.x - 0.5 * this._playerStartLives.width;
+        this._playerDecrementNewLives.y = 0 + 0.1 * this.game.world.height;
 
         this._playerIncrementLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             ">", null);
@@ -131,27 +147,36 @@ export class Options extends Phaser.State
         this._playerIncrementLives.y = 0 + 0.1 * this.game.world.height;
     }
 
-    setOrientationText(): void
+    setNewLivesCeilingText(): void
     {
-        this._orientationText = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
-            "Orientation: ");
-        this._orientationText.x = 0 + 0.2 * this.game.world.width;
-        this._orientationText.y = 0 + 0.2 * this.game.world.height;
+        this._playerNewLivesCeiling = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
+            "Points for Life " + this._game.BreakoutConfig.ValueForNewLife, null);
+        this._playerNewLivesCeiling.x = 0 + 0.2 * this.game.world.width;
+        this._playerNewLivesCeiling.y = 0 + 0.2 * this.game.world.height;
 
-        this._portraitOption = this._game.BreakoutWorld.styleManager.positionTextTopRight(
-            "PORTRAIT", null);
-        this._portraitOption.inputEnabled = true;
-        this._portraitOption.events.onInputUp.add(this.setOrientationPortrait, this, null, );
-        this._portraitOption.x = this._orientationText.x + this._orientationText.width * 2;
-        this._portraitOption.y = 0 + 0.2 * this.game.world.height;
+        this._playerDecrementLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
+            "<", null);
+        this._playerDecrementLives.inputEnabled = true;
+        this._playerDecrementLives.events.onInputUp.add(this.decreaseNewLivesCeiling, this, null);
+        this._playerDecrementLives.x = this._playerNewLivesCeiling.x - 0.2 * this._playerNewLivesCeiling.width;
+        this._playerDecrementLives.y = 0 + 0.2 * this.game.world.height;
 
-        this._landscapeOption = this._game.BreakoutWorld.styleManager.positionTextTopRight(
-            "LANDSCAPE", null);
-        this._landscapeOption.inputEnabled = true;
-        this._landscapeOption.events.onInputUp.add(this.setOrientationLandscape, this, null);
-        this._landscapeOption.x = this._portraitOption.x + this._portraitOption.width * 1.5;
-        this._landscapeOption.y = 0 + 0.2 * this.game.world.height;
+        this._playerIncrementNewLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
+            ">", null);
+        this._playerIncrementNewLives.inputEnabled = true;
+        this._playerIncrementNewLives.events.onInputUp.add(this.IncreaseNewLivesCeiling, this, null);
+        this._playerIncrementNewLives.x = this._playerNewLivesCeiling.x + 1.2 * this._playerNewLivesCeiling.width;
+        this._playerIncrementNewLives.y = 0 + 0.2 * this.game.world.height;
+    }
 
+    setRefreshScreenText(): void
+    {
+        this._refreshScreenText = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
+            "Refresh Screen", null);
+        this._refreshScreenText.inputEnabled = true;
+        this._refreshScreenText.events.onInputUp.add(this.refreshScreen, this, null);
+        this._refreshScreenText.x = 0 + 0.2 * this.game.world.width;
+        this._refreshScreenText.y = 0 + 0.3 * this.game.world.height;
     }
 
 }
