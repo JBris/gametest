@@ -386,6 +386,8 @@ export class Game extends Phaser.State {
         this._boss.body.immovable = true;
         this._boss.body.bounce.set(1);
 
+        //bullets
+
         this.loadBricks();
     }
 
