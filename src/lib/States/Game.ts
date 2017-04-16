@@ -39,6 +39,7 @@ export class Game extends Phaser.State {
     private _paddle: Phaser.Sprite;
     private _brickInfo: Object;
     private _bricks: Phaser.Group;
+    private _brick: Phaser.Sprite;
     private _livesIcon: Ball;
 
     //Text
@@ -102,16 +103,13 @@ export class Game extends Phaser.State {
     }
 
     update(): void {
-        this.game.physics.arcade.collide(this._ball, this._paddle, this.ballHitPaddle,null, this);
-        //this.game.physics.arcade.collide(this._ball, bricks, ballHitBrick);
+        this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle,null, this);
+        this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null,this);
         if (this._currentlyPlaying) {
             this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
         }
     }
 
-    //===============================================================================================================//
-    // Game actions
-    //===============================================================================================================//
 
     //===============================================================================================================//
     //start game
@@ -141,10 +139,17 @@ export class Game extends Phaser.State {
 
     ballLeaveScreen(): void {
         this._currentlyPlaying = false;
-        this._ball.MovementType.move(0, 0);
+
+        //lives
         this._game.PlayerList.MyPlayerList[0].lives -= 1;
         this._livesText.setText(String(this._game.PlayerList.MyPlayerList[0].lives) + " X", null);
+
+        //visuals
         this._game.BreakoutWorld.styleManager.damageFlash(2000);
+        this._livesIcon.animations.play('hurt');
+
+        //movement
+        this._ball.MovementType.move(0, 0);
         this._ball.reset(this._ballPositionX, this._ballPositionY);
         this._paddle.reset(this._paddlePositionX, this._paddlePositionY);
 
@@ -174,6 +179,7 @@ export class Game extends Phaser.State {
     //===============================================================================================================//
 
     prepareRelaunchGame(): void {
+        this.game.physics.arcade.checkCollision.down = true;
         this._music.fadeOut(4000);
         this.camera.fade(0x000000, 1000);
         this.camera.onFadeComplete.addOnce(this.relaunchGame, this);
@@ -196,19 +202,44 @@ export class Game extends Phaser.State {
    //collisions
    //===============================================================================================================//
 
-    ballHitPaddle(): void {
-        if ("vibrate" in window.navigator) {
-            window.navigator.vibrate([100, ,]);
-        }
-        if (this._currentlyPlaying) this._ball.collide("paddle");
+    ballCollidePaddle(): void {
+        if ("vibrate" in window.navigator) {window.navigator.vibrate([100]);}
+        if (this._currentlyPlaying) this._ball.collide("paddle", 0, this._paddle.x);
+    }
+
+    ballCollideBrick(ball: Ball, brick : Phaser.Sprite)
+    {
+        if ("vibrate" in window.navigator) { window.navigator.vibrate([100]); }
+        ball.collide("brick");
+        brick.kill()
+        if (this._bricks.countLiving() <= 0) this.prepareRelaunchGame();
     }
 
 
+   //===============================================================================================================//
+   //enemy behaviour
+   //===============================================================================================================//
 
+    loadBricks() :void
+    {
 
+        this._bricks = this.game.add.group();
+        this._bricks.enableBody = true;
+        this._bricks.physicsBodyType = Phaser.Physics.ARCADE;
 
+        let yPosition: number = 0 + this.game.world.height * 0.1;
 
-
+        for (let rows: number = 0; rows < 4; rows++) {
+            let xPosition: number = 0 + this.game.world.width * 0.1;
+            for (let columns: number = 0; columns < 8; columns++) {
+                this._brick = this._bricks.create(xPosition, yPosition, 'blue-brick');
+                this._brick.body.bounce.set(1);
+                this._brick.body.immovable = true;
+                xPosition = this._brick.x + this.game.world.width * 0.1;
+            }
+            yPosition = this._brick.y + this.game.world.height * 0.1;
+        }
+    }
 
     //===============================================================================================================//
     //Loading resources...
@@ -248,8 +279,9 @@ export class Game extends Phaser.State {
 
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._livesIcon], 0.08, 0.08);
 
-        this._livesIcon.anchor.set(0, 0.4);
-        this._livesIcon.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 24);
+        this._livesIcon.anchor.set(0, 0.6);
+        this._livesIcon.enableAnimations();
+        this._livesIcon.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
         this._livesIcon.alpha = 0.35;
 
         this._paddle = this.game.add.sprite(this._paddlePositionX, this._paddlePositionY, 'paddle', 0);
@@ -257,7 +289,7 @@ export class Game extends Phaser.State {
         this._paddle.anchor.set(0.5, 0.5);
         this.game.physics.enable(this._paddle, Phaser.Physics.ARCADE);
         this._paddle.body.immovable = true;
-        this._paddle.body.setSize(this._paddle.body.width, this._paddle.body.height/4);
+        this._paddle.body.setSize(this._paddle.body.width * 0.8, this._paddle.body.height/4);
 
         this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;
 
@@ -265,6 +297,8 @@ export class Game extends Phaser.State {
             this._ballPositionY, 'ball', 0, new MediumMovement(-100, -350), 1));
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
         this._ball.anchor.set(0.5, 0.5);
+
+        this.loadBricks();
     }
 
 }

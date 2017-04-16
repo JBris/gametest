@@ -3,5 +3,5 @@ export interface iCollidable
     /*=============================
     **Fields**
     =============================*/
-    collide(collidedWith: string);
+    collide(collidedWith: string, damageReceived?: number, newDirectionSeed?: number)
 }

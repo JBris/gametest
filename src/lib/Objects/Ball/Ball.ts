@@ -75,7 +75,7 @@ export abstract class Ball extends Phaser.Sprite implements iCollidable  {
             this.z_movementType = this.z_defaultMovementType;
     }
 
-    collide(collidedWith: string)
+    collide(collidedWith: string, damageReceived? : number, newDirectionSeed?:number)
     {
         if (collidedWith == "paddle")
         {
@@ -84,6 +84,33 @@ export abstract class Ball extends Phaser.Sprite implements iCollidable  {
                 this.animations.play('ball-to-paddle');
             }
             if (this.game.cache.checkSoundKey('ball-to-paddle')) this.game.sound.play('ball-to-paddle');
+            this.calculateDirection(newDirectionSeed);
+        }
+
+        if (collidedWith == "brick") {
+            if (this.animations.getAnimation('ball-to-brick') !== undefined && this.animations.getAnimation('ball-to-brick') !== null) {
+                this.animations.play('ball-to-brick');
+            }
+            if (this.game.cache.checkSoundKey('ball-to-brick')) this.game.sound.play('ball-to-paddle');
+        }
+    }
+
+    private calculateDirection(newDirectionSeed: number) {
+        let diff: number = 0;
+
+        if (this.x < newDirectionSeed) {
+            //  left side
+            diff = newDirectionSeed - this.x;
+            this.body.velocity.x = (-5 * diff);
+        }
+        else if (this.x > newDirectionSeed) {
+            //  right side
+            diff = this.x - newDirectionSeed;
+            this.body.velocity.x = (5 * diff);
+        }
+        else {
+            //random
+            this.body.velocity.x = 1 + Math.random() * 5;
         }
     }
 }
