@@ -3,6 +3,7 @@ import { AssetLoader } from './AssetLoader';
 import { ScalingManager } from './ScalingManager';
 import { StyleManager } from './StyleManager';
 import { StageManager } from './StageManager';
+import { ScoreCalculator } from './ScoreCalculator';
 
 export interface iGameEngine {
 
@@ -15,6 +16,7 @@ export interface iGameEngine {
     scalingManager: ScalingManager;
     styleManager: StyleManager;
     stageManager: StageManager;
+    scoreCalculator: ScoreCalculator;
     /*=============================
     **Properties**
     =============================*/

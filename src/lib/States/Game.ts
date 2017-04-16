@@ -21,13 +21,15 @@ export class Game extends Phaser.State {
     private _background: Phaser.Image;
     private _music: Phaser.Sound;
     private _currentlyPlaying: boolean;
+    private _ballTouchedPaddle : boolean;
 
     //Numbers
-    private _scoreMultiplyer: number;
     private _paddlePositionX: number;
     private _paddlePositionY: number;
     private _ballPositionX: number;
     private _ballPositionY: number;
+    private _multiplierTextWidth: number;
+    private _multiplierTextHeight: number;
 
     //Buttons
     private _playButton: BreakoutButton;
@@ -40,13 +42,16 @@ export class Game extends Phaser.State {
     private _brickInfo: Object;
     private _bricks: Phaser.Group;
     private _brick: Phaser.Sprite;
+    private _boss: Phaser.Sprite;
     private _livesIcon: Ball;
 
     //Text
     private _levelNumberText: Phaser.Text;
     private _scoreText: Phaser.Text;
     private _livesText: Phaser.Text;
-    private _multiplyerText: Phaser.Text;
+    private _multiplierText: Phaser.Text;
+    private _commentText: Phaser.Text;
+    private _bossText: Phaser.Text;
 
     /*=============================
     **Constructors
@@ -71,6 +76,7 @@ export class Game extends Phaser.State {
 
     preload(): void {
         this._currentlyPlaying = false;
+        this._ballTouchedPaddle = true;
         let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[levelNumber]);
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
@@ -79,7 +85,6 @@ export class Game extends Phaser.State {
         this.camera.onFadeComplete.forget();
         this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleGameScreen, this);
         this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground, this);
-        this._scoreMultiplyer = 1;
 
         this._paddlePositionX = this.game.world.centerX;
         this._paddlePositionY = this.game.world.height - this.game.world.height * 0.1;
@@ -104,7 +109,9 @@ export class Game extends Phaser.State {
 
     update(): void {
         this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle,null, this);
-        this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null,this);
+        this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null, this);
+        this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
+
         if (this._currentlyPlaying) {
             this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
         }
@@ -203,16 +210,35 @@ export class Game extends Phaser.State {
    //===============================================================================================================//
 
     ballCollidePaddle(): void {
-        if ("vibrate" in window.navigator) {window.navigator.vibrate([100]);}
+        if ("vibrate" in window.navigator) { window.navigator.vibrate([100]); }
+        this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier = 1;
+        this._multiplierText.setText("X " + String(this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier));
+        this._ballTouchedPaddle = true;
         if (this._currentlyPlaying) this._ball.collide("paddle", 0, this._paddle.x);
     }
 
-    ballCollideBrick(ball: Ball, brick : Phaser.Sprite)
+
+    ballCollideBrick(ball: Ball, brick: Phaser.Sprite): void
     {
-        if ("vibrate" in window.navigator) { window.navigator.vibrate([100]); }
+        brick.physicsEnabled = false;
+        if ("vibrate" in window.navigator) window.navigator.vibrate([100]); 
         ball.collide("brick");
+
+        this.updateScore(10);
+        this._ballTouchedPaddle = false;
+
         brick.kill()
-        if (this._bricks.countLiving() <= 0) this.prepareRelaunchGame();
+        if (this._bricks.countLiving() <= 0) {
+            this.introduceBoss();
+        }
+    }
+
+    ballCollideBoss(ball: Ball, boss: Phaser.Sprite): void {
+        boss.physicsEnabled = false;
+        if ("vibrate" in window.navigator) { window.navigator.vibrate([100]); }
+        ball.collide("boss");
+        boss.kill();
+        this.prepareRelaunchGame();        
     }
 
 
@@ -241,6 +267,52 @@ export class Game extends Phaser.State {
         }
     }
 
+    introduceBoss(): void
+    {
+        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
+        //this.game.sound.play(this._game.BreakoutWorld.stageManager.BossSoundList[levelNumber - 1], 1, false);
+        this.game.add.tween(this._boss).to({ y: 0 + 0.25 * this.game.world.height }, 3000, Phaser.Easing.Linear.None, true);
+        this._bossText = this._game.BreakoutWorld.styleManager.positionTextCenter("Ho Ho Ho! Another Challenger?");
+        this._bossText.addColor("#19cb65", 0);
+        this._bossText.fontSize = "300%";
+        this._game.BreakoutWorld.styleManager.fadeText(this._bossText,3000);
+    }
+
+    //===============================================================================================================//
+    //update UI
+    //===============================================================================================================//
+
+    updateScore(baseScore : number)
+    {
+        //score
+        this._game.PlayerList.MyPlayerList[0].score +=
+            this._game.BreakoutWorld.scoreCalculator.calculatePoints(this._ballTouchedPaddle, baseScore);
+        this._scoreText.setText(String(this._game.PlayerList.MyPlayerList[0].score));
+
+        //Multiplier
+        this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier++;
+        this._multiplierText.setText("X " + String(this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier));
+
+        this._game.BreakoutWorld.scalingManager.expandAndShrinkElement(this._multiplierText, this._multiplierTextWidth * 1.5,
+            this._multiplierTextHeight * 1.5, this._multiplierTextWidth, this._multiplierTextHeight);
+
+        //Multiplier comments
+        this.multiplierComments();
+    }
+
+    multiplierComments()
+    {
+        let multiplierComment: string = this._game.BreakoutWorld.scoreCalculator.makeMultiplierComment();
+        if (multiplierComment !== "") {
+            this._commentText = this._game.BreakoutWorld.styleManager.positionTextCenter(multiplierComment);
+            this._commentText.addColor("#F20000", 0);
+            this._commentText.fontSize = "400%";
+            this._commentText.anchor.set(0.5, 0.5);
+            this._game.BreakoutWorld.styleManager.fadeText(this._commentText, 1000);
+        }
+    }
+
+
     //===============================================================================================================//
     //Loading resources...
     //===============================================================================================================//
@@ -250,7 +322,10 @@ export class Game extends Phaser.State {
         //text
         this._scoreText = this._game.BreakoutWorld.styleManager.positionTextTopLeft(String(this._game.PlayerList.MyPlayerList[0].score), null);
         this._livesText = this._game.BreakoutWorld.styleManager.positionTextBottomLeft(String(this._game.PlayerList.MyPlayerList[0].lives) + " X", null);
-        this._multiplyerText = this._game.BreakoutWorld.styleManager.positionTextBottomRight("X " + String(this._scoreMultiplyer), null);
+        this._multiplierText = this._game.BreakoutWorld.styleManager.positionTextBottomRight(
+            "X " + String(this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier), null);
+        this._multiplierTextWidth = this._multiplierText.width;
+        this._multiplierTextHeight = this._multiplierText.height;
         this._levelNumberText = this._game.BreakoutWorld.styleManager.positionTextCenter(
             "Stage: " + String(this._game.PlayerList.MyPlayerList[0].level), null);
         this._levelNumberText.fontSize = "500%";
@@ -273,17 +348,21 @@ export class Game extends Phaser.State {
 
     loadSprites(): void
     {
+        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
+
         //sprites
         this._livesIcon = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._livesText.x + this._livesText.width,
             this._livesText.y, 'paddle', 0, null, 0));
 
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._livesIcon], 0.08, 0.08);
 
+        //lives icon
         this._livesIcon.anchor.set(0, 0.6);
         this._livesIcon.enableAnimations();
         this._livesIcon.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
         this._livesIcon.alpha = 0.35;
 
+        //paddle
         this._paddle = this.game.add.sprite(this._paddlePositionX, this._paddlePositionY, 'paddle', 0);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._paddle], 0.1, 0.1);
         this._paddle.anchor.set(0.5, 0.5);
@@ -291,12 +370,21 @@ export class Game extends Phaser.State {
         this._paddle.body.immovable = true;
         this._paddle.body.setSize(this._paddle.body.width * 0.8, this._paddle.body.height/4);
 
+        //ball
         this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;
-
         this._ball = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._ballPositionX,
             this._ballPositionY, 'ball', 0, new MediumMovement(-100, -350), 1));
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
         this._ball.anchor.set(0.5, 0.5);
+
+        //boss
+        this._boss = this.game.add.sprite(this.game.world.centerX, 0 - 0.5 * this.game.world.height,
+            this._game.BreakoutWorld.stageManager.BossList[levelNumber -1], 0);
+        this._boss.anchor.set(0.5, 0.5);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._boss], 0.15, 0.15);
+        this.game.physics.enable(this._boss, Phaser.Physics.ARCADE);
+        this._boss.body.immovable = true;
+        this._boss.body.bounce.set(1);
 
         this.loadBricks();
     }

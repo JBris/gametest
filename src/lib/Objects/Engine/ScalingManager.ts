@@ -27,6 +27,7 @@ export class ScalingManager extends Phaser.ScaleManager{
         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
+        this.game.scale.onSizeChange.add(this.scaleGameScreen);
         this.game.scale.refresh();
     }
 
@@ -52,7 +53,8 @@ export class ScalingManager extends Phaser.ScaleManager{
     }
 
 
-    scaleGameElementsOverTime(game: Phaser.Game, elements: Array<any>, xScaleValue: number, yScaleValue: number, duration : number, killOnEnd: boolean): void {
+    scaleGameElementsOverTime(game: Phaser.Game, elements: Array<any>, xScaleValue: number,
+        yScaleValue: number, duration: number, killOnEnd: boolean): void {
  
         let scaledWidth: number = game.world.width * xScaleValue;
         let height: number = game.world.height * yScaleValue * this._ratio;
@@ -66,7 +68,17 @@ export class ScalingManager extends Phaser.ScaleManager{
         }
     } 
 
+    expandAndShrinkElement(element: any, expandedX: number, expandedY: number, originalX: number, orginalY: number) : void
+    {
+        if (element.width !== expandedX && element.height !== expandedY)
+        {
+            let growth: Phaser.Tween = this.game.add.tween(element).to({ width: expandedX, height: expandedY }, 1000, Phaser.Easing.Linear.None);
+            let shrink: Phaser.Tween = this.game.add.tween(element).to({ width: originalX, height: orginalY }, 1000, Phaser.Easing.Linear.None);
 
+            growth.chain(shrink);
+            growth.start();   
+        }
+    }
 }
 
 

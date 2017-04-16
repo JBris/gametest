@@ -15,7 +15,6 @@ export class StageManager
         this._musicList = new Array<string>();
         this._backgroundList = new Array<string>();
         this._bossList = new Array<string>();
-        this._bossList.push('skullface');
         this._currentStage = 0;
     }
     /*=============================

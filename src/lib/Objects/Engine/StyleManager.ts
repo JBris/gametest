@@ -17,8 +17,8 @@ export class StyleManager {
     static readonly fontStyle: string = "normal";
 
     private _presentedText: Phaser.Text;
-    private _paddingSize : number = 0.05;
-
+    private _paddingSize: number = 0.05;
+ 
     /*=============================
     **Constructors
     =============================*/
@@ -50,15 +50,19 @@ export class StyleManager {
     **Methods**
     =============================*/
 
-    damageFlash(duration : number) :void
+    damageFlash(duration : number, colour? : number) :void
     {
-        this._game.camera.flash(0xff0000, duration);
+        let defaultColour = 0xff0000;
+        if (colour !== undefined && colour !== null) defaultColour = colour;
+        this._game.camera.flash(defaultColour, duration);
     }
 
-    fadeText(text : Phaser.Text) : void
+    fadeText(text : Phaser.Text, duration?:number) : void
     {
-        this._game.add.tween(text).to({ y: 0 }, 1500, Phaser.Easing.Linear.None, true);
-        this._game.add.tween(text).to({ alpha: 0 }, 1500, Phaser.Easing.Linear.None, true);
+        let fadeDuration: number = 1500;
+        if (duration !== undefined && duration !== null) fadeDuration = duration;
+        this._game.add.tween(text).to({ y: 0 }, fadeDuration, Phaser.Easing.Linear.None, true);
+        this._game.add.tween(text).to({ alpha: 0 }, fadeDuration, Phaser.Easing.Linear.None, true);
     }
 
     positionTextCenter(text: string, styles?: any): Phaser.Text {
