@@ -30,7 +30,7 @@ export class Game extends Phaser.State {
     private _ballPositionY: number;
     private _multiplierTextWidth: number;
     private _multiplierTextHeight: number;
-
+    private _levelNumber: number;
     //Buttons
     private _playButton: BreakoutButton;
     private _pauseButton: BreakoutButton;
@@ -40,11 +40,11 @@ export class Game extends Phaser.State {
     private _ball: Ball;
     private _paddle: Phaser.Sprite;
     private _brickInfo: Object;
-    private _bricks: Phaser.Group;
     private _brick: Phaser.Sprite;
     private _boss: Phaser.Sprite;
     private _livesIcon: Ball;
-
+    private _bricks: Phaser.Group;
+    private _bullets: Phaser.Group;
     //Text
     private _levelNumberText: Phaser.Text;
     private _scoreText: Phaser.Text;
@@ -77,8 +77,9 @@ export class Game extends Phaser.State {
     preload(): void {
         this._currentlyPlaying = false;
         this._ballTouchedPaddle = true;
-        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
-        this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[levelNumber]);
+        this._levelNumber = this._game.BreakoutWorld.stageManager.CurrentStage;
+
+        this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[this._levelNumber]);
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
 
         this.game.camera.resetFX();
@@ -97,9 +98,9 @@ export class Game extends Phaser.State {
     }
 
     create(): void {
-        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
+
         //music
-        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[levelNumber], 1, true, true);
+        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[this._levelNumber], 1, true, true);
         this._music.play();
 
         this.game.time.events.add(1000, this._game.BreakoutWorld.styleManager.fadeText, this, this._levelNumberText);
@@ -108,6 +109,7 @@ export class Game extends Phaser.State {
     }
 
     update(): void {
+        
         this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle,null, this);
         this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null, this);
         this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
@@ -187,6 +189,9 @@ export class Game extends Phaser.State {
 
     prepareRelaunchGame(): void {
         this.game.physics.arcade.checkCollision.down = true;
+        this._ball.body.velocity.set(0, 0);
+        this._ball.body.moves = false;
+        this._ball.body.disable;
         this._music.fadeOut(4000);
         this.camera.fade(0x000000, 1000);
         this.camera.onFadeComplete.addOnce(this.relaunchGame, this);
@@ -267,10 +272,23 @@ export class Game extends Phaser.State {
         }
     }
 
+    loadBullets()
+    {
+        this._bullets = this.game.add.group();
+        this._bullets.enableBody = true;
+        this._bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this._bullets.createMultiple(30, 'bullet');
+        this._bullets.setAll('anchor.x', 0.5);
+        this._bullets.setAll('anchor.y', 1);
+        this._bullets.setAll('outOfBoundsKill', true);
+        this._bullets.setAll('checkWorldBounds', true);
+
+    }
+
     introduceBoss(): void
     {
-        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
-        //this.game.sound.play(this._game.BreakoutWorld.stageManager.BossSoundList[levelNumber - 1], 1, false);
+
+        //this.game.sound.play(this._game.BreakoutWorld.stageManager.BossSoundList[this._levelNumber - 1], 1, false);
         this.game.add.tween(this._boss).to({ y: 0 + 0.25 * this.game.world.height }, 3000, Phaser.Easing.Linear.None, true);
         this._bossText = this._game.BreakoutWorld.styleManager.positionTextCenter("Ho Ho Ho! Another Challenger?");
         this._bossText.addColor("#19cb65", 0);
@@ -291,12 +309,14 @@ export class Game extends Phaser.State {
 
         //Multiplier
         this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier++;
+
+
         this._multiplierText.setText("X " + String(this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier));
 
-        this._game.BreakoutWorld.scalingManager.expandAndShrinkElement(this._multiplierText, this._multiplierTextWidth * 1.5,
-            this._multiplierTextHeight * 1.5, this._multiplierTextWidth, this._multiplierTextHeight);
+        this._game.BreakoutWorld.scalingManager.expandAndShrinkElement(this._multiplierText, this._multiplierTextWidth * 1.8,
+            this._multiplierTextHeight * 1.8, this._multiplierTextWidth, this._multiplierTextHeight);
 
-        //Multiplier comments
+        //Multiplier comments - Keep it in if you want smaller multipliers...
         this.multiplierComments();
     }
 
@@ -348,7 +368,7 @@ export class Game extends Phaser.State {
 
     loadSprites(): void
     {
-        let levelNumber: number = this._game.BreakoutWorld.stageManager.CurrentStage;
+
 
         //sprites
         this._livesIcon = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._livesText.x + this._livesText.width,
@@ -379,15 +399,17 @@ export class Game extends Phaser.State {
 
         //boss
         this._boss = this.game.add.sprite(this.game.world.centerX, 0 - 0.5 * this.game.world.height,
-            this._game.BreakoutWorld.stageManager.BossList[levelNumber -1], 0);
+            this._game.BreakoutWorld.stageManager.BossList[this._levelNumber -1], 0);
         this._boss.anchor.set(0.5, 0.5);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._boss], 0.15, 0.15);
         this.game.physics.enable(this._boss, Phaser.Physics.ARCADE);
         this._boss.body.immovable = true;
         this._boss.body.bounce.set(1);
 
-        //bullets
+        //projectiles
+        this.loadBullets();
 
+        //bricks
         this.loadBricks();
     }
 

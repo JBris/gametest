@@ -45,18 +45,17 @@ export class ScoreCalculator {
         if (this._scoreMultiplier >= 5 && this._scoreMultiplier < 10 ) return awardedPoints * 1.2;
         if (this._scoreMultiplier >= 10 && this._scoreMultiplier < 15) return awardedPoints * 1.4;
         if (this._scoreMultiplier >= 15 && this._scoreMultiplier < 20) return awardedPoints * 1.6;
-        if (this._scoreMultiplier >= 15 && this._scoreMultiplier < 20) return awardedPoints * 1.8;
-        if (this._scoreMultiplier > 20) return awardedPoints * 2;
+        if (this._scoreMultiplier >= 20 && this._scoreMultiplier < 25) return awardedPoints * 1.8;
+        if (this._scoreMultiplier >= 25) return awardedPoints * 2;
     }
 
     makeMultiplierComment(): string
     {
-        if (this._scoreMultiplier < 5) return "";
         if (this._scoreMultiplier === 5) return "AMAZING!";
         if (this._scoreMultiplier === 10) return "INCREDIBLE!!";
         if (this._scoreMultiplier === 15) return "UNSTOPPABLE!!!";
-        if (this._scoreMultiplier === 20) return "IMPOSSIBLE!!!!";
-        if (this._scoreMultiplier === 25) return "GODLIKE!!!!!";
+        if (this._scoreMultiplier === 20 ) return "IMPOSSIBLE!!!!";
+        if (this._scoreMultiplier === 25 ) return "GODLIKE!!!!!";
         return "";
     }
 
