@@ -50,6 +50,9 @@ export class Game extends Phaser.State {
     private _brickMovement: Phaser.Tween;
     private _projectiles: Phaser.Group;
     private _projectile: Phaser.Sprite;
+    private _drops: Phaser.Group;
+    private _playerBullets: Phaser.Group;
+
     //Text
     private _levelNumberText: Phaser.Text;
     private _scoreText: Phaser.Text;
@@ -120,6 +123,8 @@ export class Game extends Phaser.State {
         this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null, this);
         this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
         this.game.physics.arcade.collide(this._paddle, this._projectiles, this.projectileCollidesPaddle, null, this);
+        this.game.physics.arcade.collide(this._paddle, this._drops, this.paddleGetsDrop, null, this);
+
 
         if (this._currentlyPlaying) {
             this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
@@ -239,7 +244,7 @@ export class Game extends Phaser.State {
     }
 
 
-    ballCollideBrick(ball: Ball, brick: Phaser.Sprite): void
+    ballCollideBrick(ball: Ball, brick: Phaser.Sprite): void // TODO: Add collidable
     {
         brick.physicsEnabled = false;
         if ("vibrate" in window.navigator) window.navigator.vibrate([100]); 
@@ -250,9 +255,13 @@ export class Game extends Phaser.State {
 
         let rndNum: number = this.game.rnd.integerInRange(0, 3);
         if (rndNum === 1) {
-            let goody: Phaser.Sprite = this.game.add.sprite(brick.x, brick.y, 'gold-egg');
-            this.game.physics.enable(goody, Phaser.Physics.ARCADE);
-            goody.body.gravity.y = 80;
+            let drop: Phaser.Sprite = this._drops.getFirstExists(false);
+            drop.body.setSize(drop.body.width * 0.35, drop.body.height * 0.35);
+            this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [drop], 0.1, 0.1);
+            drop.reset(brick.body.x, brick.body.y);
+            drop.visible = true;
+            this.game.physics.enable(drop, Phaser.Physics.ARCADE);
+            drop.body.gravity.y = 80;
 
         }
         brick.kill();
@@ -277,12 +286,20 @@ export class Game extends Phaser.State {
         this.game.time.events.add(Phaser.Timer.SECOND * 2, this.beginPlaying, this);
     }
 
+    paddleGetsDrop(paddle: Phaser.Sprite, drop: Phaser.Sprite): void
+    {
+        drop.kill();
+        this.playerFireBullet();
+    }
+
+
+
 
    //===============================================================================================================//
-   //enemy behaviour
+   //Group behaviour
    //===============================================================================================================//
 
-    loadBricks() :void
+    loadBricks() : void
     {
 
         this._bricks = this.game.add.group();
@@ -309,7 +326,7 @@ export class Game extends Phaser.State {
         this._brickMovement = this.game.add.tween(this._bricks).to({ x: this.game.width * 0.15 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000,true).start();
     }
 
-    loadProjectiles()
+    loadProjectiles(): void
     {
         // The enemy's bullets
         this._projectiles = this.game.add.group();
@@ -323,7 +340,48 @@ export class Game extends Phaser.State {
         this._projectiles.setAll('checkWorldBounds', true);
     }
 
-    enemyFires()
+    loadDrops() : void {
+        // Player drops
+        this._drops = this.game.add.group();
+        this._drops.enableBody = true;
+        this._drops.physicsBodyType = Phaser.Physics.ARCADE;
+        this._drops.createMultiple(30, 'ammo-box', 0);
+        this._drops.visible = true;
+        this._drops.setAll('anchor.x', 0.5);
+        this._drops.setAll('anchor.y', 1);
+        this._drops.setAll('outOfBoundsKill', true);
+        this._drops.setAll('checkWorldBounds', true);
+    }
+
+    loadPlayerBullets(): void
+    {
+        this._playerBullets = this.game.add.group();
+        this._playerBullets.enableBody = true;
+        this._playerBullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this._playerBullets.createMultiple(30, 'bullet-player', 0);
+        this._playerBullets.visible = true;
+        this._playerBullets.setAll('anchor.x', 0.5);
+        this._playerBullets.setAll('anchor.y', 1);
+        this._playerBullets.setAll('outOfBoundsKill', true);
+        this._playerBullets.setAll('checkWorldBounds', true);
+    }
+
+    playerFireBullet() {
+        if (this.game.time.now > this._bulletTime) {
+            //  Grab the first bullet we can from the pool
+            let bullet : Phaser.Sprite = this._playerBullets.getFirstExists(false);
+
+            if (bullet) {
+                //  And fire it
+                bullet.reset(this._paddle.x, this._paddle.y + this._paddle.height * 0.2);
+                bullet.body.velocity.y = -400;
+                this._bulletTime = this.game.time.now + 200;
+            }
+        }
+    }
+
+
+    enemyFires(): void
     {
         this._projectile = this._projectiles.getFirstExists(false);
      
@@ -344,7 +402,6 @@ export class Game extends Phaser.State {
             // And fire the bullet from this enemy
             this._projectile.reset(shooter.body.x, shooter.body.y);
             this._projectile.visible = true;
-            console.log(this._projectile);
             this.game.physics.arcade.moveToObject(this._projectile , this._paddle, 120);
             this._firingTimer = this.game.time.now + 5000;
         }
@@ -492,9 +549,13 @@ export class Game extends Phaser.State {
 
         //projectiles
         this.loadProjectiles();
+        this.loadPlayerBullets();
 
         //bricks
         this.loadBricks();
+
+        //drops
+        this.loadDrops();
     }
 
 }
