@@ -142,5 +142,7 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadMusic('stage_1_electrical_adventures', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadMusic('stage_2_Endgame', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadMusic('stage_3_parago', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadMusic('final_chaoz', 'mp3', 'ogg');
+
     }
 }

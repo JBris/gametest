@@ -257,11 +257,11 @@ export class Game extends Phaser.State {
         if (rndNum === 1) {
             let drop: Phaser.Sprite = this._drops.getFirstExists(false);
             drop.body.setSize(drop.body.width * 0.35, drop.body.height * 0.35);
-            this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [drop], 0.1, 0.1);
+            this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [drop], 0.07, 0.07);
             drop.reset(brick.body.x, brick.body.y);
             drop.visible = true;
             this.game.physics.enable(drop, Phaser.Physics.ARCADE);
-            drop.body.gravity.y = 80;
+            drop.body.gravity.y = 100;
 
         }
         brick.kill();
@@ -289,7 +289,7 @@ export class Game extends Phaser.State {
     paddleGetsDrop(paddle: Phaser.Sprite, drop: Phaser.Sprite): void
     {
         drop.kill();
-        this.playerFireBullet();
+        let bulletFire :Phaser.TimerEvent = this.game.time.events.repeat(Phaser.Timer.SECOND * 0.35, 3,this.playerFireBullet, this);
     }
 
 
@@ -366,18 +366,15 @@ export class Game extends Phaser.State {
         this._playerBullets.setAll('checkWorldBounds', true);
     }
 
-    playerFireBullet() {
-        if (this.game.time.now > this._bulletTime) {
-            //  Grab the first bullet we can from the pool
-            let bullet : Phaser.Sprite = this._playerBullets.getFirstExists(false);
-
-            if (bullet) {
-                //  And fire it
-                bullet.reset(this._paddle.x, this._paddle.y + this._paddle.height * 0.2);
-                bullet.body.velocity.y = -400;
-                this._bulletTime = this.game.time.now + 200;
-            }
-        }
+    playerFireBullet()
+    {
+        console.log("hello");
+        let newBullet: Phaser.Sprite = this._playerBullets.getFirstExists(false);
+        if (newBullet)
+        {
+            newBullet.reset(this._paddle.x, this._paddle.y + this._paddle.height * 0.2);
+            newBullet.body.velocity.y = -400;
+        }   
     }
 
 

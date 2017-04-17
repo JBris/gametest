@@ -39,6 +39,8 @@ Glorious Morning - http://www.newgrounds.com/audio/listen/91476 - http://www.new
 
 Electroman adventures - Waterflame - http://www.newgrounds.com/audio/listen/479319
 
-ParagonX9 - ParagonX9 - http://www.newgrounds.com/audio/listen/704298
+Chaoz Fantasy - pokerockmario- http://www.newgrounds.com/audio/listen/704298
 
 Endgame - Waterflame - http://www.newgrounds.com/audio/listen/587069
+
+Chaoz - ParagonX9 - http://www.newgrounds.com/audio/listen/245921
