@@ -19,7 +19,7 @@ Design Patterns
 
 Strategy Pattern - Alter object behaviour at runtime. Decouple class behaviour from the classes themselves.
 
-Factory Pattern - Decouple the object creation process from the Breakout game instance.
+Simple Factory Pattern - Decouple the object creation process from the Breakout game instance.
 
 Facade pattern - Simplify interactions with the game engine. Reduce dependencies on individual components of the system.
 

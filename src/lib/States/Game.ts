@@ -250,9 +250,9 @@ export class Game extends Phaser.State {
 
         let rndNum: number = this.game.rnd.integerInRange(0, 3);
         if (rndNum === 1) {
-            let enemyProjectile: Phaser.Sprite = this.game.add.sprite(brick.x, brick.y, 'ball');
-            this.game.physics.enable(enemyProjectile, Phaser.Physics.ARCADE);
-            enemyProjectile.body.gravity.y = 80;
+            let goody: Phaser.Sprite = this.game.add.sprite(brick.x, brick.y, 'gold-egg');
+            this.game.physics.enable(goody, Phaser.Physics.ARCADE);
+            goody.body.gravity.y = 80;
 
         }
         brick.kill();
@@ -297,6 +297,7 @@ export class Game extends Phaser.State {
                 this._brick = this._bricks.create(xPosition, yPosition, 'blue-brick');
                 this._brick.body.bounce.set(1);
                 this._brick.body.immovable = true;
+                this._brick.body.setSize(this._brick.body.width * 0.4, this._brick.body.height * 0.4);
                 this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._brick],0.08,0.08);
                 let float = this._brick.animations.add('float', [0, 1, 0, 1, 0, 1, 0, 1], 2,true);
                 float.play();
@@ -314,19 +315,19 @@ export class Game extends Phaser.State {
         this._projectiles = this.game.add.group();
         this._projectiles.enableBody = true;
         this._projectiles.physicsBodyType = Phaser.Physics.ARCADE;
-        this._projectiles.createMultiple(30, 'ball', 0);
+        this._projectiles.createMultiple(30, 'bullet-enemy', 0);
         this._projectiles.visible = true;
         this._projectiles.setAll('anchor.x', 0.5);
         this._projectiles.setAll('anchor.y', 1);
-  //      this._projectiles.setAll('outOfBoundsKill', true);
-    //    this._projectiles.setAll('checkWorldBounds', true);
-
+        this._projectiles.setAll('outOfBoundsKill', true);
+        this._projectiles.setAll('checkWorldBounds', true);
     }
 
     enemyFires()
     {
-        this._projectile = this._projectiles.getFirstExists(true, true);
-
+        this._projectile = this._projectiles.getFirstExists(false);
+     
+        this._projectile.body.setSize(this._projectile.body.width * 0.35, this._projectile.body.height * 0.35);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._projectile], 0.08, 0.08);
 
         let livingEnemies: Array<Phaser.Sprite> = new Array<Phaser.Sprite>();
@@ -345,7 +346,7 @@ export class Game extends Phaser.State {
             this._projectile.visible = true;
             console.log(this._projectile);
             this.game.physics.arcade.moveToObject(this._projectile , this._paddle, 120);
-            this._firingTimer = this.game.time.now + 2000;
+            this._firingTimer = this.game.time.now + 5000;
         }
 
     }
@@ -454,13 +455,13 @@ export class Game extends Phaser.State {
 
 
         //sprites
-        this._livesIcon = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._livesText.x + this._livesText.width,
-            this._livesText.y, 'paddle', 0, null, 0));
+        this._livesIcon = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._livesText.x + this._livesText.width * 1.5,
+            this._livesText.y, 'ball', 0, null, 0));
 
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._livesIcon], 0.08, 0.08);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._livesIcon], 0.1,0.1);
 
         //lives icon
-        this._livesIcon.anchor.set(0, 0.6);
+        this._livesIcon.anchor.set(0, 0.7);
         this._livesIcon.enableAnimations();
         this._livesIcon.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
         this._livesIcon.alpha = 0.35;
