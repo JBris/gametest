@@ -4,6 +4,7 @@ import { MainMenu } from './lib/States/MainMenu';
 import { LeaderBoard } from './lib/States/LeaderBoard';
 import { Options } from './lib/States/Options';
 import { Game } from './lib/States/Game';
+import { FinalBoss } from './lib/States/FinalBoss';
 
 import { Config } from '../config/Config';
 
@@ -41,6 +42,7 @@ export class Breakout extends Phaser.Game {
         this.state.add('Preload', Preload, false);
         this.state.add('MainMenu', MainMenu, false);
         this.state.add('Game', Game, false);
+        this.state.add('FinalBoss', FinalBoss, false);
         this.state.add('LeaderBoard', LeaderBoard, false);
         this.state.add('Options', Options, false);
         this.state.start('Boot',true,false, this);

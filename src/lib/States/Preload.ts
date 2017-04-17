@@ -76,6 +76,8 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('poison', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('fire-eye', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('fire', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bloody-bullet', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bloody-spread', 'png', 64, 64);
 
         //goodies
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('ammo-box', 'png', 64, 64);
@@ -91,7 +93,8 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('skullface', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('eye', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('shadow', 'png', 64, 64);
-
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('fetus-ball', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('bloody-paddle', 'png', 64, 64);
     }
 
     loadLogos(): void 
@@ -129,13 +132,14 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSound('bullet-fire', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('gun-cock', 'mp3', 'ogg');
 
-
         //bosses
         this._game.BreakoutWorld.assetLoader.loadSound('noble-woman-laugh', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('yuck', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('demon-sound', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('evil-laugh', 'mp3', 'ogg');
-    }
 
+    }
+    
     loadMusic(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadMusic('opening_glorious_morning', 'mp3', 'ogg');

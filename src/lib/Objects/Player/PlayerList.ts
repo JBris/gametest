@@ -41,13 +41,12 @@ export class PlayerList {
 
     addPlayer(iPlayer): void
     {
-        this._myPlayerList.unshift(iPlayer);
         this.sortPlayers();
         if (this._myPlayerList.length > this._maxNumOfPlayers)
         {
             while (this._myPlayerList.length > this._maxNumOfPlayers) this._myPlayerList.pop();
         }
-     
+        this._myPlayerList.unshift(iPlayer);
     }
 
     removePlayer(iPlayer, deleteCount?:number): void {
@@ -66,7 +65,7 @@ export class PlayerList {
     displayPlayers(): string
     {
         if (this._myPlayerList.length === 0) return "No players yet";
-
+        this.sortPlayers();
         let playerDisplay: string = "";
         for (let player of this._myPlayerList)
         {
