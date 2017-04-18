@@ -1,16 +1,5 @@
 import { Breakout } from '../../Breakout';
 
-import { Ball } from '../Objects/Ball/Ball';
-import { BallParameters } from '../Objects/Ball/BallParameters';
-
-import { MediumMovement } from '../Objects/MovableBehaviour/MediumMovement';
-import { FastMovement } from '../Objects/MovableBehaviour/FastMovement';
-import { SlowMovement } from '../Objects/MovableBehaviour/SlowMovement';
-
-import { BreakoutButton } from '../Objects/Button/BreakoutButton';
-import { ButtonParameters } from '../Objects/Button/ButtonParameters';
-
-
 export class Game extends Phaser.State {
 
     /*=============================
@@ -34,17 +23,17 @@ export class Game extends Phaser.State {
     private _firingTimer = 0;
 
     //Buttons
-    private _playButton: BreakoutButton;
-    private _pauseButton: BreakoutButton;
-    private _restartButton: BreakoutButton;
+    private _playButton: Phaser.Button;
+    private _pauseButton: Phaser.Button;
+    private _restartButton: Phaser.Button;
 
     //Objects
-    private _ball: Ball;
+    private _ball: Phaser.Sprite;
     private _paddle: Phaser.Sprite;
     private _brickInfo: Object;
     private _brick: Phaser.Sprite;
     private _boss: Phaser.Sprite;
-    private _livesIcon: Ball;
+    private _livesIcon: Phaser.Sprite;
     private _bricks: Phaser.Group;
     private _brickMovement: Phaser.Tween;
     private _projectiles: Phaser.Group;
@@ -143,8 +132,7 @@ export class Game extends Phaser.State {
 
     displayPlayButton(): void {
         //start
-        this._playButton = this._game.AddElement.buttonFactory.createProduct("play", new ButtonParameters(this.game,
-            this.game.world.centerX, this.game.world.centerY, 'play-button', this.startGame, this, 1, 0, 1, 0));
+        this._playButton = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'play-button', this.startGame, this, 1, 0, 1, 0);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._playButton], 0, 0);
         this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0.15, 0.15, 500, false);
         this._playButton.anchor.set(0.5, 0.5);
@@ -152,7 +140,7 @@ export class Game extends Phaser.State {
 
     startGame(): void {
         this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0, 0, 500, true);
-        this._ball.MovementType.move();
+        this._ball.body.velocity.set(-75, -300);
         this.game.physics.arcade.checkCollision.down = false;
         this._ball.events.onOutOfBounds.add(this.ballLeaveScreen, this);
         this.beginPlaying();
@@ -178,7 +166,7 @@ export class Game extends Phaser.State {
         this._livesIcon.animations.play('hurt');
 
         //movement
-        this._ball.MovementType.move(0, 0);
+        this._ball.body.velocity.set(0, 0);
         this._ball.reset(this._ballPositionX, this._ballPositionY);
         this._paddle.reset(this._paddlePositionX, this._paddlePositionY);
 
@@ -240,19 +228,36 @@ export class Game extends Phaser.State {
    //===============================================================================================================//
 
     ballCollidePaddle(): void {
-        if ("vibrate" in window.navigator) { window.navigator.vibrate([100]); }
         this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier = 1;
         this._multiplierText.setText("X " + String(this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier));
         this._ballTouchedPaddle = true;
-        if (this._currentlyPlaying) this._ball.collide("paddle", 0, this._paddle.x);
+
+        if (this._currentlyPlaying)
+        {
+            let diff: number = 0;
+            if (this._ball.x < this._paddle.x) {
+                //  left side
+                diff = this._paddle.x - this._ball.x;
+                this._ball.body.velocity.x = (-5 * diff);
+            }
+            else if (this._ball.x > this._paddle.x) {
+                //  right side
+                diff = this._ball.x - this._paddle.x;
+                this._ball.body.velocity.x = (5 * diff);
+            }
+            else {
+                //random
+                this._ball.body.velocity.x = 1 + Math.random() * 5;
+            }
+        }
+
     }
 
 
-    ballCollideBrick(ball: Ball, brick: Phaser.Sprite): void // TODO: Add collidable
+    ballCollideBrick(ball: Phaser.Sprite, brick: Phaser.Sprite): void // TODO: Add collidable
     {
         brick.physicsEnabled = false;
-        if ("vibrate" in window.navigator) window.navigator.vibrate([100]); 
-        ball.collide("brick");
+       // ball.collide("brick");
 
         this.updateScore(10);
         this._ballTouchedPaddle = false;
@@ -275,10 +280,9 @@ export class Game extends Phaser.State {
         }
     }
 
-    ballCollideBoss(ball: Ball, boss: Phaser.Sprite): void {
+    ballCollideBoss(ball: Phaser.Sprite, boss: Phaser.Sprite): void {
         boss.physicsEnabled = false;
-        if ("vibrate" in window.navigator) { window.navigator.vibrate([100]); }
-        ball.collide("boss");
+        //ball.collide("boss");
         boss.kill();
         this.prepareRelaunchGame();        
     }
@@ -497,9 +501,7 @@ export class Game extends Phaser.State {
     {
         //buttons
         //pause
-        this._pauseButton = this._game.AddElement.buttonFactory.createProduct("pause", new ButtonParameters(this.game,
-            this.game.world.width - 0.1 * this.game.world.width, 0 + 0.1 * this.game.world.height, 'pause-button', null, null, 1, 0, 1, 0));
-
+        this._pauseButton = this.game.add.button(this.game.world.width - 0.1 * this.game.world.width, 0 + 0.1 * this.game.world.height, 'pause-button', null, null, 1, 0, 1, );
         this._pauseButton.anchor.set(1, 0);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._pauseButton], 0.05, 0.05);
         this._pauseButton.inputEnabled = true;
@@ -512,14 +514,11 @@ export class Game extends Phaser.State {
 
 
         //sprites
-        this._livesIcon = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._livesText.x + this._livesText.width * 1.5,
-            this._livesText.y, 'ball', 0, null, 0));
-
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._livesIcon], 0.1,0.1);
+        this._livesIcon = this.game.add.sprite(this._livesText.x + this._livesText.width * 1.5,
+            this._livesText.y, 'ball', 0);
 
         //lives icon
         this._livesIcon.anchor.set(0, 0.7);
-        this._livesIcon.enableAnimations();
         this._livesIcon.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
         this._livesIcon.alpha = 0.35;
 
@@ -533,10 +532,21 @@ export class Game extends Phaser.State {
 
         //ball
         this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;
-        this._ball = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this._ballPositionX,
-            this._ballPositionY, 'ball', 0, new MediumMovement(-100, -350), 1));
+        this._ball = this.game.add.sprite(this._ballPositionX,
+            this._ballPositionY, 'ball', 0);
+
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
         this._ball.anchor.set(0.5, 0.5);
+        this._ball.animations.add('ball-to-paddle', [3, 2, 1, 0], 2);
+        this._ball.animations.add('ball-to-brick', [3, 4, 1, 0], 2);
+        this._ball.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 2);
+
+        this.game.physics.enable(this._ball, Phaser.Physics.ARCADE);
+        this._ball.body.collideWorldBounds = true;
+        this._ball.body.bounce.set(1);
+        this._ball.checkWorldBounds = true;
+        this._ball.body.setSize(this._ball.body.width, this._ball.body.height / 4);
+
 
         //boss
         this._boss = this.game.add.sprite(0 + this.game.world.width * 0.1, 0 - 0.5 * this.game.world.height,

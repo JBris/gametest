@@ -1,6 +1,4 @@
 import { Breakout } from '../../Breakout';
-import { BreakoutButton } from '../Objects/Button/BreakoutButton';
-import { ButtonParameters } from '../Objects/Button/ButtonParameters';
 
 export class LeaderBoard extends Phaser.State
 {
@@ -11,7 +9,7 @@ export class LeaderBoard extends Phaser.State
     private _background: Phaser.Image;
     private _music: Phaser.Sound;
     private _leaderBoard: Phaser.Text;
-    private _backButton: BreakoutButton;
+    private _backButton: Phaser.Button;
 
     /*=============================
     **Constructors
@@ -50,9 +48,8 @@ export class LeaderBoard extends Phaser.State
         this._music.fadeIn(6000);
 
         //buttons
-        this._backButton = this._game.AddElement.buttonFactory.createProduct("start", new ButtonParameters(this.game,
-            this.game.world.width - 0.1 * this.game.world.width, this.game.world.height - 0.1 * this.game.world.height,
-            'back-button', this.launchMainMenu, this, 1, 0, 1, 0));
+        this._backButton = this.game.add.button(this.game.world.width - 0.1 * this.game.world.width, this.game.world.height - 0.1 * this.game.world.height,
+            'back-button', this.launchMainMenu, this, 1, 0, 1, 0);
 
         this._backButton.anchor.set(1, 1);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._backButton], 0.1, 0.1);

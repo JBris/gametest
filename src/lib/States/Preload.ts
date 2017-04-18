@@ -1,6 +1,4 @@
 import { Breakout } from '../../Breakout';
-import { Ball } from '../Objects/Ball/Ball';
-import { BallParameters } from '../Objects/Ball/BallParameters';
 
 export class Preload extends Phaser.State {
 
@@ -8,7 +6,7 @@ export class Preload extends Phaser.State {
     **Fields**
     =============================*/
     private _game: Breakout;
-    private _loadingSprite: Ball;
+    private _loadingSprite: Phaser.Sprite;
 
     /*=============================
     **Constructors
@@ -29,13 +27,13 @@ export class Preload extends Phaser.State {
 
     preload(): void  {
 
-        this._loadingSprite = this._game.AddElement.ballFactory.createProduct("normal", new BallParameters(this.game, this.game.world.centerX,
-            this.game.world.centerY, 'ball', 0));
+        this._loadingSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'ball', 0);
+        this._loadingSprite.anchor.set(0.5, 0.5);
 
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game,[this._loadingSprite],0.2,0.2);
-
-        if (this._loadingSprite.animations.getAnimation('sleep') !== undefined && this._loadingSprite.animations.getAnimation('sleep') !== null)
-            this._loadingSprite.animations.play('sleep', 24, true);
+        this._loadingSprite.animations.add('sleep', [1, 3, 1, 3], 2);
+        if (this._loadingSprite.animations.getAnimation('sleep'))
+            this._loadingSprite.animations.play('sleep', 2, true);
 
         //sprites
         this.loadSprites();

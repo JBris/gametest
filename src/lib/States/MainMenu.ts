@@ -1,9 +1,7 @@
 import { Breakout } from '../../Breakout';
 import { BreakoutPlayer } from '../Objects/Player/BreakoutPlayer'
-import { BreakoutButton } from '../Objects/Button/BreakoutButton';
 import { BreakoutLogo } from '../Objects/Logo/BreakoutLogo';
 import { Title } from '../Objects/Logo/Title';
-import { ButtonParameters } from '../Objects/Button/ButtonParameters';
 
 export class MainMenu extends Phaser.State
 {
@@ -16,9 +14,9 @@ export class MainMenu extends Phaser.State
 
     private _leaderBoard: Phaser.Text;
 
-    private _playButton: BreakoutButton;
-    private _offButton: BreakoutButton;
-    private _optionsButton: BreakoutButton;
+    private _playButton: Phaser.Button;
+    private _offButton: Phaser.Button;
+    private _optionsButton: Phaser.Button;
 
     private _title: BreakoutLogo;
 
@@ -72,19 +70,18 @@ export class MainMenu extends Phaser.State
         this._music.fadeIn(6000);
 
         //buttons
-        
-        this._playButton = this._game.AddElement.buttonFactory.createProduct("start", new ButtonParameters(this.game, this._title.x - (this.game.world.width * 0.3), this._title.y,
-            'play-button', this.prepareBeginGame, this, 1, 0, 1, 0));
+        this._playButton = this.game.add.button(this._title.x - (this.game.world.width * 0.3), this._title.y,
+            'play-button', this.prepareBeginGame, this, 1, 0, 1, 0);
 
         this._playButton.anchor.set(0.5, 1);
 
-       this._optionsButton = this._game.AddElement.buttonFactory.createProduct("options", new ButtonParameters(this.game,
-            this._title.x + (this.game.world.width * 0.3), this._title.y, 'options-button', this.options, this, 1, 0, 1, 0)); 
+        this._optionsButton = this.game.add.button(this._title.x + (this.game.world.width * 0.3), this._title.y,
+            'options-button', this.options, this, 1, 0, 1, 0);
 
        this._optionsButton.anchor.set(0.5, 1);
 
-       this._offButton = this._game.AddElement.buttonFactory.createProduct("off", new ButtonParameters(this.game, this._title.x + (this.game.world.width * 0.3),
-           this._title.y + this.game.world.height * 0.3, 'off-button', this.endGame, this, 0, 1, 0, 1));
+       this._offButton = this.game.add.button(this._title.x + (this.game.world.width * 0.3),
+           this._title.y + this.game.world.height * 0.3, 'off-button', this.endGame, this, 0, 1, 0, 1);
 
        this._offButton.anchor.set(0.5, 1);
 
@@ -118,8 +115,7 @@ export class MainMenu extends Phaser.State
         this._background.destroy();
         this._music.destroy();
         this._game.BreakoutWorld.stageManager.CurrentStage = 1;
-        this.game.state.start("FinalBoss", true, false, this._game);  
-        //this.game.state.start("Game",true, false, this._game);  
+        this.game.state.start("Game",true, false, this._game);  
     }
 
     addLeaderBoardText(): void 
