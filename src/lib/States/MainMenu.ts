@@ -46,8 +46,6 @@ export class MainMenu extends Phaser.State
         let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
 
         this._game.BreakoutWorld.scalingManager.scaleGameScreen();
-        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleGameScreen, this);
-        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground, this);
 
         //background
 

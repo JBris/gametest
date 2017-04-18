@@ -81,8 +81,6 @@ export class Game extends Phaser.State {
 
         this.game.camera.resetFX();
         this.camera.onFadeComplete.forget();
-        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleGameScreen, this);
-        this.scale.onOrientationChange.add(this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground, this);
 
         this._paddlePositionX = this.game.world.centerX;
         this._paddlePositionY = this.game.world.height - this.game.world.height * 0.1;

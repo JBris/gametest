@@ -25,8 +25,6 @@ export class ScalingManager extends Phaser.ScaleManager{
     {
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.game.scale.pageAlignHorizontally = true;
-        this.game.scale.pageAlignVertically = true;
         this.game.scale.refresh();
     }
 
