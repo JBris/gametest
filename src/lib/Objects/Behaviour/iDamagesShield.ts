@@ -1,7 +1,7 @@
-export interface iCollidable
+export interface iDamagesShield
 {
     /*=============================
     **Fields**
     =============================*/
-    collide(collidedWith: string): void;
+    shieldDamageValue: number;
 }

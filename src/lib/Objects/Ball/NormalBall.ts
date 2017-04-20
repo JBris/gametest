@@ -1,5 +1,8 @@
 import { Ball } from './Ball';
+//Behaviours
 import { NormalBallMovement } from './Movement/NormalBallMovement';
+import { NormalBallCollision } from './Collision/NormalBallCollision';
+
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
 export class NormalBall extends Ball {
@@ -18,8 +21,6 @@ export class NormalBall extends Ball {
         this.z_baseYVelocity = -150;
         this.z_basePhysicalDamage = 2;
         this.z_baseShieldDamage = 1;
-        this.z_ballMovement = new NormalBallMovement(this);
-
     }
 
     /*=============================
@@ -38,6 +39,17 @@ export class NormalBall extends Ball {
         this.animations.add('ball-to-brick', [3, 4, 1, 0], 2);
         this.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 2);
         this.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
+        this.animations.add('idle', [0, 1], 1, true).play();
+    }
+
+    protected setMovementType(): void
+    {
+        this.z_ballMovement = new NormalBallMovement(this);
+    }
+
+    protected setCollisionType(): void {
+        this.z_ballCollision = new NormalBallCollision(this);
+
     }
 }
 

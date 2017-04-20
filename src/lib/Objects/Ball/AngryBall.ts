@@ -1,5 +1,8 @@
 import { Ball } from './Ball';
+//Behaviours
 import { SlowBallMovement } from './Movement/SlowBallMovement';
+import { BigNastyBallCollision } from './Collision/BigNastyBallCollision';
+
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
 export class AngryBall extends Ball {
@@ -18,7 +21,6 @@ export class AngryBall extends Ball {
         this.z_baseYVelocity = -70;
         this.z_basePhysicalDamage = 3;
         this.z_baseShieldDamage = 1;
-        this.z_ballMovement = new SlowBallMovement(this);
     }
 
     /*=============================
@@ -37,7 +39,18 @@ export class AngryBall extends Ball {
         this.animations.add('ball-to-brick', [3, 4, 1, 0], 2);
         this.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 2);
         this.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
+        this.animations.add('idle', [0, 1], 1, true).play();
     }
+
+    protected setMovementType(): void {
+        this.z_ballMovement = new SlowBallMovement(this);
+    }
+
+    protected setCollisionType(): void {
+        this.z_ballCollision = new BigNastyBallCollision(this);
+
+    }
+
 }
 
 

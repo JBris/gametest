@@ -202,9 +202,7 @@ export class Game extends Phaser.State {
 
     prepareRelaunchGame(): void {
         this.game.physics.arcade.checkCollision.down = true;
-        this._ball.body.velocity.set(0, 0);
-        this._ball.body.moves = false;
-        this._ball.body.disable;
+        this._ball.disableBall();
         this._music.fadeOut(4000);
         this.camera.fade(0x000000, 1000);
         this.camera.onFadeComplete.addOnce(this.relaunchGame, this);
@@ -233,12 +231,14 @@ export class Game extends Phaser.State {
    //===============================================================================================================//
 
     ballCollidePaddle(): void {
+
         this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier = 1;
         this._multiplierText.setText("X " + String(this._game.BreakoutWorld.scoreCalculator.ScoreMultiplier));
         this._ballTouchedPaddle = true;
 
         if (this._currentlyPlaying)
         {
+            this._ball.BallCollision.collide("paddle");
             let diff: number = 0;
             if (this._ball.x < this._paddle.x) {
                 //  left side
@@ -261,6 +261,8 @@ export class Game extends Phaser.State {
 
     ballCollideBrick(ball: Phaser.Sprite, brick: Phaser.Sprite): void // TODO: Add collidable
     {
+        this._ball.BallCollision.collide("brick");
+
         brick.physicsEnabled = false;
        // ball.collide("brick");
 

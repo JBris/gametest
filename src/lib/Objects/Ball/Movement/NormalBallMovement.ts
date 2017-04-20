@@ -1,20 +1,22 @@
-import { aBallMovement } from './aBallMovement';
+import { iBallMovement } from './iBallMovement';
 import { Ball } from '../Ball';
 
-export class NormalBallMovement extends aBallMovement {
+export class NormalBallMovement implements iBallMovement {
 
     /*=============================
     **Fields**
     =============================*/
+    ball: Ball;
+    additionalXVelocity: number;
+    additionalYVelocity: number;
 
     /*=============================
     **Constructors**
     =============================*/
-    constructor(ball : Ball)
-    {
-        super(ball);
-        this.z_additionalXVelocity = -100;
-        this.z_additionalYVelocity = -350;
+    constructor(ball: Ball) {
+        this.ball = ball;
+        this.additionalXVelocity = -100;
+        this.additionalYVelocity = -350;
     }
 
     /*=============================
@@ -29,12 +31,14 @@ export class NormalBallMovement extends aBallMovement {
     **Methods**
     =============================*/
 
-    protected moveBall(): void {
-    this.z_ball.body.velocity.set(
-            this.z_ball.BaseXVelocity + this.z_additionalXVelocity,
-            this.z_ball.BaseYVelocity + this.z_additionalYVelocity
+    move(): void {
+        this.ball.body.velocity.set(
+            this.ball.BaseXVelocity + this.additionalXVelocity,
+            this.ball.BaseYVelocity + this.additionalYVelocity
         );
     }
 }
+
+
 
 

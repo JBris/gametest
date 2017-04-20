@@ -1,23 +1,23 @@
-import { iMovable } from '../../Behaviour/iMovable';
+import { aBallCollision } from './aBallCollision';
 import { Ball } from '../Ball';
 
-export abstract class aBallMovement implements iMovable {
+export class NormalBallCollision extends aBallCollision {
 
     /*=============================
     **Fields**
     =============================*/
-    protected z_ball : Ball;
-    protected z_additionalXVelocity : number;
-    protected z_additionalYVelocity : number;
+    healthDamageValue: number;
+    shieldDamageValue: number;
 
     /*=============================
     **Constructors**
     =============================*/
     constructor(ball : Ball)
     {
-        this.z_ball = ball;
+        super(ball);
+        this.healthDamageValue = 2;
+        this.shieldDamageValue = 1;
     }
-
     /*=============================
     **Properties**
     =============================*/
@@ -29,13 +29,7 @@ export abstract class aBallMovement implements iMovable {
     /*=============================
     **Methods**
     =============================*/
-    move(): void
-    {
-        if (!this.z_ball.physicsEnabled) this.z_ball.physicsEnabled = true;
-        this.moveBall();
-    }
 
-    protected abstract moveBall(): void;
 }
 
 

@@ -1,4 +1,6 @@
 import { iMovable } from '../Behaviour/iMovable';
+import { iCollidable } from '../Behaviour/iCollidable';
+
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
 export abstract class Ball extends Phaser.Sprite {
@@ -7,10 +9,11 @@ export abstract class Ball extends Phaser.Sprite {
     **Fields**
     =============================*/
     protected z_ballMovement: iMovable;
-    protected z_baseXVelocity: number;
-    protected z_baseYVelocity: number;
-    protected z_basePhysicalDamage: number;
-    protected z_baseShieldDamage: number;
+    protected z_ballCollision: iCollidable;
+    protected z_baseXVelocity: number = 0;
+    protected z_baseYVelocity: number = 0;
+    protected z_basePhysicalDamage: number = 0;
+    protected z_baseShieldDamage: number = 0;
 
     /*=============================
     **Constructors
@@ -22,7 +25,8 @@ export abstract class Ball extends Phaser.Sprite {
         super(parameterList.game, parameterList.x, parameterList.y, parameterList.key, parameterList.frame);
         this.initBallSettings();
         this.initAnimations();
-
+        this.setMovementType();
+        this.setCollisionType();
     }
 
     /*=============================
@@ -32,6 +36,10 @@ export abstract class Ball extends Phaser.Sprite {
 
     get BallMovement(): iMovable {
         return this.z_ballMovement;
+    }
+
+    get BallCollision(): iCollidable {
+        return this.z_ballCollision;
     }
 
     get BaseXVelocity(): number
@@ -55,6 +63,10 @@ export abstract class Ball extends Phaser.Sprite {
 
     set BallMovement(val: iMovable) {
         this.z_ballMovement = val;
+    }
+
+    set BallCollision(val: iCollidable) {
+        this.z_ballCollision = val;
     }
 
     set BaseXVelocity(val: number ){
@@ -86,9 +98,16 @@ export abstract class Ball extends Phaser.Sprite {
         this.checkWorldBounds = true;
     }
 
-    protected abstract initAnimations();
+    disableBall(): void
+    {
+        this.body.velocity.set(0, 0);
+        this.body.moves = false;
+        this.body.disable;
+    }
 
-
+    protected abstract initAnimations() : void;
+    protected abstract setMovementType(): void;
+    protected abstract setCollisionType(): void;
 }
 
 
