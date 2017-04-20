@@ -4,8 +4,8 @@ import { Breakout } from '../../Breakout';
 import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
 
 //Objects
-//Ball
 import { Ball } from '../Objects/Ball/Ball';
+import { Paddle } from '../Objects/Paddle/Paddle';
 
 export class Game extends Phaser.State {
 
@@ -20,8 +20,7 @@ export class Game extends Phaser.State {
     private _ballTouchedPaddle : boolean;
 
     //Numbers
-    private _paddlePositionX: number;
-    private _paddlePositionY: number;
+
     private _ballPositionX: number;
     private _ballPositionY: number;
     private _multiplierTextWidth: number;
@@ -33,10 +32,10 @@ export class Game extends Phaser.State {
     private _playButton: Phaser.Button;
     private _pauseButton: Phaser.Button;
     private _restartButton: Phaser.Button;
-
+   
     //Objects
     private _ball: Ball;
-    private _paddle: Phaser.Sprite;
+    private _paddle: Paddle;
     private _brickInfo: Object;
     private _brick: Phaser.Sprite;
     private _boss: Phaser.Sprite;
@@ -89,8 +88,7 @@ export class Game extends Phaser.State {
         this.game.camera.resetFX();
         this.camera.onFadeComplete.forget();
 
-        this._paddlePositionX = this.game.world.centerX;
-        this._paddlePositionY = this.game.world.height - this.game.world.height * 0.1;
+
         this._ballPositionX = this.game.world.centerX;
         //can't set ball position y just yet
 
@@ -120,8 +118,7 @@ export class Game extends Phaser.State {
 
 
         if (this._currentlyPlaying) {
-            this._paddle.x = this.game.input.x || this.game.world.width * 0.5;
-
+            this._paddle.PaddleMovement.move();       
             if (this.game.time.now > this._firingTimer) {
                 this.enemyFires();
             }
@@ -173,8 +170,8 @@ export class Game extends Phaser.State {
         //movement
         this._ball.body.velocity.set(0, 0);
         this._ball.reset(this._ballPositionX, this._ballPositionY);
-        this._paddle.reset(this._paddlePositionX, this._paddlePositionY);
-
+        this._paddle.resetPaddle();
+       
         if (this._game.PlayerList.MyPlayerList[0].lives > 0) {
             this.displayPlayButton();
         } else {
@@ -239,23 +236,8 @@ export class Game extends Phaser.State {
         if (this._currentlyPlaying)
         {
             this._ball.BallCollision.collide("paddle");
-            let diff: number = 0;
-            if (this._ball.x < this._paddle.x) {
-                //  left side
-                diff = this._paddle.x - this._ball.x;
-                this._ball.body.velocity.x = (-5 * diff);
-            }
-            else if (this._ball.x > this._paddle.x) {
-                //  right side
-                diff = this._ball.x - this._paddle.x;
-                this._ball.body.velocity.x = (5 * diff);
-            }
-            else {
-                //random
-                this._ball.body.velocity.x = 1 + Math.random() * 5;
-            }
+            this._paddle.PaddleCollision.collide("ball", this._ball);
         }
-
     }
 
 
@@ -297,8 +279,7 @@ export class Game extends Phaser.State {
     projectileCollidesPaddle(paddle : Phaser.Sprite, bullet: Phaser.Sprite) : void
     {
         bullet.kill();
-        this._currentlyPlaying = false;
-        this.game.time.events.add(Phaser.Timer.SECOND * 0.8, this.beginPlaying, this);
+        this._paddle.PaddleCollision.collide("projectile");
     }
 
     paddleGetsDrop(paddle: Phaser.Sprite, drop: Phaser.Sprite): void
@@ -530,12 +511,10 @@ export class Game extends Phaser.State {
         this._livesIcon.alpha = 0.35;
 
         //paddle
+        parameters.setParameters(this.game.world.centerX, this.game.world.height - this.game.world.height * 0.1,'paddle',0);
         this._paddle = this.game.add.sprite(this._paddlePositionX, this._paddlePositionY, 'paddle', 0);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._paddle], 0.1, 0.1);
-        this._paddle.anchor.set(0.5, 0.5);
-        this.game.physics.enable(this._paddle, Phaser.Physics.ARCADE);
-        this._paddle.body.immovable = true;
-        this._paddle.body.setSize(this._paddle.body.width * 0.8, this._paddle.body.height/4);
+
 
         //ball
         this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;

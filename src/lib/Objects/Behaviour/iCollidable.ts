@@ -3,5 +3,5 @@ export interface iCollidable
     /*=============================
     **Fields**
     =============================*/
-    collide(collidedWith: string): void;
+    collide(collidedWith: string, spriteCollidedAgainst? : Phaser.Sprite): void;
 }
