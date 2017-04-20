@@ -14,6 +14,9 @@ export class Options extends Phaser.State
 
     private _backButton: Phaser.Button;
 
+    //strings
+    private _fontSize = "250%";
+
     //Lives
     private _playerStartLives: Phaser.Text;
     private _playerDecrementLives: Phaser.Text;
@@ -62,7 +65,7 @@ export class Options extends Phaser.State
 
         //buttons
         this._backButton = this.game.add.button(this.game.world.width - 0.1 * this.game.world.width, this.game.world.height - 0.1 * this.game.world.height,
-            'back-button', this.launchMainMenu, this, 1, 0, 1, 0);
+            'home-button', this.launchMainMenu, this, 1, 0, 1, 0);
 
         this._backButton.anchor.set(1, 1);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._backButton], 0.1, 0.1);
@@ -126,19 +129,22 @@ export class Options extends Phaser.State
     {
         this._playerStartLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             "Lives " + this._game.BreakoutConfig.PlayerNumberOfLives, null);
+        this._playerStartLives.fontSize = this._fontSize;
         this._playerStartLives.x = 0 + 0.2 * this.game.world.width;
         this._playerStartLives.y = 0 + 0.1 * this.game.world.height;
 
-        this._playerDecrementNewLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
+        this._playerDecrementLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             "<", null);
-        this._playerDecrementNewLives.inputEnabled = true;
-        this._playerDecrementNewLives.events.onInputUp.add(this.decreaseLives, this, null);
-        this._playerDecrementNewLives.x = this._playerStartLives.x - 0.5 * this._playerStartLives.width;
-        this._playerDecrementNewLives.y = 0 + 0.1 * this.game.world.height;
+        this._playerDecrementLives.inputEnabled = true;
+        this._playerDecrementLives.events.onInputUp.add(this.decreaseLives, this, null);
+        this._playerDecrementLives.fontSize = this._fontSize;
+        this._playerDecrementLives.x = this._playerStartLives.x - 0.5 * this._playerStartLives.width;
+        this._playerDecrementLives.y = 0 + 0.1 * this.game.world.height;
 
         this._playerIncrementLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             ">", null);
         this._playerIncrementLives.inputEnabled = true;
+        this._playerIncrementLives.fontSize = this._fontSize;
         this._playerIncrementLives.events.onInputUp.add(this.increaseLives, this, null);
         this._playerIncrementLives.x = this._playerStartLives.x + 1.5 * this._playerStartLives.width;
         this._playerIncrementLives.y = 0 + 0.1 * this.game.world.height;
@@ -148,22 +154,25 @@ export class Options extends Phaser.State
     {
         this._playerNewLivesCeiling = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             "Points for Life " + this._game.BreakoutConfig.ValueForNewLife, null);
+        this._playerNewLivesCeiling.fontSize = this._fontSize;
         this._playerNewLivesCeiling.x = 0 + 0.2 * this.game.world.width;
-        this._playerNewLivesCeiling.y = 0 + 0.2 * this.game.world.height;
+        this._playerNewLivesCeiling.y = this._playerStartLives.y + 1.5 * this._playerStartLives.height;
 
-        this._playerDecrementLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
+        this._playerDecrementNewLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             "<", null);
-        this._playerDecrementLives.inputEnabled = true;
-        this._playerDecrementLives.events.onInputUp.add(this.decreaseNewLivesCeiling, this, null);
-        this._playerDecrementLives.x = this._playerNewLivesCeiling.x - 0.2 * this._playerNewLivesCeiling.width;
-        this._playerDecrementLives.y = 0 + 0.2 * this.game.world.height;
+        this._playerDecrementNewLives.inputEnabled = true;
+        this._playerDecrementNewLives.fontSize = this._fontSize;
+        this._playerDecrementNewLives.events.onInputUp.add(this.decreaseNewLivesCeiling, this, null);
+        this._playerDecrementNewLives.x = this._playerNewLivesCeiling.x - 0.2 * this._playerNewLivesCeiling.width;
+        this._playerDecrementNewLives.y = this._playerStartLives.y + 1.5 * this._playerStartLives.height;
 
         this._playerIncrementNewLives = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             ">", null);
         this._playerIncrementNewLives.inputEnabled = true;
+        this._playerIncrementNewLives.fontSize = this._fontSize;
         this._playerIncrementNewLives.events.onInputUp.add(this.IncreaseNewLivesCeiling, this, null);
         this._playerIncrementNewLives.x = this._playerNewLivesCeiling.x + 1.2 * this._playerNewLivesCeiling.width;
-        this._playerIncrementNewLives.y = 0 + 0.2 * this.game.world.height;
+        this._playerIncrementNewLives.y = this._playerStartLives.y + 1.5 * this._playerStartLives.height;
     }
 
     setRefreshScreenText(): void
@@ -171,9 +180,10 @@ export class Options extends Phaser.State
         this._refreshScreenText = this._game.BreakoutWorld.styleManager.positionTextTopLeft(
             "Refresh Screen", null);
         this._refreshScreenText.inputEnabled = true;
+        this._refreshScreenText.fontSize = this._fontSize;
         this._refreshScreenText.events.onInputUp.add(this.refreshScreen, this, null);
         this._refreshScreenText.x = 0 + 0.2 * this.game.world.width;
-        this._refreshScreenText.y = 0 + 0.3 * this.game.world.height;
+        this._refreshScreenText.y = this._playerNewLivesCeiling.y + 1.5 * this._playerNewLivesCeiling.height;
     }
 
 }

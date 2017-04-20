@@ -18,20 +18,6 @@ export abstract class Config {
     protected z_orientation: number;
     protected z_playerNewLife: number;
 
-    //Default Values
-    protected z_defaultWidth: number;
-    protected z_defaultHeight: number;
-    protected z_defaultRenderer: number;
-    protected z_defaultAspect_ratio: number;
-    protected z_defaultTransparent: boolean;
-    protected z_defaultAntialias: boolean;
-    protected z_defaultNumberOfLives: number;
-    protected z_defaultSettableNumberOfLives: number;
-    protected z_defaultNumberOfStages: number;
-    protected z_defaultFrameSize: number;
-    protected z_defaultOrientation: number;
-    protected z_defaultPlayerNewLife: number;
-
     /*=============================
     **Constructors**
     =============================*/
@@ -163,33 +149,5 @@ export abstract class Config {
     /*=============================
     **Methods**
     =============================*/
-
-    protected setGameDefaults() {
-
-        if (this.z_width === null || this.z_width === undefined)
-            this.z_width = this.z_defaultWidth;
-        if (this.z_height === null || this.z_height === undefined)
-            this.z_height = this.z_defaultHeight;
-        if (this.z_renderer === null || this.z_renderer === undefined)
-            this.z_renderer = this.z_defaultRenderer;
-        if (this.z_aspect_ratio === null || this.z_aspect_ratio === undefined)
-            this.z_aspect_ratio = this.z_defaultAspect_ratio;
-        if (this.z_transparent === null || this.z_transparent === undefined)
-            this.z_transparent = this.z_defaultTransparent;
-        if (this.z_antialias === null || this.z_antialias === undefined)
-            this.z_antialias = this.z_defaultAntialias;
-        if (this.z_playerNumberOfLives === null || this.z_playerNumberOfLives === undefined)
-            this.z_playerNumberOfLives = this.z_defaultNumberOfLives;
-        if (this.z_playerMaximumSettableLives === null || this.z_playerMaximumSettableLives === undefined)
-            this.z_playerMaximumSettableLives = this.z_defaultSettableNumberOfLives;
-        if (this.z_numberOfStages === null || this.z_numberOfStages === undefined)
-            this.z_numberOfStages = this.z_defaultNumberOfStages;
-        if (this.z_frameSize === null || this.z_frameSize === undefined)
-            this.z_frameSize = this.z_defaultFrameSize;
-        if (this.z_orientation === null || this.z_orientation === undefined)
-            this.z_orientation = this.z_defaultOrientation;
-        if (this.z_playerNewLife === null || this.z_playerNewLife === undefined)
-            this.z_playerNewLife = this.z_defaultPlayerNewLife;
-    }
 
 }

@@ -15,6 +15,10 @@ Game is modelled after NES and Atari games. It contains many of signatures of ga
 
 //=============================================================//
 
+APK built using Cordova/
+
+//=============================================================//
+
 Design Patterns
 
 Strategy Pattern - Alter object behaviour at runtime. Decouple class behaviour from the classes themselves.

@@ -2,9 +2,11 @@ import { AssetRouter } from './AssetRouter';
 import { AssetLoader } from './AssetLoader';
 import { ScalingManager } from './ScalingManager';
 import { StyleManager } from './StyleManager';
-import { iGameEngine } from './iGameEngine';
 import { StageManager } from './StageManager';
 import { ScoreCalculator } from './ScoreCalculator';
+import { ElementFactory } from '../Factory/ElementFactory';
+
+import { iGameEngine } from './iGameEngine';
 
 export class BreakoutGameEngine implements iGameEngine {
 
@@ -18,7 +20,7 @@ export class BreakoutGameEngine implements iGameEngine {
     styleManager: StyleManager;
     stageManager: StageManager;
     scoreCalculator: ScoreCalculator;
-
+    elementFactory: ElementFactory;
     /*=============================
     **Constructors
     =============================*/
@@ -31,6 +33,7 @@ export class BreakoutGameEngine implements iGameEngine {
         this.scalingManager = new ScalingManager(game, game.width, game.height);
         this.styleManager = new StyleManager(game);
         this.scoreCalculator = new ScoreCalculator(game);
+        this.elementFactory = new ElementFactory(game);
     }
     /*=============================
     **Properties**

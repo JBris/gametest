@@ -1,4 +1,5 @@
 import { Breakout } from '../../Breakout';
+import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
 
 export class Preload extends Phaser.State {
 
@@ -27,13 +28,16 @@ export class Preload extends Phaser.State {
 
     preload(): void  {
 
-        this._loadingSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'ball', 0);
-        this._loadingSprite.anchor.set(0.5, 0.5);
+        //Animated sprite
+        let parameters: SpriteParameterList = new SpriteParameterList(
+            this.game, this.game.world.centerX, this.game.world.centerY, 'ball', 0);
 
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game,[this._loadingSprite],0.2,0.2);
-        this._loadingSprite.animations.add('sleep', [1, 3, 1, 3], 2);
+        this._loadingSprite = this._game.BreakoutWorld.elementFactory.CreateBall.createProduct("normal", parameters);
+
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._loadingSprite], 0.2, 0.2);
+
         if (this._loadingSprite.animations.getAnimation('sleep'))
-            this._loadingSprite.animations.play('sleep', 2, true);
+            this._loadingSprite.animations.play('sleep',2, true);
 
         //sprites
         this.loadSprites();
@@ -103,7 +107,7 @@ export class Preload extends Phaser.State {
     loadButtons(): void 
     {
         this._game.BreakoutWorld.assetLoader.loadButtons('play-button', 'png', 200, 200);
-        this._game.BreakoutWorld.assetLoader.loadButtons('back-button', 'png', 200, 200);
+        this._game.BreakoutWorld.assetLoader.loadButtons('home-button', 'png', 200, 172);
         this._game.BreakoutWorld.assetLoader.loadButtons('off-button', 'png', 220, 259);
         this._game.BreakoutWorld.assetLoader.loadButtons('options-button', 'png', 200, 200);
         this._game.BreakoutWorld.assetLoader.loadButtons('pause-button', 'png', 152, 250);

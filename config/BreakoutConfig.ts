@@ -9,24 +9,22 @@ export class BreakoutConfig extends Config{
     **Constructors**
     =============================*/
     constructor(width?: number, height?: number, renderer?: number, aspect_ratio?: number, transparent?: boolean, antialias?: boolean,
-        playerNumberOfLives?: number, numberOfStages?: number, defaultFrameSize?: number, orientation?: number)
-    {
+        playerNumberOfLives?: number, playerMaximumSettableLives?: number, numberOfStages?: number, defaultFrameSize?: number, orientation?: number, newLife?: number) {
+
         super(width, height, renderer, aspect_ratio, transparent, antialias, playerNumberOfLives, numberOfStages, defaultFrameSize, orientation);
 
-         this.z_defaultWidth = window.innerWidth * window.devicePixelRatio;
-         this.z_defaultHeight = window.innerHeight * window.devicePixelRatio;
-         this.z_defaultRenderer = Phaser.AUTO;
-         this.z_defaultAspect_ratio = this.z_defaultWidth / this.z_defaultHeight;
-         this.z_defaultTransparent = false;
-         this.z_defaultAntialias = false;
-         this.z_defaultNumberOfLives = 5;
-         this.z_defaultSettableNumberOfLives = 9;
-         this.z_defaultNumberOfStages = 3;
-         this.z_defaultFrameSize = 64;
-         this.z_defaultOrientation = 0;
-         this.z_defaultPlayerNewLife = 2500;
-
-         this.setGameDefaults();
+         if (!width) this.z_width = window.innerWidth * window.devicePixelRatio;
+         if (!height) this.z_height = window.innerHeight * window.devicePixelRatio;
+         if (!renderer)this.z_renderer = Phaser.AUTO;
+         if (!aspect_ratio)this.z_aspect_ratio = this.z_width / this.z_height;
+         if (!transparent)this.z_transparent = false;
+         if(!antialias)this.z_antialias = false;
+         if(!playerNumberOfLives)this.z_playerNumberOfLives = 5;
+         if(!playerMaximumSettableLives)this.z_playerMaximumSettableLives = 9;
+         if(!numberOfStages)this.z_numberOfStages = 3;
+         if(!defaultFrameSize)this.z_frameSize = 64;
+         if(!orientation)this.z_orientation = 0;
+         if(!newLife)this.z_playerNewLife = 2500;
     }
 
     /*=============================

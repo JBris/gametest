@@ -69,7 +69,8 @@ export class PlayerList {
         let playerDisplay: string = "";
         for (let player of this._myPlayerList)
         {
-            playerDisplay += "Name: " + player.name + " Score: " + player.score + " Level: " + player.level + '\n';
+            playerDisplay += "Name: " + player.name + " Score: " + player.score +
+                " Level: " + player.level + '\n';
         }
 
         return playerDisplay;

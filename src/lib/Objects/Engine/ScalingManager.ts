@@ -43,8 +43,8 @@ export class ScalingManager extends Phaser.ScaleManager{
         let height: number  = game.world.height * yScaleValue * this._ratio;
         if (this.game.world.width < this.game.world.height)
         {
-            width *= 2;
-            height *= 2;
+            width *= 1.3;
+            height *= 1.3;
         }
 
         for (let element of elements)

@@ -1,6 +1,6 @@
 import { Breakout } from '../../Breakout';
 
-export class FinalBoss extends Phaser.State {
+export class FetusBoss extends Phaser.State {
 
     /*=============================
     **Fields**

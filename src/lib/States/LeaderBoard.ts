@@ -49,7 +49,7 @@ export class LeaderBoard extends Phaser.State
 
         //buttons
         this._backButton = this.game.add.button(this.game.world.width - 0.1 * this.game.world.width, this.game.world.height - 0.1 * this.game.world.height,
-            'back-button', this.launchMainMenu, this, 1, 0, 1, 0);
+            'home-button', this.launchMainMenu, this, 1, 0, 1, 0);
 
         this._backButton.anchor.set(1, 1);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._backButton], 0.1, 0.1);

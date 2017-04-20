@@ -1,5 +1,12 @@
 import { Breakout } from '../../Breakout';
 
+//Params
+import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
+
+//Objects
+//Ball
+import { Ball } from '../Objects/Ball/Ball';
+
 export class Game extends Phaser.State {
 
     /*=============================
@@ -28,12 +35,12 @@ export class Game extends Phaser.State {
     private _restartButton: Phaser.Button;
 
     //Objects
-    private _ball: Phaser.Sprite;
+    private _ball: Ball;
     private _paddle: Phaser.Sprite;
     private _brickInfo: Object;
     private _brick: Phaser.Sprite;
     private _boss: Phaser.Sprite;
-    private _livesIcon: Phaser.Sprite;
+    private _livesIcon: Ball;
     private _bricks: Phaser.Group;
     private _brickMovement: Phaser.Tween;
     private _projectiles: Phaser.Group;
@@ -138,7 +145,7 @@ export class Game extends Phaser.State {
 
     startGame(): void {
         this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0, 0, 500, true);
-        this._ball.body.velocity.set(-75, -300);
+        this._ball.BallMovement.move();
         this.game.physics.arcade.checkCollision.down = false;
         this._ball.events.onOutOfBounds.add(this.ballLeaveScreen, this);
         this.beginPlaying();
@@ -212,7 +219,7 @@ export class Game extends Phaser.State {
 
         if (this._game.BreakoutWorld.stageManager.CurrentStage > this._game.BreakoutConfig.NumberOfStages) {
             this._game.BreakoutWorld.stageManager.CurrentStage = 1;
-            this.game.state.start("FinalBoss", true, false, this._game);
+            this.game.state.start("FetusBoss", true, false, this._game);
         }
         else this.game.state.start("Game", true, false, this._game); 
     }
@@ -510,14 +517,14 @@ export class Game extends Phaser.State {
     loadSprites(): void
     {
 
-
-        //sprites
-        this._livesIcon = this.game.add.sprite(this._livesText.x + this._livesText.width * 1.5,
+        let parameters : SpriteParameterList = new SpriteParameterList(
+            this.game, this._livesText.x + this._livesText.width * 1.5,
             this._livesText.y, 'ball', 0);
 
+        //sprites
         //lives icon
+        this._livesIcon = this._game.BreakoutWorld.elementFactory.CreateBall.createProduct("normal", parameters);
         this._livesIcon.anchor.set(0, 0.7);
-        this._livesIcon.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
         this._livesIcon.alpha = 0.35;
 
         //paddle
@@ -530,20 +537,11 @@ export class Game extends Phaser.State {
 
         //ball
         this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;
-        this._ball = this.game.add.sprite(this._ballPositionX,
-            this._ballPositionY, 'ball', 0);
-
+        parameters.setParameters(this._ballPositionX, this._ballPositionY, 'ball', 0);
+        this._ball = this._game.BreakoutWorld.elementFactory.CreateBall.createProduct("normal", parameters);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
-        this._ball.anchor.set(0.5, 0.5);
-        this._ball.animations.add('ball-to-paddle', [3, 2, 1, 0], 2);
-        this._ball.animations.add('ball-to-brick', [3, 4, 1, 0], 2);
-        this._ball.animations.add('ball-to-boss', [3, 4, 1, 3, 4, 0], 2);
 
-        this.game.physics.enable(this._ball, Phaser.Physics.ARCADE);
-        this._ball.body.collideWorldBounds = true;
-        this._ball.body.bounce.set(1);
-        this._ball.checkWorldBounds = true;
-        this._ball.body.setSize(this._ball.body.width, this._ball.body.height / 4);
+
 
 
         //boss
