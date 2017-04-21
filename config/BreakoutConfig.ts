@@ -21,7 +21,7 @@ export class BreakoutConfig extends Config{
          if(!antialias)this.z_antialias = false;
          if(!playerNumberOfLives)this.z_playerNumberOfLives = 5;
          if(!playerMaximumSettableLives)this.z_playerMaximumSettableLives = 9;
-         if(!numberOfStages)this.z_numberOfStages = 3;
+         if(!numberOfStages)this.z_numberOfStages = 5;
          if(!defaultFrameSize)this.z_frameSize = 64;
          if(!orientation)this.z_orientation = 0;
          if(!newLife)this.z_playerNewLife = 2500;

@@ -49,7 +49,7 @@ export class MainMenu extends Phaser.State
 
         //background
 
-        this._background = this.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[currentStage]);
+        this._background = this.add.image(0, 0, this._game.BreakoutWorld.stageManager.TitleScreenBackground);
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
 
 
@@ -64,7 +64,7 @@ export class MainMenu extends Phaser.State
     {
         let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         //music
-        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[currentStage], 1, true);
+        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.TitleScreenMusic, 1, true);
         this._music.fadeIn(6000);
 
         //buttons

@@ -82,7 +82,7 @@ export class Game extends Phaser.State {
         this._ballTouchedPaddle = true;
         this._levelNumber = this._game.BreakoutWorld.stageManager.CurrentStage;
 
-        this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.BackgroundList[this._levelNumber]);
+        this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.getLevelBackground());
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
 
         this.game.camera.resetFX();
@@ -100,7 +100,7 @@ export class Game extends Phaser.State {
     create(): void {
 
         //music
-        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.MusicList[this._levelNumber], 1, true, true);
+        this._music = this.add.audio(this._game.BreakoutWorld.stageManager.getLevelMusic(), 1, true, true);
         this._music.play();
 
         this.game.time.events.add(1000, this._game.BreakoutWorld.styleManager.fadeText, this, this._levelNumberText);
@@ -521,9 +521,6 @@ export class Game extends Phaser.State {
         parameters.setParameters(this._ballPositionX, this._ballPositionY, 'ball', 0);
         this._ball = this._game.BreakoutWorld.elementFactory.CreateBall.createProduct("normal", parameters);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
-
-
-
 
         //boss
         let randomBoss: string = this._game.BreakoutWorld.stageManager.getLevelBoss();

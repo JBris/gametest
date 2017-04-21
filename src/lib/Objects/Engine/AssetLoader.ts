@@ -28,12 +28,17 @@ export class AssetLoader {
         this._game.load.spritesheet(name, AssetRouter.spriteRoute + name +"."+ fileType, frameWidth, frameHeight);
     }
 
-    loadBossSpriteSheet(name: string, fileType: string, frameWidth: number, frameHeight: number) {
+    loadBossSpriteSheet(name: string, fileType: string, frameWidth: number, frameHeight: number, addToRandomPool :boolean) {
         this._game.load.spritesheet(name, AssetRouter.spriteRoute + name + "." + fileType, frameWidth, frameHeight);
-        this._stageManager.BossList.push(name);
+        if (addToRandomPool) this._stageManager.BossList.push(name);
 
     }
 
+    loadEnemySpriteSheet(name: string, fileType: string, frameWidth: number, frameHeight: number, addToRandomPool: boolean) {
+        this._game.load.spritesheet(name, AssetRouter.spriteRoute + name + "." + fileType, frameWidth, frameHeight);
+        //if (addToRandomPool) this._stageManager.EnemyList.push(name);
+
+    }
 
     loadLogos(name: string, fileType: string, frameWidth: number, frameHeight: number) {
         this._game.load.spritesheet(name, AssetRouter.logoRoute + name + "." + fileType, frameWidth, frameHeight);
@@ -43,10 +48,10 @@ export class AssetLoader {
         this._game.load.spritesheet(name, AssetRouter.buttonRoute + name + "." + fileType, frameWidth, frameHeight);
     }
 
-    loadImage(name: string, fileType: string) 
+    loadImage(name: string, fileType: string, addToRandomPool: boolean) 
     {
         this._game.load.image(name, AssetRouter.backgroundRoute + name + "." + fileType);
-        this._stageManager.BackgroundList.push(name);
+        if (addToRandomPool) this._stageManager.BackgroundList.push(name);
     }
 
     loadSound(name: string, fileType: string, altFileType:string) 
@@ -55,9 +60,9 @@ export class AssetLoader {
 
     }
 
-    loadMusic(name: string, fileType: string, altFileType: string) {
+    loadMusic(name: string, fileType: string, altFileType: string, addToRandomPool: boolean) {
         this._game.load.audio(name, [AssetRouter.mpg3MusicRoute + name + fileType, AssetRouter.oggMusicRoute + name + "." + altFileType]);
-        this._stageManager.MusicList.push(name);
+        if (addToRandomPool) this._stageManager.MusicList.push(name);
     }
 }
 

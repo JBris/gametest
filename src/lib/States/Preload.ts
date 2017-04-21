@@ -56,6 +56,8 @@ export class Preload extends Phaser.State {
 
         //music
         this.loadMusic();
+
+        this._game.BreakoutWorld.stageManager.randomiseGameWorld();
     }
 
     create(): void {
@@ -78,6 +80,8 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('poison', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('fire-eye', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('fire', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('lazer', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('fecal-matter', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bloody-bullet', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bloody-spread', 'png', 64, 64);
 
@@ -85,17 +89,18 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('ammo-box', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('lemon', 'png', 64, 64);
 
-        //bricks
-        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('blue-brick', 'png',64,64);
-        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('gold-brick', 'png', 64, 64);
-        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('green-brick', 'png', 64, 64);
-        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('teal-brick', 'png', 64, 64);
+        //bricks in random pool
+        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('blue-brick', 'png', 64, 64, true);
+        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('gold-brick', 'png', 64, 64, true);;
+        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('green-brick', 'png', 64, 64, true);
+        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('teal-brick', 'png', 64, 64, true);
 
         //bosses in random pool
-        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('skullface', 'png', 64, 64);
-        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('eye', 'png', 64, 64);
-        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('shadow', 'png', 64, 64);
-        this._game.BreakoutWorld.stageManager.shuffleBosses();
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('skullface', 'png', 64, 64, true);
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('eye', 'png', 64, 64, true);
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('shadow', 'png', 64, 64, true);
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('robot', 'png', 64, 64, true);
+        this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('weird-guy', 'png', 64, 64, true);
 
         //specialBosses
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('fetus-ball', 'png', 64, 64);
@@ -119,10 +124,15 @@ export class Preload extends Phaser.State {
 
     loadBackgrounds(): void 
     {
-        this._game.BreakoutWorld.assetLoader.loadImage('1st-sky', 'jpg');
-        this._game.BreakoutWorld.assetLoader.loadImage('2nd-sky', 'jpg');
-        this._game.BreakoutWorld.assetLoader.loadImage('3rd-sky', 'jpg');
-        this._game.BreakoutWorld.assetLoader.loadImage('4th-sky', 'jpg');
+        this._game.BreakoutWorld.assetLoader.loadImage('1st-sky', 'jpg', false);
+        this._game.BreakoutWorld.assetLoader.loadImage('2nd-sky', 'jpg', true);
+        this._game.BreakoutWorld.assetLoader.loadImage('3rd-sky', 'jpg', true);
+        this._game.BreakoutWorld.assetLoader.loadImage('4th-sky', 'jpg', true);
+        this._game.BreakoutWorld.assetLoader.loadImage('5th-sky', 'jpg', true);
+        this._game.BreakoutWorld.assetLoader.loadImage('6th-sky', 'jpg', true);
+
+        this._game.BreakoutWorld.stageManager.TitleScreenBackground = '1st-sky';
+
     }
 
     loadSoundEffects(): void 
@@ -141,17 +151,24 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSound('noble-woman-laugh', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('yuck', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('demon-sound', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('beep-boop', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadSound('what-is-it', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('evil-laugh', 'mp3', 'ogg');
 
     }
     
     loadMusic(): void 
     {
-        this._game.BreakoutWorld.assetLoader.loadMusic('opening_glorious_morning', 'mp3', 'ogg');
-        this._game.BreakoutWorld.assetLoader.loadMusic('stage_1_electrical_adventures', 'mp3', 'ogg');
-        this._game.BreakoutWorld.assetLoader.loadMusic('stage_2_Endgame', 'mp3', 'ogg');
-        this._game.BreakoutWorld.assetLoader.loadMusic('stage_3_parago', 'mp3', 'ogg');
-        this._game.BreakoutWorld.assetLoader.loadMusic('final_chaoz', 'mp3', 'ogg');
+        this._game.BreakoutWorld.assetLoader.loadMusic('opening_glorious_morning', 'mp3', 'ogg', false);
+        this._game.BreakoutWorld.assetLoader.loadMusic('stage_1_electrical_adventures', 'mp3', 'ogg', true);
+        this._game.BreakoutWorld.assetLoader.loadMusic('stage_2_Endgame', 'mp3', 'ogg', true);
+        this._game.BreakoutWorld.assetLoader.loadMusic('stage_3_parago', 'mp3', 'ogg', true);
+        this._game.BreakoutWorld.assetLoader.loadMusic('stage_4_fire_aura', 'mp3', 'ogg', true);
+        this._game.BreakoutWorld.assetLoader.loadMusic('stage_5_show_no_fear', 'mp3', 'ogg', true);
+        this._game.BreakoutWorld.assetLoader.loadMusic('final_chaoz', 'mp3', 'ogg', false);
+
+        this._game.BreakoutWorld.stageManager.TitleScreenMusic = 'opening_glorious_morning';
+        this._game.BreakoutWorld.stageManager.FetusScreenMusic = 'final_chaoz';
 
     }
 }
