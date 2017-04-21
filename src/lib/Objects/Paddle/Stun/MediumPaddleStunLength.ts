@@ -1,18 +1,22 @@
-import { iMovable } from '../../Behaviour/iMovable';
-import { iStunnable } from '../../Behaviour/iStunnable';
+import { aPaddleStunBehaviour } from './aPaddleStunBehaviour';
 
 import { Paddle } from '../Paddle';
 
-export interface iPaddleMovement extends iMovable, iStunnable {
+export class MediumPaddleStunLength extends aPaddleStunBehaviour {
 
     /*=============================
     **Fields**
     =============================*/
-    paddle: Paddle;
-    offscreenBufferDistance: number;
 
     /*=============================
     **Constructors**
+    =============================*/
+    constructor(paddle: Paddle) {
+        super(paddle);
+        this.stunDuration = 0.4;
+    }
+    /*=============================
+    **Properties**
     =============================*/
 
     /*=============================

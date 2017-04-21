@@ -1,26 +1,24 @@
-import { iMovable } from '../../Behaviour/iMovable';
+import { aPaddleStunBehaviour } from './aPaddleStunBehaviour';
 
 import { Paddle } from '../Paddle';
 
-export abstract class aPaddleMovement implements iMovable {
+export class PaddleStunImmune  extends aPaddleStunBehaviour {
 
     /*=============================
     **Fields**
     =============================*/
-    paddle: Paddle;
-    offscreenBufferDistance: number;
-    alphaIntensity: number;
-    intialAlphaState: number;
 
     /*=============================
     **Constructors**
     =============================*/
     constructor(paddle: Paddle) {
-        this.paddle = paddle;
-        this.offscreenBufferDistance = 10;
-        this.alphaIntensity = 0.5;
-        this.intialAlphaState = 1;
+        super(paddle);
+        this.stunDuration = 0;
+        this.isImmuneToStun = true;
     }
+    /*=============================
+    **Properties**
+    =============================*/
 
     /*=============================
     **Properties**
@@ -33,11 +31,6 @@ export abstract class aPaddleMovement implements iMovable {
     /*=============================
     **Methods**
     =============================*/
-    move(): void {
-        this.paddleMovement();
-    }
-
-    protected abstract paddleMovement():void;
 
 }
 

@@ -1,16 +1,22 @@
-import { iCollidable } from '../../Behaviour/iCollidable';
+import { aPaddleStunBehaviour } from './aPaddleStunBehaviour';
 
 import { Paddle } from '../Paddle';
 
-export interface iPaddleCollisionBehaviour extends iCollidable {
+export class LongPaddleStunLength extends aPaddleStunBehaviour {
 
     /*=============================
     **Fields**
     =============================*/
-    paddle: Paddle;
 
     /*=============================
     **Constructors**
+    =============================*/
+    constructor(paddle: Paddle) {
+        super(paddle);
+        this.stunDuration = 0.7;
+    }
+    /*=============================
+    **Properties**
     =============================*/
 
     /*=============================
@@ -24,7 +30,6 @@ export interface iPaddleCollisionBehaviour extends iCollidable {
     /*=============================
     **Methods**
     =============================*/
-    paddleCollidesWithBall(ball : Phaser.Sprite): void;
 
 }
 

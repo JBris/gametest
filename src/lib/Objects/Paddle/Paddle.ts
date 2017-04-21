@@ -1,5 +1,6 @@
-import { iPaddleMovement } from './Movement/iPaddleMovement';
+import { iMovable } from '../Behaviour/iMovable';
 import { iCollidable } from '../Behaviour/iCollidable';
+import { iStunnable } from '../Behaviour/iStunnable';
 
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
@@ -8,11 +9,13 @@ export abstract class Paddle extends Phaser.Sprite {
     /*=============================
     **Fields**
     =============================*/
-    protected z_paddleMovement: iPaddleMovement;
+    protected z_paddleMovement: iMovable;
     protected z_paddleCollision: iCollidable;
+    protected z_stunBehaviour: iStunnable;
     protected z_basePhysicalDamage: number = 0;
     protected z_baseShieldDamage: number = 0;
     protected z_baseStunDuration: number = 0; //seconds
+    protected z_baseNumberOfShots: number = 0; //seconds
 
     /*=============================
     **Constructors
@@ -25,19 +28,23 @@ export abstract class Paddle extends Phaser.Sprite {
         this.initAnimations();
         this.setMovementType();
         this.setCollisionType();
-
+        this.setStunType();
     }
 
     /*=============================
     **Properties**
     =============================*/
     //getters
-    get PaddleMovement(): iPaddleMovement {
+    get PaddleMovement(): iMovable {
         return this.z_paddleMovement;
     }
 
     get PaddleCollision(): iCollidable {
         return this.z_paddleCollision;
+    }
+
+    get StunBehaviour(): iStunnable {
+        return this.z_stunBehaviour;
     }
 
     get BasePhysicalDamage(): number {
@@ -52,13 +59,20 @@ export abstract class Paddle extends Phaser.Sprite {
         return this.z_baseStunDuration;
     }
 
+    get BaseNumberOfShots(): number {
+        return this.z_baseNumberOfShots;
+    }
     //setters
-    set PaddleMovement(val: iPaddleMovement) {
+    set PaddleMovement(val: iMovable) {
         this.z_paddleMovement = val;
     }
 
     set PaddleCollision(val: iCollidable) {
         this.z_paddleCollision = val;
+    }
+
+    set StunBehaviour(val: iStunnable) {
+        this.z_stunBehaviour = val;
     }
 
     set BasePhysicalDamage(val: number) {
@@ -73,6 +87,9 @@ export abstract class Paddle extends Phaser.Sprite {
         this.z_baseStunDuration = val;
     }
 
+    set BaseNumberOfShots(val: number) {
+        this.z_baseNumberOfShots = val;
+    }
     /*=============================
     **Methods**
     =============================*/
@@ -91,7 +108,7 @@ export abstract class Paddle extends Phaser.Sprite {
     protected abstract initAnimations(): void;
     protected abstract setMovementType(): void;
     protected abstract setCollisionType(): void;
-
+    protected abstract setStunType(): void;
 }
 
 

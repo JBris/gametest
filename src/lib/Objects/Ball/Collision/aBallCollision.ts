@@ -31,26 +31,48 @@ export abstract class aBallCollision implements iCollidable, iDamagesHealth, iDa
     /*=============================
     **Methods**
     =============================*/
-    collide(collidedWith: string): void
+    collide(collidedWithType: string, collidedWithSprite: iCollidable, paddleVelocityX: number): void
     {
-        this.collideAgainstBall(collidedWith);
+        this.collideAgainstBall(collidedWithType, collidedWithSprite, paddleVelocityX);
     }
 
-    protected collideAgainstBall(collidedWith: string): void {
+    protected collideAgainstBall(collidedWithType: string, collidedWithSprite: iCollidable, paddleVelocityX: number): void {
 
-        if (collidedWith === "paddle" && this.z_ball.animations.getAnimation('ball-to-paddle'))
+        if (collidedWithType === "paddle" && this.z_ball.animations.getAnimation('ball-to-paddle'))
+        {
+            this.ballAgainstPaddleVelocityChange(paddleVelocityX);
             this.z_ball.animations.play('ball-to-paddle');
+        }
 
-        if (collidedWith === "brick" && this.z_ball.animations.getAnimation('ball-to-brick'))
+        if (collidedWithType === "brick" && this.z_ball.animations.getAnimation('ball-to-brick'))
             this.z_ball.animations.play('ball-to-brick');
-
-        if (collidedWith === "boss" && this.z_ball.animations.getAnimation('ball-to-boss'))
+           
+        if (collidedWithType === "boss" && this.z_ball.animations.getAnimation('ball-to-boss'))
             this.z_ball.animations.play('ball-to-boss');
 
-        if (collidedWith === "hurt" && this.z_ball.animations.getAnimation('hurt'))
+        if (collidedWithType === "hurt" && this.z_ball.animations.getAnimation('hurt'))
             this.z_ball.animations.play('hurt');
 
         if (this.z_ball.game.cache.checkSoundKey('ball-to-paddle')) this.z_ball.game.sound.play('ball-to-paddle');
+    }
+
+    protected ballAgainstPaddleVelocityChange(paddleVelocityX)
+    {
+        let diff: number = 0;
+        if (this.z_ball.x < paddleVelocityX) {
+            //  left side
+            diff = paddleVelocityX - this.z_ball.x;
+            this.z_ball.body.velocity.x = (-5 * diff);
+        }
+        else if (this.z_ball.x > paddleVelocityX) {
+            //  right side
+            diff = this.z_ball.x - paddleVelocityX;
+            this.z_ball.body.velocity.x = (5 * diff);
+        }
+        else {
+            //random
+            this.z_ball.body.velocity.x = 1 + Math.random() * 5;
+        }
     }
 }
 

@@ -3,5 +3,6 @@ export interface iCollidable
     /*=============================
     **Fields**
     =============================*/
-    collide(collidedWith: string, spriteCollidedAgainst? : Phaser.Sprite): void;
+    collide(collidedWithType: string, collidedAgainst?: iCollidable, changeInVelocity?: number): void;
+    receiveCollisionDamage?(healthDamage :number, shieldDamage?:number);
 }

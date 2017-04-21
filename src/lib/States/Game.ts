@@ -235,8 +235,8 @@ export class Game extends Phaser.State {
 
         if (this._currentlyPlaying)
         {
-            this._ball.BallCollision.collide("paddle");
-            this._paddle.PaddleCollision.collide("ball", this._ball);
+            this._ball.BallCollision.collide("paddle",this._paddle.PaddleCollision,this._paddle.x);
+            this._paddle.PaddleCollision.collide("ball");
         }
     }
 
@@ -511,8 +511,8 @@ export class Game extends Phaser.State {
         this._livesIcon.alpha = 0.35;
 
         //paddle
-        parameters.setParameters(this.game.world.centerX, this.game.world.height - this.game.world.height * 0.1,'paddle',0);
-        this._paddle = this.game.add.sprite(this._paddlePositionX, this._paddlePositionY, 'paddle', 0);
+        parameters.setParameters(this.game.world.centerX, this.game.world.height - this.game.world.height * 0.1, 'paddle', 0);
+        this._paddle = this._game.BreakoutWorld.elementFactory.CreatePaddle.createProduct("normal", parameters);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._paddle], 0.1, 0.1);
 
 
@@ -526,8 +526,9 @@ export class Game extends Phaser.State {
 
 
         //boss
+        let randomBoss: string = this._game.BreakoutWorld.stageManager.getLevelBoss();
         this._boss = this.game.add.sprite(0 + this.game.world.width * 0.1, 0 - 0.5 * this.game.world.height,
-            this._game.BreakoutWorld.stageManager.BossList[this._levelNumber -1], 0);
+            randomBoss, 0);
         this._boss.anchor.set(0.5, 0.5);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._boss], 0.15, 0.15);
         this.game.physics.enable(this._boss, Phaser.Physics.ARCADE);

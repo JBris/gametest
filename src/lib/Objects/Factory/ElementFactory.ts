@@ -1,5 +1,10 @@
 import { BreakoutAbstractFactory } from './BreakoutAbstractFactory';
+
+//Factories
 import { BallFactory } from '../Ball/Factory/BallFactory';
+import { PaddleFactory } from '../Paddle/Factory/PaddleFactory';
+
+//Params
 import { iParameterList } from './iParameterList';
 
 export class ElementFactory extends Phaser.GameObjectFactory {
@@ -8,6 +13,7 @@ export class ElementFactory extends Phaser.GameObjectFactory {
     **Fields**
     =============================*/
     private _ballFactory: BreakoutAbstractFactory;
+    private _paddleFactory: BreakoutAbstractFactory;
 
     /*=============================
     **Constructors
@@ -16,6 +22,7 @@ export class ElementFactory extends Phaser.GameObjectFactory {
     {
         super(game);
         this._ballFactory = new BallFactory(game);
+        this._paddleFactory = new PaddleFactory(game);
     }
 
     /*=============================
@@ -24,6 +31,9 @@ export class ElementFactory extends Phaser.GameObjectFactory {
     //getters
     get CreateBall(): BreakoutAbstractFactory
     { return this._ballFactory; }
+
+    get CreatePaddle(): BreakoutAbstractFactory
+    { return this._paddleFactory; }
 
     //setters
 

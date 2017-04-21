@@ -1,30 +1,19 @@
-import { iPaddleMovement } from './iPaddleMovement';
+import { aPaddleMovement } from './aPaddleMovement';
 
 import { Paddle } from '../Paddle';
 
-export class PaddleFollowsKeys implements iPaddleMovement {
+export class PaddleFollowsKeys extends aPaddleMovement {
 
     /*=============================
     **Fields**
     =============================*/
-    paddle: Paddle;
-    offscreenBufferDistance: number;
     private _cursors: Phaser.CursorKeys;
-    stunDuration: number;//seconds
-    isCurrentlyStunned: boolean;
-    alphaIntensity: number;
-
     /*=============================
     **Constructors**
     =============================*/
-    constructor(paddle: Paddle)
-    {
-        this.paddle = paddle;
-        this.offscreenBufferDistance = 10;
+    constructor(paddle: Paddle) {
+        super(paddle);
         this._cursors = this.paddle.game.input.keyboard.createCursorKeys();
-        this.isCurrentlyStunned = false;
-        this.stunDuration = 0.05;
-        this.alphaIntensity = 0.5;
     }
 
     /*=============================
@@ -38,9 +27,9 @@ export class PaddleFollowsKeys implements iPaddleMovement {
     /*=============================
     **Methods**
     =============================*/
-    move(): void
+    protected paddleMovement(): void
     {
-        if (!this.isCurrentlyStunned)
+        if (!this.paddle.StunBehaviour.isCurrentlyStunned)
         {
             if (this._cursors.left.isDown) {
                 this.paddle.body.velocity.x = -200;
@@ -48,22 +37,16 @@ export class PaddleFollowsKeys implements iPaddleMovement {
             else if (this._cursors.right.isDown) {
                 this.paddle.body.velocity.x = 200;
             }
+
+            if (this.paddle.x < this.offscreenBufferDistance) {
+                this.paddle.x = this.offscreenBufferDistance;
+            }
+            else if (this.paddle.x > this.paddle.game.width - this.offscreenBufferDistance) {
+                this.paddle.x = this.paddle.game.width - this.offscreenBufferDistance;
+            }
         }    
     }
 
-    stunMe(): void {
-        this.isCurrentlyStunned = true;
-        this.paddle.alpha = this.alphaIntensity;
-        if (this.paddle.animations.getAnimation('hurt')) this.paddle.animations.play('hurt');
-        this.paddle.game.time.events.add(Phaser.Timer.SECOND *
-            this.stunDuration + this.paddle.BaseStunDuration, this.unStunMe, this);
-    }
-
-    unStunMe(): void {
-        this.isCurrentlyStunned = false;
-        this.paddle.alpha = 1;
-        if (this.paddle.animations.getAnimation('idle')) this.paddle.animations.play('idle');
-    }
 }
 
 

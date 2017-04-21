@@ -3,6 +3,7 @@ import { Paddle } from './Paddle';
 //Behaviours
 import { PaddleFollowsInputMovement } from './Movement/PaddleFollowsInputMovement';
 import { NormalPaddleCollisionBehaviour } from './Collision/NormalPaddleCollisionBehaviour';
+import { LongPaddleStunLength } from './Stun/LongPaddleStunLength';
 
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
@@ -20,7 +21,7 @@ export class MeanPaddle extends Paddle {
         super(parameterList);
         this.z_basePhysicalDamage = 3;
         this.z_baseShieldDamage = 1;
-        this.z_baseStunDuration = 0.4;
+        this.z_baseStunDuration = 0.5;
     }
 
     /*=============================
@@ -34,15 +35,14 @@ export class MeanPaddle extends Paddle {
     **Methods**
     =============================*/
     protected initAnimations() {
-        this.animations.add('paddle-to-ball', [1, 2, 6, 5], 2);
-        this.animations.add('paddle-to-drop', [5, 6, 5, 6], 2);
-        this.animations.add('fire', [1, 5, 1, 5], 2);
-        this.animations.add('hurt', [3, 4, 3, 4,3,4], 2);
-        this.animations.add('idle', [0, 2], 1, true).play();
+        this.animations.add('paddle-to-ball', [1, 2, 6, 5, 0], 2);
+        this.animations.add('paddle-to-drop', [5, 6, 5, 6, 0], 2);
+        this.animations.add('fire', [1, 5, 1, 5, 0], 2);
+        this.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);
+        this.animations.add('idle', [0, 2, 0], 1, true).play();
     }
 
-    protected setMovementType(): void
-    {
+    protected setMovementType(): void {
         this.z_paddleMovement = new PaddleFollowsInputMovement(this);
     }
 
@@ -50,6 +50,9 @@ export class MeanPaddle extends Paddle {
         this.z_paddleCollision = new NormalPaddleCollisionBehaviour(this);
     }
 
+    protected setStunType(): void {
+        this.z_stunBehaviour = new LongPaddleStunLength(this);
+    }
 
 }
 
