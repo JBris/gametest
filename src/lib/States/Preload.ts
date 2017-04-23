@@ -1,5 +1,6 @@
 import { Breakout } from '../../Breakout';
 import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
+import { EnemyDataNode } from '../Objects/Enemy/EnemyDataNode';
 
 export class Preload extends Phaser.State {
 
@@ -32,7 +33,7 @@ export class Preload extends Phaser.State {
         let parameters: SpriteParameterList = new SpriteParameterList(
             this.game, this.game.world.centerX, this.game.world.centerY, 'ball', 0);
 
-        this._loadingSprite = this._game.BreakoutWorld.elementFactory.CreateBall.createProduct("normal", parameters);
+        this._loadingSprite = this._game.BreakoutWorld.factoryManager.CreateBall.createProduct("normal", parameters);
 
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._loadingSprite], 0.2, 0.2);
 
@@ -57,7 +58,17 @@ export class Preload extends Phaser.State {
         //music
         this.loadMusic();
 
+        let enemyList: Array<EnemyDataNode> = [ //higher value increases the probability of brick type being selected
+            new EnemyDataNode("blue-brick", 15),
+            new EnemyDataNode("green-brick", 15),
+            new EnemyDataNode("teal-brick", 6),
+            new EnemyDataNode("gold-gold", 8)
+        ];
+
+        //this._game.BreakoutWorld.stageManager.initEnemyList(enemyList);
         this._game.BreakoutWorld.stageManager.randomiseGameWorld();
+
+
     }
 
     create(): void {
@@ -75,7 +86,9 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('paddle', 'png', 64, 64);
 
         //projectiles
-        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bullet-player', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bullet-player-single', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bullet-player-multi', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bullet-player-spread', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('bullet-enemy', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('poison', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('fire-eye', 'png', 64, 64);
@@ -89,11 +102,11 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('ammo-box', 'png', 64, 64);
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('lemon', 'png', 64, 64);
 
-        //bricks in random pool
-        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('blue-brick', 'png', 64, 64, true);
-        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('gold-brick', 'png', 64, 64, true);;
-        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('green-brick', 'png', 64, 64, true);
-        this._game.BreakoutWorld.assetLoader.loadEnemySpriteSheet('teal-brick', 'png', 64, 64, true);
+        //bricks
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('blue-brick', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('gold-brick', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('green-brick', 'png', 64, 64);
+        this._game.BreakoutWorld.assetLoader.loadSpriteSheet('teal-brick', 'png', 64, 64);
 
         //bosses in random pool
         this._game.BreakoutWorld.assetLoader.loadBossSpriteSheet('skullface', 'png', 64, 64, true);

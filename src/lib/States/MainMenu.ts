@@ -43,8 +43,6 @@ export class MainMenu extends Phaser.State
 
         this._game.BreakoutWorld.stageManager.CurrentStage = 0;
 
-        let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
-
         this._game.BreakoutWorld.scalingManager.scaleGameScreen();
 
         //background
@@ -56,13 +54,15 @@ export class MainMenu extends Phaser.State
         //logo
         this._title = new Title(this.game, this.game.world.centerX, this.game.world.centerY, 'title', 0);
         this.game.add.existing(this._title);
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game,[this._title],0.2,0.15);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._title], 0.2, 0.15);
 
+        //resetWorld
+        this._game.BreakoutWorld.stageManager.resetGameWorld();
+        this._game.BreakoutWorld.stageManager.randomiseGameWorld();
     }
 
     create(): void 
     {
-        let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         //music
         this._music = this.add.audio(this._game.BreakoutWorld.stageManager.TitleScreenMusic, 1, true);
         this._music.fadeIn(6000);

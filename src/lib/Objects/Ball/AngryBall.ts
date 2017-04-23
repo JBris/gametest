@@ -33,7 +33,7 @@ export class AngryBall extends Ball {
     /*=============================
     **Methods**
     =============================*/
-    protected initAnimations() {
+    protected initAnimations(): void {
         this.animations.add('sleep', [1, 3, 1, 3], 2);
         this.animations.add('ball-to-paddle', [3, 2, 1, 0], 2);
         this.animations.add('ball-to-brick', [3, 4, 1, 0], 2);

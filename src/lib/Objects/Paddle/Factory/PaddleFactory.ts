@@ -39,7 +39,7 @@ export class PaddleFactory extends BreakoutAbstractFactory {
     buildProduct(productType: string, parameterList: SpriteParameterList): Paddle {
         let producedPaddle: Paddle;
         if (productType === "mean") producedPaddle = new MeanPaddle(parameterList);
-        if (productType === "shooter") producedPaddle = new ShooterPaddle(parameterList);
+        else if (productType === "shooter") producedPaddle = new ShooterPaddle(parameterList);
         else producedPaddle = new NormalPaddle(parameterList); 
              
         return this.z_game.add.existing(producedPaddle);   

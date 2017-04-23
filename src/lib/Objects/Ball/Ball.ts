@@ -88,7 +88,7 @@ export abstract class Ball extends Phaser.Sprite {
     /*=============================
     **Methods**
     =============================*/
-    private initBallSettings()
+    private initBallSettings() : void
     {
         this.anchor.set(0.5, 0.5);
         this.game.physics.enable(this, Phaser.Physics.ARCADE);

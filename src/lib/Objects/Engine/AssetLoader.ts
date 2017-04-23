@@ -1,21 +1,19 @@
 import { AssetRouter } from './AssetRouter';
-import { StageManager } from './StageManager';
+import { Breakout } from '../../../Breakout';
 
 export class AssetLoader {
 
     /*=============================
     **Fields**
     =============================*/
-    private _game: Phaser.Game;
-    private _assetRouter: AssetRouter;
-    private _stageManager: StageManager;
+    private _game: Breakout;
+
     /*=============================
     **Constructors
     =============================*/
-    constructor(game: Phaser.Game, assetRouter: AssetRouter, stageManager: StageManager) {
+    constructor(game: Breakout) {
         this._game = game;
-        this._assetRouter = assetRouter;
-        this._stageManager = stageManager;
+
     }
     /*=============================
     **Properties**
@@ -30,13 +28,7 @@ export class AssetLoader {
 
     loadBossSpriteSheet(name: string, fileType: string, frameWidth: number, frameHeight: number, addToRandomPool :boolean) {
         this._game.load.spritesheet(name, AssetRouter.spriteRoute + name + "." + fileType, frameWidth, frameHeight);
-        if (addToRandomPool) this._stageManager.BossList.push(name);
-
-    }
-
-    loadEnemySpriteSheet(name: string, fileType: string, frameWidth: number, frameHeight: number, addToRandomPool: boolean) {
-        this._game.load.spritesheet(name, AssetRouter.spriteRoute + name + "." + fileType, frameWidth, frameHeight);
-        //if (addToRandomPool) this._stageManager.EnemyList.push(name);
+        if (addToRandomPool) this._game.BreakoutWorld.stageManager.BossList.push(name);
 
     }
 
@@ -51,7 +43,7 @@ export class AssetLoader {
     loadImage(name: string, fileType: string, addToRandomPool: boolean) 
     {
         this._game.load.image(name, AssetRouter.backgroundRoute + name + "." + fileType);
-        if (addToRandomPool) this._stageManager.BackgroundList.push(name);
+        if (addToRandomPool) this._game.BreakoutWorld.stageManager.BackgroundList.push(name);
     }
 
     loadSound(name: string, fileType: string, altFileType:string) 
@@ -62,7 +54,7 @@ export class AssetLoader {
 
     loadMusic(name: string, fileType: string, altFileType: string, addToRandomPool: boolean) {
         this._game.load.audio(name, [AssetRouter.mpg3MusicRoute + name + fileType, AssetRouter.oggMusicRoute + name + "." + altFileType]);
-        if (addToRandomPool) this._stageManager.MusicList.push(name);
+        if (addToRandomPool) this._game.BreakoutWorld.stageManager.MusicList.push(name);
     }
 }
 

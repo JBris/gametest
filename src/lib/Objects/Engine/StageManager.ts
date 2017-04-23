@@ -1,9 +1,11 @@
+import { Breakout } from '../../../Breakout';
+
 export class StageManager
 {
     /*=============================
     **Fields**
     =============================*/
-    private _game: Phaser.Game;
+    private _game: Breakout;
 
     //randomized music
     private _musicList: Array<string>;
@@ -12,9 +14,6 @@ export class StageManager
     //randomized background
     private _backgroundList: Array<string>;
     private _seenbackground: Array<string>;
-
-    //randomized enemies
-    private _enemyList: Array<string>;
 
     //randomized bosses
     private _bossList: Array<string>;
@@ -32,7 +31,7 @@ export class StageManager
     /*=============================
     **Constructors**
     =============================*/
-    constructor(game :Phaser.Game)
+    constructor(game: Breakout)
     {
         this._game = game;
 
@@ -57,6 +56,7 @@ export class StageManager
     get BackgroundList(): Array<string>
     { return this._backgroundList; }
 
+
     get BossList(): Array<string>
     { return this._bossList; }
 
@@ -74,6 +74,7 @@ export class StageManager
 
     get FetusScreenMusic(): string
     { return this._fetusScreenMusic; }
+
 
     //setters
 
@@ -101,6 +102,7 @@ export class StageManager
     set FetusScreenMusic(val: string)
     { this._fetusScreenMusic = val; }
 
+
     /*=============================
     **Methods**
     =============================*/
@@ -115,6 +117,13 @@ export class StageManager
 
     getLevelMusic(): string {
         return this.getRandomizedListElement(this._musicList, this._playedMusic);
+    }
+
+    resetGameWorld(): void
+    {
+        this.mergeLists(this._musicList, this._playedMusic);
+        this.mergeLists(this._backgroundList, this._seenbackground);
+        this.mergeLists(this._bossList, this._foughtBosses);
     }
 
     randomiseGameWorld(): void
@@ -143,13 +152,20 @@ export class StageManager
     //Using Durstenfeld shuffle algorithm.
     shuffleList(array : Array<string>) : void
     {
-        for (let i: number = array.length - 1; i > 0; i--)
+        if (array.length > 0)
         {
-            let j : number = Math.floor(Math.random() * (i + 1));
-            let temp: string = array[i];
-            array[i] = array[j];
-            array[j] = temp;
+            for (let i: number = array.length - 1; i > 0; i--) {
+                let j: number = Math.floor(Math.random() * (i + 1));
+                let temp: string = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
         }
+    }
 
+    mergeLists(fullList: Array<string>, emptyList: Array<string>): void
+    {
+        fullList = fullList.concat(emptyList);
+        emptyList = [];
     }
 }

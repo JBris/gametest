@@ -4,6 +4,8 @@ import { Paddle } from './Paddle';
 import { PaddleFollowsInputMovement } from './Movement/PaddleFollowsInputMovement';
 import { NormalPaddleCollisionBehaviour } from './Collision/NormalPaddleCollisionBehaviour';
 import { ShortPaddleStunLength } from './Stun/ShortPaddleStunLength';
+import { PaddleProjectileMulti } from './Projectile/PaddleProjectileMulti';
+import { PaddleAttackMulti } from './Attack/PaddleAttackMulti';
 
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
@@ -23,6 +25,8 @@ export class ShooterPaddle extends Paddle {
         this.z_baseShieldDamage = 1;
         this.z_baseStunDuration = 0.5;
         this.z_baseNumberOfShots = 1;
+        this.loadAmmunition('bullet-player-multi');
+
     }
 
     /*=============================
@@ -53,6 +57,10 @@ export class ShooterPaddle extends Paddle {
 
     protected setStunType(): void {
         this.z_stunBehaviour = new ShortPaddleStunLength(this);
+    }
+
+    protected setAttackType(): void {
+        this.z_attack = new PaddleAttackMulti(this);
     }
 
 }

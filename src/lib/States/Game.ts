@@ -7,6 +7,9 @@ import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
 import { Ball } from '../Objects/Ball/Ball';
 import { Paddle } from '../Objects/Paddle/Paddle';
 
+//Groups
+import { BreakoutGroup } from '../Objects/Group/BreakoutGroup';
+
 export class Game extends Phaser.State {
 
     /*=============================
@@ -45,7 +48,7 @@ export class Game extends Phaser.State {
     private _projectiles: Phaser.Group;
     private _projectile: Phaser.Sprite;
     private _drops: Phaser.Group;
-    private _playerBullets: Phaser.Group;
+    private _playerBullets: BreakoutGroup;
 
     //Text
     private _levelNumberText: Phaser.Text;
@@ -260,7 +263,7 @@ export class Game extends Phaser.State {
             drop.visible = true;
             this.game.physics.enable(drop, Phaser.Physics.ARCADE);
             drop.body.gravity.y = 100;
-
+         
         }
         brick.kill();
 
@@ -285,7 +288,8 @@ export class Game extends Phaser.State {
     paddleGetsDrop(paddle: Phaser.Sprite, drop: Phaser.Sprite): void
     {
         drop.kill();
-        this.game.time.events.repeat(Phaser.Timer.SECOND * 0.35, 3,this.playerFireBullet, this);
+        this._paddle.Attack.attack();
+        //this.game.time.events.repeat(Phaser.Timer.SECOND * 0.35, 3,this.playerFireBullet, this);
     }
 
 
@@ -318,6 +322,11 @@ export class Game extends Phaser.State {
             }
             yPosition = this._brick.y + this.game.world.height * 0.1;
         }
+        this._bricks.visible = true;
+        this._bricks.setAll('anchor.x', 0.5);
+        this._bricks.setAll('anchor.y', 0.5);
+        this._bricks.setAll('outOfBoundsKill', true);
+        this._bricks.setAll('checkWorldBounds', true);
 
         this._brickMovement = this.game.add.tween(this._bricks).to({ x: this.game.width * 0.15 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000,true).start();
     }
@@ -326,6 +335,7 @@ export class Game extends Phaser.State {
     {
         // The enemy's bullets
         this._projectiles = this.game.add.group();
+        this.game.add.group();
         this._projectiles.enableBody = true;
         this._projectiles.physicsBodyType = Phaser.Physics.ARCADE;
         this._projectiles.createMultiple(30, 'bullet-enemy', 0);
@@ -351,15 +361,8 @@ export class Game extends Phaser.State {
 
     loadPlayerBullets(): void
     {
-        this._playerBullets = this.game.add.group();
-        this._playerBullets.enableBody = true;
-        this._playerBullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this._playerBullets.createMultiple(30, 'bullet-player', 0);
-        this._playerBullets.visible = true;
-        this._playerBullets.setAll('anchor.x', 0.5);
-        this._playerBullets.setAll('anchor.y', 1);
-        this._playerBullets.setAll('outOfBoundsKill', true);
-        this._playerBullets.setAll('checkWorldBounds', true);
+       
+
     }
 
     playerFireBullet()
@@ -506,20 +509,20 @@ export class Game extends Phaser.State {
 
         //sprites
         //lives icon
-        this._livesIcon = this._game.BreakoutWorld.elementFactory.CreateBall.createProduct("normal", parameters);
+        this._livesIcon = this._game.BreakoutWorld.factoryManager.CreateBall.createProduct("normal", parameters);
         this._livesIcon.anchor.set(0, 0.7);
         this._livesIcon.alpha = 0.35;
 
         //paddle
         parameters.setParameters(this.game.world.centerX, this.game.world.height - this.game.world.height * 0.1, 'paddle', 0);
-        this._paddle = this._game.BreakoutWorld.elementFactory.CreatePaddle.createProduct("normal", parameters);
+        this._paddle = this._game.BreakoutWorld.factoryManager.CreatePaddle.createProduct("normal", parameters);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._paddle], 0.1, 0.1);
 
 
         //ball
         this._ballPositionY = this._paddle.y - this._paddle.height * 0.1;
         parameters.setParameters(this._ballPositionX, this._ballPositionY, 'ball', 0);
-        this._ball = this._game.BreakoutWorld.elementFactory.CreateBall.createProduct("normal", parameters);
+        this._ball = this._game.BreakoutWorld.factoryManager.CreateBall.createProduct("normal", parameters);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
 
         //boss

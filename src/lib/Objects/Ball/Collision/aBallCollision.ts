@@ -38,6 +38,8 @@ export abstract class aBallCollision implements iCollidable, iDamagesHealth, iDa
 
     protected collideAgainstBall(collidedWithType: string, collidedWithSprite: iCollidable, paddleVelocityX: number): void {
 
+        //animations
+
         if (collidedWithType === "paddle" && this.z_ball.animations.getAnimation('ball-to-paddle'))
         {
             this.ballAgainstPaddleVelocityChange(paddleVelocityX);
@@ -54,6 +56,14 @@ export abstract class aBallCollision implements iCollidable, iDamagesHealth, iDa
             this.z_ball.animations.play('hurt');
 
         if (this.z_ball.game.cache.checkSoundKey('ball-to-paddle')) this.z_ball.game.sound.play('ball-to-paddle');
+
+        //damage against enemy
+       /* if (collidedWithType === "brick" || collidedWithType === "boss" && collidedWithSprite!== undefined) {
+            let totalHealthDamage = this.healthDamageValue + this.z_ball.BasePhysicalDamage;
+            let totalShieldDamage = this.shieldDamageValue + this.z_ball.BaseShieldDamage;
+
+            collidedWithSprite.receiveCollisionDamage(totalHealthDamage, totalShieldDamage);
+        }*/
     }
 
     protected ballAgainstPaddleVelocityChange(paddleVelocityX)

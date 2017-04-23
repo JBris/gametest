@@ -2,6 +2,10 @@ import { iMovable } from '../Behaviour/iMovable';
 import { iCollidable } from '../Behaviour/iCollidable';
 import { iStunnable } from '../Behaviour/iStunnable';
 
+//Attacks
+import { iAttacks } from '../Behaviour/iAttacks';
+import { PaddleProjectileGroup } from './Projectile/PaddleProjectileGroup';
+
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
 export abstract class Paddle extends Phaser.Sprite {
@@ -9,9 +13,15 @@ export abstract class Paddle extends Phaser.Sprite {
     /*=============================
     **Fields**
     =============================*/
+
+    //behaviours
     protected z_paddleMovement: iMovable;
     protected z_paddleCollision: iCollidable;
     protected z_stunBehaviour: iStunnable;
+    protected z_attack: iAttacks;
+    protected z_ammoPool: PaddleProjectileGroup;
+
+    //stats
     protected z_basePhysicalDamage: number = 0;
     protected z_baseShieldDamage: number = 0;
     protected z_baseStunDuration: number = 0; //seconds
@@ -24,11 +34,14 @@ export abstract class Paddle extends Phaser.Sprite {
     constructor(parameterList: SpriteParameterList)
     {
         super(parameterList.game, parameterList.x, parameterList.y, parameterList.key, parameterList.frame);
+        this.z_ammoPool = new PaddleProjectileGroup(this.game, this);
+
         this.initPaddleSettings();
         this.initAnimations();
         this.setMovementType();
         this.setCollisionType();
         this.setStunType();
+        this.setAttackType();
     }
 
     /*=============================
@@ -47,6 +60,14 @@ export abstract class Paddle extends Phaser.Sprite {
         return this.z_stunBehaviour;
     }
 
+    get Attack(): iAttacks {
+        return this.z_attack;
+    }
+
+    get AmmoPool(): PaddleProjectileGroup {
+        return this.z_ammoPool;
+    }
+
     get BasePhysicalDamage(): number {
         return this.z_basePhysicalDamage;
     }
@@ -62,6 +83,8 @@ export abstract class Paddle extends Phaser.Sprite {
     get BaseNumberOfShots(): number {
         return this.z_baseNumberOfShots;
     }
+
+
     //setters
     set PaddleMovement(val: iMovable) {
         this.z_paddleMovement = val;
@@ -73,6 +96,13 @@ export abstract class Paddle extends Phaser.Sprite {
 
     set StunBehaviour(val: iStunnable) {
         this.z_stunBehaviour = val;
+    }
+
+    set Attack(val: iAttacks) {
+        this.z_attack = val;
+    }
+    set AmmoPool(val: PaddleProjectileGroup) {
+        this.z_ammoPool = val;
     }
 
     set BasePhysicalDamage(val: number) {
@@ -100,15 +130,24 @@ export abstract class Paddle extends Phaser.Sprite {
         this.body.setSize(this.body.width * 0.8, this.body.height / 4);
     }
 
-    resetPaddle(): void 
-    {
-        this.reset(this.game.world.centerX, this.game.world.height - this.game.world.height * 0.1);
-    }
 
     protected abstract initAnimations(): void;
     protected abstract setMovementType(): void;
     protected abstract setCollisionType(): void;
     protected abstract setStunType(): void;
+    protected abstract setAttackType(): void;
+
+    resetPaddle(): void 
+    {
+        this.reset(this.game.world.centerX, this.game.world.height - this.game.world.height * 0.1);
+    }
+
+    loadAmmunition(key : string | string[], groupSize?: number, frame?: any): void
+    {
+        this.z_ammoPool.createGroup(key, groupSize,frame);
+    }
+
+ 
 }
 
 

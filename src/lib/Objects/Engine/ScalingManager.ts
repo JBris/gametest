@@ -1,16 +1,20 @@
+import { Breakout } from '../../../Breakout';
+
 export class ScalingManager extends Phaser.ScaleManager{
 
     /*=============================
     **Fields**
     =============================*/
+    private _game: Breakout;
+
     private _ratio: number = window.innerWidth / window.innerHeight;
 
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game, width: string | number, height: string | number) {
-        super(game, width, height);
+    constructor(game: Breakout) {
+        super(game, game.width, game.height);
     }
 
     /*=============================

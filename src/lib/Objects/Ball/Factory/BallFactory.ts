@@ -39,7 +39,7 @@ export class BallFactory extends BreakoutAbstractFactory {
     buildProduct(productType: string, parameterList: SpriteParameterList): Ball {
         let producedBall: Ball;
         if (productType === "shield") producedBall = new ShieldBusterBall(parameterList);
-        if (productType === "angry") producedBall = new AngryBall(parameterList);
+        else if (productType === "angry") producedBall = new AngryBall(parameterList);
         else producedBall = new NormalBall(parameterList); 
              
         return this.z_game.add.existing(producedBall);   

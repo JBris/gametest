@@ -4,6 +4,8 @@ import { Paddle } from './Paddle';
 import { PaddleFollowsInputMovement } from './Movement/PaddleFollowsInputMovement';
 import { NormalPaddleCollisionBehaviour } from './Collision/NormalPaddleCollisionBehaviour';
 import { LongPaddleStunLength } from './Stun/LongPaddleStunLength';
+import { PaddleProjectileSpread } from './Projectile/PaddleProjectileSpread';
+import { PaddleAttackSpread } from './Attack/PaddleAttackSpread';
 
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
@@ -22,6 +24,8 @@ export class MeanPaddle extends Paddle {
         this.z_basePhysicalDamage = 3;
         this.z_baseShieldDamage = 1;
         this.z_baseStunDuration = 0.5;
+        this.loadAmmunition('bullet-player-spread');
+
     }
 
     /*=============================
@@ -52,6 +56,10 @@ export class MeanPaddle extends Paddle {
 
     protected setStunType(): void {
         this.z_stunBehaviour = new LongPaddleStunLength(this);
+    }
+
+    protected setAttackType(): void {
+        this.z_attack = new PaddleAttackSpread(this);
     }
 
 }

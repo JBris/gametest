@@ -4,6 +4,8 @@ import { Paddle } from './Paddle';
 import { PaddleFollowsInputMovement } from './Movement/PaddleFollowsInputMovement';
 import { NormalPaddleCollisionBehaviour } from './Collision/NormalPaddleCollisionBehaviour';
 import { MediumPaddleStunLength } from './Stun/MediumPaddleStunLength';
+import { PaddleProjectileSingle } from './Projectile/PaddleProjectileSingle';
+import { PaddleAttackSingle } from './Attack/PaddleAttackSingle';
 
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
@@ -22,6 +24,7 @@ export class NormalPaddle extends Paddle {
         this.z_basePhysicalDamage = 2;
         this.z_baseShieldDamage = 1;
         this.z_baseStunDuration = 0.3;
+        this.loadAmmunition('bullet-player-single');
     }
 
     /*=============================
@@ -53,6 +56,11 @@ export class NormalPaddle extends Paddle {
 
     protected setStunType(): void {
         this.z_stunBehaviour = new MediumPaddleStunLength(this);
+    }
+
+    protected setAttackType(): void
+    {
+        this.z_attack = new PaddleAttackSingle(this);
     }
 
 }

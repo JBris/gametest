@@ -4,36 +4,40 @@ import { ScalingManager } from './ScalingManager';
 import { StyleManager } from './StyleManager';
 import { StageManager } from './StageManager';
 import { ScoreCalculator } from './ScoreCalculator';
-import { ElementFactory } from '../Factory/ElementFactory';
+import { FactoryManager } from '../Factory/FactoryManager';
+import { GroupManager } from '../Group/GroupManager';
 
 import { iGameEngine } from './iGameEngine';
+import { Breakout } from '../../../Breakout';
 
 export class BreakoutGameEngine implements iGameEngine {
 
     /*=============================
     **Fields**
     =============================*/
-    game: Phaser.Game;
+    game: Breakout;
     assetRouter: AssetRouter;
     assetLoader: AssetLoader;
     scalingManager: ScalingManager;
     styleManager: StyleManager;
     stageManager: StageManager;
     scoreCalculator: ScoreCalculator;
-    elementFactory: ElementFactory;
+    factoryManager: FactoryManager;
+    groupManager: GroupManager;
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(game :Phaser.Game)
+    constructor(game: Breakout)
     {
         this.assetRouter = new AssetRouter();
         this.stageManager = new StageManager(game);
-        this.assetLoader = new AssetLoader(game, this.assetRouter, this.stageManager);
-        this.scalingManager = new ScalingManager(game, game.width, game.height);
+        this.assetLoader = new AssetLoader(game);
+        this.scalingManager = new ScalingManager(game);
         this.styleManager = new StyleManager(game);
         this.scoreCalculator = new ScoreCalculator(game);
-        this.elementFactory = new ElementFactory(game);
+        this.factoryManager = new FactoryManager(game);
+        this.groupManager = new GroupManager(game);
     }
     /*=============================
     **Properties**

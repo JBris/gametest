@@ -1,9 +1,11 @@
+import { Breakout } from '../../../Breakout';
+
 export class StyleManager {
 
     /*=============================
     **Fields**
     =============================*/
-    private _game: Phaser.Game;
+    private _game: Breakout;
 
     //default styles
     static readonly font: string = "Signika, sans-serif";
@@ -23,7 +25,7 @@ export class StyleManager {
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game)
+    constructor(game: Breakout)
     {
         this._game = game;
     }

@@ -31,7 +31,6 @@ export class LeaderBoard extends Phaser.State
     preload(): void 
     {
         this._game.BreakoutWorld.stageManager.CurrentStage = 0;
-        let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
         this._game.BreakoutWorld.scalingManager.scaleGameScreen();
 
         //background
@@ -41,8 +40,6 @@ export class LeaderBoard extends Phaser.State
 
     create(): void 
     {
-        let currentStage: number = this._game.BreakoutWorld.stageManager.CurrentStage;
-
         //music
         this._music = this.add.audio(this._game.BreakoutWorld.stageManager.TitleScreenMusic, 1, true);
         this._music.fadeIn(6000);
