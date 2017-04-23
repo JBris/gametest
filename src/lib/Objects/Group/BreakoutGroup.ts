@@ -1,3 +1,5 @@
+import { Breakout } from '../../../Breakout';
+
 //Behaviours
 import { iActsAsGroup } from '../Behaviour/iActsAsGroup';
 
@@ -6,14 +8,15 @@ export abstract class BreakoutGroup extends Phaser.Group implements iActsAsGroup
     /*=============================
     **Fields**
     =============================*/
-    
+    protected z_game: Breakout;
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game)
+    constructor(game: Breakout)
     {
         super(game);
+        this.z_game = game;
         this.enableBody = true;
         this.physicsBodyType = Phaser.Physics.ARCADE;
     }
@@ -45,6 +48,11 @@ export abstract class BreakoutGroup extends Phaser.Group implements iActsAsGroup
         this.setAll('anchor.y', 0.5);
         this.setAll('outOfBoundsKill', true);
         this.setAll('checkWorldBounds', true);
+    }
+
+    getFirstExistsInGroup(): Phaser.Sprite
+    {
+        return this.getFirstExists(false);
     }
 
     clearGroup(): void

@@ -1,9 +1,12 @@
+import { Breakout } from '../../../Breakout';
+
 import { iMovable } from '../Behaviour/iMovable';
 import { iCollidable } from '../Behaviour/iCollidable';
 import { iStunnable } from '../Behaviour/iStunnable';
 
 //Attacks
 import { iAttacks } from '../Behaviour/iAttacks';
+import { iActsAsGroup } from '../Behaviour/iActsAsGroup';
 import { PaddleProjectileGroup } from './Projectile/PaddleProjectileGroup';
 
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
@@ -13,13 +16,13 @@ export abstract class Paddle extends Phaser.Sprite {
     /*=============================
     **Fields**
     =============================*/
-
+    protected z_game: Breakout;
     //behaviours
     protected z_paddleMovement: iMovable;
     protected z_paddleCollision: iCollidable;
     protected z_stunBehaviour: iStunnable;
     protected z_attack: iAttacks;
-    protected z_ammoPool: PaddleProjectileGroup;
+    protected z_ammoPool: iActsAsGroup;
 
     //stats
     protected z_basePhysicalDamage: number = 0;
@@ -31,10 +34,11 @@ export abstract class Paddle extends Phaser.Sprite {
     **Constructors
     =============================*/
 
-    constructor(parameterList: SpriteParameterList)
+    constructor(game: Breakout, parameterList: SpriteParameterList)
     {
         super(parameterList.game, parameterList.x, parameterList.y, parameterList.key, parameterList.frame);
-        this.z_ammoPool = new PaddleProjectileGroup(this.game, this);
+        this.z_game = game;
+        this.z_ammoPool = new PaddleProjectileGroup(this.z_game, this);
 
         this.initPaddleSettings();
         this.initAnimations();
@@ -64,7 +68,7 @@ export abstract class Paddle extends Phaser.Sprite {
         return this.z_attack;
     }
 
-    get AmmoPool(): PaddleProjectileGroup {
+    get AmmoPool(): iActsAsGroup {
         return this.z_ammoPool;
     }
 
@@ -101,7 +105,7 @@ export abstract class Paddle extends Phaser.Sprite {
     set Attack(val: iAttacks) {
         this.z_attack = val;
     }
-    set AmmoPool(val: PaddleProjectileGroup) {
+    set AmmoPool(val: iActsAsGroup) {
         this.z_ammoPool = val;
     }
 

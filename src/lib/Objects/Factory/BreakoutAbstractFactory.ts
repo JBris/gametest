@@ -6,12 +6,12 @@ export abstract class BreakoutAbstractFactory {
     /*=============================
     **Fields**
     =============================*/
-    protected z_game: Phaser.Game;
+    protected z_game: Breakout;
     /*=============================
     **Constructors
     =============================*/
 
-    constructor(game : Phaser.Game)
+    constructor(game : Breakout)
     {
         this.z_game = game;
     }

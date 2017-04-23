@@ -59,6 +59,7 @@ export class MainMenu extends Phaser.State
         //resetWorld
         this._game.BreakoutWorld.stageManager.resetGameWorld();
         this._game.BreakoutWorld.stageManager.randomiseGameWorld();
+        this._game.BreakoutWorld.stageManager.EnemyManager.randomiseEnemySeed();
     }
 
     create(): void 

@@ -36,7 +36,7 @@ export class PaddleAttackMulti extends PaddleAttack{
     }
 
     protected fireMultipleShots(): void {
-        this.z_paddleProjectile = this.z_paddle.AmmoPool.getFirstExists(false);
+        this.z_paddleProjectile = this.z_paddle.AmmoPool.getFirstExistsInGroup();
         if (this.z_paddleProjectile) {
 
             if (this.z_paddleProjectile.animations.getAnimation('fly')) this.z_paddleProjectile.animations.play('fly', 6, true);

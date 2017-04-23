@@ -20,7 +20,7 @@ export class BallFactory extends BreakoutAbstractFactory {
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game)
+    constructor(game: Breakout)
     {
         super(game);
     }

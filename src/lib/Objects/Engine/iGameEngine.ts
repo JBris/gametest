@@ -5,7 +5,6 @@ import { StyleManager } from './StyleManager';
 import { StageManager } from './StageManager';
 import { ScoreCalculator } from './ScoreCalculator';
 import { FactoryManager } from '../Factory/FactoryManager';
-import { GroupManager } from '../Group/GroupManager';
 
 export interface iGameEngine {
 
@@ -20,7 +19,6 @@ export interface iGameEngine {
     stageManager: StageManager;
     scoreCalculator: ScoreCalculator;
     factoryManager: FactoryManager;
-    groupManager: GroupManager;
 
     /*=============================
     **Properties**

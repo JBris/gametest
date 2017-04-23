@@ -1,6 +1,5 @@
 import { Breakout } from '../../Breakout';
 import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
-import { EnemyDataNode } from '../Objects/Enemy/EnemyDataNode';
 
 export class Preload extends Phaser.State {
 
@@ -58,12 +57,8 @@ export class Preload extends Phaser.State {
         //music
         this.loadMusic();
 
-        let enemyList: Array<EnemyDataNode> = [ //higher value increases the probability of brick type being selected
-            new EnemyDataNode("blue-brick", 15),
-            new EnemyDataNode("green-brick", 15),
-            new EnemyDataNode("teal-brick", 6),
-            new EnemyDataNode("gold-gold", 8)
-        ];
+        //data
+        this.loadData();
 
         //this._game.BreakoutWorld.stageManager.initEnemyList(enemyList);
         this._game.BreakoutWorld.stageManager.randomiseGameWorld();
@@ -72,6 +67,10 @@ export class Preload extends Phaser.State {
     }
 
     create(): void {
+
+        //getSeed
+        this._game.BreakoutWorld.stageManager.EnemyManager.seedEnemyList(this.game.cache.getText('brick-field'));
+
         this.camera.fade(0x000000, 3000);
         this.camera.onFadeComplete.addOnce(this.launchMainMenu ,this);
     }
@@ -83,6 +82,7 @@ export class Preload extends Phaser.State {
 
     loadSprites(): void 
     {
+        //paddle
         this._game.BreakoutWorld.assetLoader.loadSpriteSheet('paddle', 'png', 64, 64);
 
         //projectiles
@@ -183,5 +183,11 @@ export class Preload extends Phaser.State {
         this._game.BreakoutWorld.stageManager.TitleScreenMusic = 'opening_glorious_morning';
         this._game.BreakoutWorld.stageManager.FetusScreenMusic = 'final_chaoz';
 
+    }
+
+    loadData(): void
+    {
+        //brick data
+        this._game.load.text('brick-field', 'assets/data/brick-field.json');
     }
 }

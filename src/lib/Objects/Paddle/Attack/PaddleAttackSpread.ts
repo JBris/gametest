@@ -38,7 +38,7 @@ export class PaddleAttackSpread extends PaddleAttack{
     }
 
     protected fireSpreadShot(): void {
-        this.z_paddleProjectile = this.z_paddle.AmmoPool.getFirstExists(false);
+        this.z_paddleProjectile = this.z_paddle.AmmoPool.getFirstExistsInGroup();
 
         if (this.z_paddleProjectile) {
 

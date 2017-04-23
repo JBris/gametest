@@ -1,3 +1,5 @@
+import { Breakout } from '../../../Breakout';
+
 import { Paddle } from './Paddle';
 
 //Behaviours
@@ -19,8 +21,8 @@ export class NormalPaddle extends Paddle {
     **Constructors
     =============================*/
 
-    constructor(parameterList: SpriteParameterList) {
-        super(parameterList);
+    constructor(game: Breakout, parameterList: SpriteParameterList){
+        super(game, parameterList);
         this.z_basePhysicalDamage = 2;
         this.z_baseShieldDamage = 1;
         this.z_baseStunDuration = 0.3;

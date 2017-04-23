@@ -1,11 +1,16 @@
 import { Breakout } from '../../../Breakout';
 
+import { EnemyManager } from '../Enemy/EnemyManager';
+
 export class StageManager
 {
     /*=============================
     **Fields**
     =============================*/
     private _game: Breakout;
+
+    //Enemies
+    private _enemyManager: EnemyManager;
 
     //randomized music
     private _musicList: Array<string>;
@@ -34,6 +39,7 @@ export class StageManager
     constructor(game: Breakout)
     {
         this._game = game;
+        this._enemyManager = new EnemyManager(game);
 
         this._musicList = new Array<string>();
         this._playedMusic = new Array<string>();
@@ -50,12 +56,14 @@ export class StageManager
     **Properties**
     =============================*/
     //getters
+    get EnemyManager(): EnemyManager
+    { return this._enemyManager; }
+
     get MusicList(): Array<string>
     { return this._musicList;  }
 
     get BackgroundList(): Array<string>
     { return this._backgroundList; }
-
 
     get BossList(): Array<string>
     { return this._bossList; }
@@ -118,6 +126,7 @@ export class StageManager
     getLevelMusic(): string {
         return this.getRandomizedListElement(this._musicList, this._playedMusic);
     }
+
 
     resetGameWorld(): void
     {

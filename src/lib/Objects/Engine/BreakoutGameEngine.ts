@@ -5,7 +5,6 @@ import { StyleManager } from './StyleManager';
 import { StageManager } from './StageManager';
 import { ScoreCalculator } from './ScoreCalculator';
 import { FactoryManager } from '../Factory/FactoryManager';
-import { GroupManager } from '../Group/GroupManager';
 
 import { iGameEngine } from './iGameEngine';
 import { Breakout } from '../../../Breakout';
@@ -23,7 +22,6 @@ export class BreakoutGameEngine implements iGameEngine {
     stageManager: StageManager;
     scoreCalculator: ScoreCalculator;
     factoryManager: FactoryManager;
-    groupManager: GroupManager;
     /*=============================
     **Constructors
     =============================*/
@@ -37,7 +35,6 @@ export class BreakoutGameEngine implements iGameEngine {
         this.styleManager = new StyleManager(game);
         this.scoreCalculator = new ScoreCalculator(game);
         this.factoryManager = new FactoryManager(game);
-        this.groupManager = new GroupManager(game);
     }
     /*=============================
     **Properties**

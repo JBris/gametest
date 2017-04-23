@@ -8,7 +8,7 @@ import { Game } from './lib/States/Game';
 import { FetusBoss } from './lib/States/FetusBoss';
 
 //Config and engine imports
-import { Config } from '../config/Config';
+import { Config } from './lib/config/Config';
 import { PlayerList } from './lib/Objects/Player/PlayerList';
 import { iGameEngine } from './lib/Objects/Engine/iGameEngine';
 import { BreakoutGameEngine } from './lib/Objects/Engine/BreakoutGameEngine';

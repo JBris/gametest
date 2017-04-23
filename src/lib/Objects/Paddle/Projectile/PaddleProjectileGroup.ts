@@ -1,3 +1,5 @@
+import { Breakout } from '../../../../Breakout';
+
 //Behaviours
 import { BreakoutGroup } from '../../Group/BreakoutGroup';
 
@@ -17,7 +19,7 @@ export class PaddleProjectileGroup extends BreakoutGroup {
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game, paddle : Phaser.Sprite)
+    constructor(game: Breakout, paddle : Phaser.Sprite)
     {
         super(game);
         this._paddle = paddle;
@@ -27,9 +29,6 @@ export class PaddleProjectileGroup extends BreakoutGroup {
     **Properties**
     =============================*/
     //getters
-
-
-
     //setters
 
     /*=============================
@@ -49,7 +48,6 @@ export class PaddleProjectileGroup extends BreakoutGroup {
         this.createMultiple(groupSize, key, frame);
 
         if (this.classType !== Phaser.Sprite) this.setAll('Paddle', this._paddle);
-        
         this.initGroupValues();
     }
 

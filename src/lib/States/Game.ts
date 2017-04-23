@@ -85,9 +85,9 @@ export class Game extends Phaser.State {
         this._ballTouchedPaddle = true;
         this._levelNumber = this._game.BreakoutWorld.stageManager.CurrentStage;
 
+        //visuals
         this._background = this.game.add.image(0, 0, this._game.BreakoutWorld.stageManager.getLevelBackground());
         this._game.BreakoutWorld.scalingManager.scaleBreakoutBackground(this._background);
-
         this.game.camera.resetFX();
         this.camera.onFadeComplete.forget();
 
@@ -95,9 +95,15 @@ export class Game extends Phaser.State {
         this._ballPositionX = this.game.world.centerX;
         //can't set ball position y just yet
 
+        //loading resources
         this.loadButtons();
         this.loadText();
         this.loadSprites();
+
+        this._game.BreakoutWorld.stageManager.EnemyManager.randomiseEnemySeed();
+        this._game.BreakoutWorld.stageManager.EnemyManager.createEnemyGroupWithSeed();
+        
+
     }
 
     create(): void {
@@ -114,7 +120,7 @@ export class Game extends Phaser.State {
     update(): void {
         
         this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle,null, this);
-        this.game.physics.arcade.collide(this._ball, this._bricks, this.ballCollideBrick, null, this);
+        this.game.physics.arcade.collide(this._ball, this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup, this.ballCollideBrick, null, this);
         this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
         this.game.physics.arcade.collide(this._paddle, this._projectiles, this.projectileCollidesPaddle, null, this);
         this.game.physics.arcade.collide(this._paddle, this._drops, this.paddleGetsDrop, null, this);
@@ -123,7 +129,7 @@ export class Game extends Phaser.State {
         if (this._currentlyPlaying) {
             this._paddle.PaddleMovement.move();       
             if (this.game.time.now > this._firingTimer) {
-                this.enemyFires();
+           //     this.enemyFires();
             }
 
         }
@@ -267,9 +273,9 @@ export class Game extends Phaser.State {
         }
         brick.kill();
 
-        if (this._bricks.countLiving() <= 0) {
-            this.introduceBoss();
-        }
+       // if (this._bricks.countLiving() <= 0) {
+         //   this.introduceBoss();
+       // }
     }
 
     ballCollideBoss(ball: Phaser.Sprite, boss: Phaser.Sprite): void {
@@ -289,7 +295,7 @@ export class Game extends Phaser.State {
     {
         drop.kill();
         this._paddle.Attack.attack();
-        //this.game.time.events.repeat(Phaser.Timer.SECOND * 0.35, 3,this.playerFireBullet, this);
+       
     }
 
 
@@ -299,37 +305,6 @@ export class Game extends Phaser.State {
    //Group behaviour
    //===============================================================================================================//
 
-    loadBricks() : void
-    {
-
-        this._bricks = this.game.add.group();
-        this._bricks.enableBody = true;
-        this._bricks.physicsBodyType = Phaser.Physics.ARCADE;
-
-        let yPosition: number = 0 + this.game.world.height * 0.1;
-
-        for (let rows: number = 0; rows < 4; rows++) {
-            let xPosition: number = 0 + this.game.world.width * 0.05;
-            for (let columns: number = 0; columns < 8; columns++) {
-                this._brick = this._bricks.create(xPosition, yPosition, 'blue-brick');
-                this._brick.body.bounce.set(1);
-                this._brick.body.immovable = true;
-                this._brick.body.setSize(this._brick.body.width * 0.4, this._brick.body.height * 0.4);
-                this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._brick],0.08,0.08);
-                let float = this._brick.animations.add('float', [0, 1, 0, 1, 0, 1, 0, 1], 2,true);
-                float.play();
-                xPosition = this._brick.x + this.game.world.width * 0.1;
-            }
-            yPosition = this._brick.y + this.game.world.height * 0.1;
-        }
-        this._bricks.visible = true;
-        this._bricks.setAll('anchor.x', 0.5);
-        this._bricks.setAll('anchor.y', 0.5);
-        this._bricks.setAll('outOfBoundsKill', true);
-        this._bricks.setAll('checkWorldBounds', true);
-
-        this._brickMovement = this.game.add.tween(this._bricks).to({ x: this.game.width * 0.15 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000,true).start();
-    }
 
     loadProjectiles(): void
     {
@@ -357,22 +332,6 @@ export class Game extends Phaser.State {
         this._drops.setAll('anchor.y', 1);
         this._drops.setAll('outOfBoundsKill', true);
         this._drops.setAll('checkWorldBounds', true);
-    }
-
-    loadPlayerBullets(): void
-    {
-       
-
-    }
-
-    playerFireBullet()
-    {
-        let newBullet: Phaser.Sprite = this._playerBullets.getFirstExists(false);
-        if (newBullet)
-        {
-            newBullet.reset(this._paddle.x, this._paddle.y + this._paddle.height * 0.2);
-            newBullet.body.velocity.y = -400;
-        }   
     }
 
 
@@ -537,10 +496,6 @@ export class Game extends Phaser.State {
 
         //projectiles
         this.loadProjectiles();
-        this.loadPlayerBullets();
-
-        //bricks
-        this.loadBricks();
 
         //drops
         this.loadDrops();

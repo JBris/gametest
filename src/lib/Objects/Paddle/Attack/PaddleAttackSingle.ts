@@ -37,12 +37,10 @@ export class PaddleAttackSingle extends PaddleAttack{
     }
 
     protected fireSingleShot(): void {
-        this.z_paddleProjectile = this.z_paddle.AmmoPool.getFirstExists(false);
+        this.z_paddleProjectile = this.z_paddle.AmmoPool.getFirstExistsInGroup();
         if (this.z_paddleProjectile) {
-
             if (this.z_paddleProjectile.animations.getAnimation('fly')) this.z_paddleProjectile.animations.play('fly', 6, true);
             if (this.z_paddle.game.cache.checkSoundKey('bullet-fire')) this.z_paddle.game.sound.play('bullet-fire');
-
             this.z_paddleProjectile.reset(this.z_paddle.x, this.z_paddle.y + this.z_paddle.height * 0.2);
             this.z_paddleProjectile.body.velocity.y = this.z_paddleProjectile.ProjectileSpeed;
         }

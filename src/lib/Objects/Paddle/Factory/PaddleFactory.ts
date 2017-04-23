@@ -20,7 +20,7 @@ export class PaddleFactory extends BreakoutAbstractFactory {
     **Constructors
     =============================*/
 
-    constructor(game: Phaser.Game)
+    constructor(game: Breakout)
     {
         super(game);
     }
@@ -38,9 +38,9 @@ export class PaddleFactory extends BreakoutAbstractFactory {
     =============================*/
     buildProduct(productType: string, parameterList: SpriteParameterList): Paddle {
         let producedPaddle: Paddle;
-        if (productType === "mean") producedPaddle = new MeanPaddle(parameterList);
-        else if (productType === "shooter") producedPaddle = new ShooterPaddle(parameterList);
-        else producedPaddle = new NormalPaddle(parameterList); 
+        if (productType === "mean") producedPaddle = new MeanPaddle(this.z_game, parameterList);
+        else if (productType === "shooter") producedPaddle = new ShooterPaddle(this.z_game, parameterList);
+        else producedPaddle = new NormalPaddle(this.z_game, parameterList);
              
         return this.z_game.add.existing(producedPaddle);   
     }
