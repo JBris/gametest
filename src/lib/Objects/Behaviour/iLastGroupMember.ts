@@ -1,9 +1,9 @@
-export interface iAttacks {
+export interface iLastGroupMember {
 
     /*=============================
     **Fields**
     =============================*/
-    attackEnabled?: boolean;
+
     /*=============================
     **Properties**
     =============================*/
@@ -11,7 +11,8 @@ export interface iAttacks {
     /*=============================
     **Methods**
     =============================*/
-    attack(attackXCoordinate? : number, attackYCoordinate?: number): void;
+    reactToTheSituation(): void;
+
 
 }
 

@@ -6,9 +6,14 @@ import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
 //Objects
 import { Ball } from '../Objects/Ball/Ball';
 import { Paddle } from '../Objects/Paddle/Paddle';
+import { Brick } from '../Objects/Enemy/Brick/Brick';
 
 //Groups
 import { BreakoutGroup } from '../Objects/Group/BreakoutGroup';
+
+//Behaviours
+import { iActsAsGroup } from '../Objects/Behaviour/iActsAsGroup';
+import { iCollidable } from '../Objects/Behaviour/iCollidable';
 
 export class Game extends Phaser.State {
 
@@ -40,10 +45,10 @@ export class Game extends Phaser.State {
     private _ball: Ball;
     private _paddle: Paddle;
     private _brickInfo: Object;
-    private _brick: Phaser.Sprite;
+    private _brick: Brick;
     private _boss: Phaser.Sprite;
     private _livesIcon: Ball;
-    private _bricks: Phaser.Group;
+    private _bricks: iActsAsGroup;
     private _brickMovement: Phaser.Tween;
     private _projectiles: Phaser.Group;
     private _projectile: Phaser.Sprite;
@@ -102,8 +107,8 @@ export class Game extends Phaser.State {
 
         this._game.BreakoutWorld.stageManager.EnemyManager.randomiseEnemySeed();
         this._game.BreakoutWorld.stageManager.EnemyManager.createEnemyGroupWithSeed();
-        
-
+        this._bricks = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup;
+        this._bricks.moveAsGroup();
     }
 
     create(): void {
@@ -250,12 +255,10 @@ export class Game extends Phaser.State {
     }
 
 
-    ballCollideBrick(ball: Phaser.Sprite, brick: Phaser.Sprite): void // TODO: Add collidable
+    ballCollideBrick(ball: Phaser.Sprite, brick: Brick): void // TODO: Add collidable
     {
-        this._ball.BallCollision.collide("brick");
-
-        brick.physicsEnabled = false;
-       // ball.collide("brick");
+        this._ball.BallCollision.collide("brick", brick.BrickCollision);
+        brick.BrickCollision.collide('ball');
 
         this.updateScore(10);
         this._ballTouchedPaddle = false;
@@ -271,7 +274,6 @@ export class Game extends Phaser.State {
             drop.body.gravity.y = 100;
          
         }
-        brick.kill();
 
        // if (this._bricks.countLiving() <= 0) {
          //   this.introduceBoss();
@@ -344,9 +346,9 @@ export class Game extends Phaser.State {
 
         let livingEnemies: Array<Phaser.Sprite> = new Array<Phaser.Sprite>();
 
-        this._bricks.forEachAlive(function (projectile) {
-            livingEnemies.push(projectile);
-        }, this, this._projectile);
+       // this._bricks.forEachAlive(function (projectile) {
+        //    livingEnemies.push(projectile);
+        //}, this, this._projectile);
 
         if (livingEnemies.length > 0) {
             let random : number = this.game.rnd.integerInRange(0, livingEnemies.length - 1);

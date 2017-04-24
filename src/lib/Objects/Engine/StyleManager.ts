@@ -54,17 +54,30 @@ export class StyleManager {
 
     damageFlash(duration : number, colour? : number) :void
     {
-        let defaultColour = 0xff0000;
+        let defaultColour : number = 0xff0000;
         if (colour !== undefined && colour !== null) defaultColour = colour;
         this._game.camera.flash(defaultColour, duration);
     }
 
     fadeText(text : Phaser.Text, duration?:number) : void
     {
-        let fadeDuration: number = 1500;
-        if (duration !== undefined && duration !== null) fadeDuration = duration;
-        this._game.add.tween(text).to({ y: 0 }, fadeDuration, Phaser.Easing.Linear.None, true);
-        this._game.add.tween(text).to({ alpha: 0 }, fadeDuration, Phaser.Easing.Linear.None, true);
+        if (duration === undefined) duration = 1500;
+        this._game.add.tween(text).to({ y: 0 }, duration, Phaser.Easing.Linear.None, true);
+        this._game.add.tween(text).to({ alpha: 0 }, duration, Phaser.Easing.Linear.None, true);
+    }
+
+    flashDamageText(text: string, xCoordinate:number, yCoordinate : number, damageType?: string): void
+    {
+        //style text
+        let damageText: Phaser.Text = this._game.add.text(xCoordinate, yCoordinate, text, null);
+        this.styleTextWithDefaults(damageText);
+        damageText.fontSize = "300%";
+
+        //colour text
+        if (damageType === "health" || damageType === undefined) damageType = "#ff80bf";
+        else if (damageType === "shield") damageType = "#b30059";
+        damageText.addColor(damageType, 0); 
+        this.fadeText(damageText, 1000); 
     }
 
     positionTextCenter(text: string, styles?: any): Phaser.Text {

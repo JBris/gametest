@@ -51,6 +51,13 @@ export class PaddleProjectileGroup extends BreakoutGroup {
         this.initGroupValues();
     }
 
+    attackAsGroup(target: Phaser.Sprite): void
+    {
+        this.forEachExists(function (projectile, target)
+        {
+            this.game.physics.arcade.moveToObject(projectile, target, 500);
+        }, this);
+    }
 }
 
 

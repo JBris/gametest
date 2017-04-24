@@ -16,6 +16,11 @@ export interface iActsAsGroup {
     getFirstExistsInGroup(): any;
     initGroupValues(): void;
 
+    //optionals
+    attackAsGroup?(target:Phaser.Sprite): void;
+    moveAsGroup?(xCoordinate?: number, yCoordinate?:number): void;
+    lastChildBehaviour?(): void;
+
 }
 
 
