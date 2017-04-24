@@ -50,7 +50,7 @@ export abstract class BreakoutGroup extends Phaser.Group implements iActsAsGroup
         this.setAll('checkWorldBounds', true);
     }
 
-    getFirstExistsInGroup(): Phaser.Sprite
+    getFirstExistsInGroup(): any
     {
         return this.getFirstExists(false);
     }

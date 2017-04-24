@@ -7,7 +7,8 @@ import { iHasHealth } from '../../Behaviour/iHasHealth';
 import { iAttacks } from '../../Behaviour/iAttacks';
 import { iLastGroupMember } from '../../Behaviour/iLastGroupMember';
 
-import { SpriteParameterList } from '../../Factory/SpriteParameterList';
+//Group
+import { BrickGroup } from './Group/BrickGroup';
 
 export abstract class Brick extends Phaser.Sprite {
 
@@ -15,6 +16,7 @@ export abstract class Brick extends Phaser.Sprite {
     **Fields**
     =============================*/
     protected z_game: Breakout;
+    protected z_brickGroup: BrickGroup;
     protected z_attack: iAttacks;
     protected z_brickCollision: iCollidable;
     protected z_health: iHasHealth;
@@ -47,6 +49,9 @@ export abstract class Brick extends Phaser.Sprite {
     get Game(): Breakout
     { return this.z_game; }
 
+    get BrickGroup(): BrickGroup
+    { return this.z_brickGroup; }
+
     get Attack(): iAttacks
     { return this.z_attack; }
 
@@ -71,6 +76,9 @@ export abstract class Brick extends Phaser.Sprite {
     //setters
     set Game(val: Breakout)
     { this.z_game = val; }
+
+    set BrickGroup(val: BrickGroup)
+    { this.z_brickGroup = val; }
 
     set Attack(val: iAttacks)
     { this.z_attack = val; }

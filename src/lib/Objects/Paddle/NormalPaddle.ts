@@ -40,7 +40,7 @@ export class NormalPaddle extends Paddle {
     **Methods**
     =============================*/
     protected initAnimations() {
-        this.animations.add('paddle-to-ball', [1, 1, 2, 2, 0], 2);
+        this.animations.add('paddle-to-ball', [1, 1, 1, 1, 0], 4);
         this.animations.add('paddle-to-drop', [5, 6, 5, 6, 0], 2);
         this.animations.add('fire', [1, 5, 6, 0], 2);
         this.animations.add('hurt', [3, 4, 3, 4, 3, 4, 0], 2);

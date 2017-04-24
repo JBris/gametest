@@ -7,12 +7,17 @@ import { BreakoutGroup } from '../../../Group/BreakoutGroup';
 import { Brick } from '../Brick';
 import { BlueBrick } from '../BlueBrick';
 
+//Projectiles
+import { BrickProjectileGroup } from '../Projectile/BrickProjectileGroup';
+
 export class BrickGroup extends BreakoutGroup {
 
     /*=============================
     **Fields**
     =============================*/
-    private _brick: Phaser.Sprite;
+    private _brick: Brick;
+    private _normalBrickProjectileGroup: BrickProjectileGroup;
+    private _fastBrickProjectileGroup: BrickProjectileGroup;
 
     /*=============================
     **Constructors
@@ -21,6 +26,8 @@ export class BrickGroup extends BreakoutGroup {
     constructor(game: Breakout)
     {
         super(game);
+        this._normalBrickProjectileGroup = new BrickProjectileGroup(game);
+        this._fastBrickProjectileGroup = new BrickProjectileGroup(game);
 
     }
 
@@ -28,8 +35,18 @@ export class BrickGroup extends BreakoutGroup {
     **Properties**
     =============================*/
     //getters
+    get NormalBrickProjectileGroup(): BrickProjectileGroup
+    { return this._normalBrickProjectileGroup; }
+
+    get FastBrickProjectileGroup(): BrickProjectileGroup
+    { return this._fastBrickProjectileGroup; }
 
     //setters
+    set NormalBrickProjectileGroup(val: BrickProjectileGroup)
+    { this._normalBrickProjectileGroup = val; }
+
+    set FastBrickProjectileGroup(val: BrickProjectileGroup)
+    { this._fastBrickProjectileGroup = val; }
 
     /*=============================
     **Methods**
@@ -40,8 +57,10 @@ export class BrickGroup extends BreakoutGroup {
         if (groupSize === undefined) groupSize = 40;
     
         let yPosition: number = 0 + this.game.world.height * 0.1;
+
         for (let rows: number = 0; rows < 4; rows++) {
             let xPosition: number = 0 + this.game.world.width * 0.05;
+
             for (let columns: number = 0; columns < 8; columns++) {
                 let newBrick = key.shift();
                 if (newBrick !== "none")
@@ -49,14 +68,17 @@ export class BrickGroup extends BreakoutGroup {
                 xPosition = this._brick.x + this.game.world.width * 0.1;
                 if (key.length === 0) break;
             }
+
             yPosition = this._brick.y + this.game.world.height * 0.1;
         }
 
         this.initGroupValues();
+        this.createBrickProjectiles();
         this.setAll('Game', this.z_game);
+        this.setAll('BrickGroup', this);
     }
 
-    createBrick(key: string , xPosition : number, yPosition : number ) : void
+    protected createBrick(key: string , xPosition : number, yPosition : number ) : void
     {
         this.classType = BlueBrick;
             /*if (key === "gold-brick") this.classType = GoldBrick;
@@ -70,6 +92,12 @@ export class BrickGroup extends BreakoutGroup {
         if (this._brick.animations.getAnimation('float')) this._brick.animations.play('float');
     }
 
+    protected createBrickProjectiles(): void
+    {
+        this._normalBrickProjectileGroup.createGroup('bullet-enemy', 25, 0);
+        this._fastBrickProjectileGroup.createGroup('fire', 20, 0);
+    } 
+
     moveAsGroup(xCoordinate?: number): void
     {
         if (xCoordinate === undefined) xCoordinate = this.game.width * 0.15;
@@ -80,10 +108,27 @@ export class BrickGroup extends BreakoutGroup {
 
     lastChildBehaviour(): void
     {
-        let lastBrick: Brick;
         if (this.countLiving() === 1)
-            lastBrick = this.getFirstAlive();
-        lastBrick.LastGroupMemberReaction.reactToTheSituation();
+            this._brick = this.getFirstAlive();
+        this._brick.LastGroupMemberReaction.reactToTheSituation();
+    }
+
+    attackAsGroup(target : Phaser.Sprite): void
+    {
+        if (this.countLiving() > 0)
+        {
+            let livingEnemies: Array<Brick> = new Array<Brick>();
+
+            this.forEachAlive(function (brick) {
+                livingEnemies.push(brick);
+            }, this);
+
+            let shooter: Brick = Phaser.ArrayUtils.getRandomItem(livingEnemies);
+                // And fire the bullet from this enemy
+             shooter.Attack.attack(target);
+            
+        }
+     
     }
 
    

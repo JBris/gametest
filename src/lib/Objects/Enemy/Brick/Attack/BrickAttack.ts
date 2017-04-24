@@ -1,11 +1,11 @@
-//Paddle
+//Brick
 import { Brick } from '../Brick';
 
 //Behaviours
 import { iAttacks } from '../../../Behaviour/iAttacks';
 
 //Projectile
-import { PaddleProjectile } from '../Projectile/PaddleProjectile';
+import { BrickProjectile } from '../Projectile/BrickProjectile';
 
 export abstract class BrickAttack implements iAttacks{
 
@@ -13,7 +13,7 @@ export abstract class BrickAttack implements iAttacks{
     **Fields**
     =============================*/
     protected z_brick: Brick;
-    protected z_paddleProjectile: PaddleProjectile;
+    protected z_brickProjectile: BrickProjectile;
 
     /*=============================
     **Constructors
@@ -34,12 +34,12 @@ export abstract class BrickAttack implements iAttacks{
     /*=============================
     **Methods**
     =============================*/
-    attack(): void
+    attack(target?: Phaser.Sprite): void
     {
-        this.launchProjectileAttack();
+        this.launchProjectileAttack(target);
     }
 
-    protected abstract launchProjectileAttack(): void;
+    protected abstract launchProjectileAttack(target?: Phaser.Sprite): void;
 }
 
 

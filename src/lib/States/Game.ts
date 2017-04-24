@@ -108,7 +108,7 @@ export class Game extends Phaser.State {
         this._game.BreakoutWorld.stageManager.EnemyManager.randomiseEnemySeed();
         this._game.BreakoutWorld.stageManager.EnemyManager.createEnemyGroupWithSeed();
         this._bricks = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup;
-        this._bricks.moveAsGroup();
+        this._bricks.moveAsGroup();      
     }
 
     create(): void {
@@ -134,7 +134,7 @@ export class Game extends Phaser.State {
         if (this._currentlyPlaying) {
             this._paddle.PaddleMovement.move();       
             if (this.game.time.now > this._firingTimer) {
-           //     this.enemyFires();
+                this.enemyFires();
             }
 
         }
@@ -339,28 +339,14 @@ export class Game extends Phaser.State {
 
     enemyFires(): void
     {
+        this._bricks.attackAsGroup(this._paddle);
+
         this._projectile = this._projectiles.getFirstExists(false);
      
-        this._projectile.body.setSize(this._projectile.body.width * 0.35, this._projectile.body.height * 0.35);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._projectile], 0.08, 0.08);
+        this._firingTimer = this.game.time.now + 5000;
 
-        let livingEnemies: Array<Phaser.Sprite> = new Array<Phaser.Sprite>();
-
-       // this._bricks.forEachAlive(function (projectile) {
-        //    livingEnemies.push(projectile);
-        //}, this, this._projectile);
-
-        if (livingEnemies.length > 0) {
-            let random : number = this.game.rnd.integerInRange(0, livingEnemies.length - 1);
-
-            // randomly select one of them
-            let shooter :Phaser.Sprite = livingEnemies[random];
-            // And fire the bullet from this enemy
-            this._projectile.reset(shooter.body.x, shooter.body.y);
-            this._projectile.visible = true;
-            this.game.physics.arcade.moveToObject(this._projectile , this._paddle, 200);
-            this._firingTimer = this.game.time.now + 5000;
-        }
+    
 
     }
 

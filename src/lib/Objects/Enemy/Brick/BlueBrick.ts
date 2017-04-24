@@ -3,15 +3,9 @@ import { Brick } from './Brick';
 
 //Attributes and Behaviours
 import { LowBrickHealth } from './Health/LowBrickHealth';
-import { HighBrickHealth } from './Health/HighBrickHealth';
-
 import { NoBrickShield } from './Shield/NoBrickShield';
-import { HighBrickShield } from './Shield/HighBrickShield';
-
 import { NormalBrickCollision } from './Collision/NormalBrickCollision';
-
-//Params
-import { SpriteParameterList } from '../../Factory/SpriteParameterList';
+import { BrickAttackSingle } from './Attack/BrickAttackSingle';
 
 export class BlueBrick extends Brick {
 
@@ -52,7 +46,7 @@ export class BlueBrick extends Brick {
 
     protected setAttackType(): void
     {
-
+        this.z_attack = new BrickAttackSingle(this);
     }
     protected setCollisionType(): void
     {

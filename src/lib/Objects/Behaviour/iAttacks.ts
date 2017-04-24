@@ -11,7 +11,7 @@ export interface iAttacks {
     /*=============================
     **Methods**
     =============================*/
-    attack(attackXCoordinate? : number, attackYCoordinate?: number): void;
+    attack(target?: Phaser.Sprite): void;
 
 }
 
