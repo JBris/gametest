@@ -124,8 +124,7 @@ export class BrickGroup extends BreakoutGroup {
             }, this);
 
             let shooter: Brick = Phaser.ArrayUtils.getRandomItem(livingEnemies);
-                // And fire the bullet from this enemy
-             shooter.Attack.attack(target);
+            shooter.Attack.attack(target);
             
         }
      
