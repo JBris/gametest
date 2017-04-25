@@ -255,10 +255,10 @@ export class Game extends Phaser.State {
     }
 
 
-    ballCollideBrick(ball: Phaser.Sprite, brick: Brick): void // TODO: Add collidable
+    ballCollideBrick(ball: Ball, brick: Brick): void // TODO: Add collidable
     {
         this._ball.BallCollision.collide("brick", brick.BrickCollision);
-        brick.BrickCollision.collide('ball');
+        brick.BrickCollision.collide('ball', ball.BallCollision, 0, this._paddle);
 
         this.updateScore(10);
         this._ballTouchedPaddle = false;

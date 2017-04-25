@@ -14,6 +14,7 @@ export abstract class BrickAttack implements iAttacks{
     =============================*/
     protected z_brick: Brick;
     protected z_brickProjectile: BrickProjectile;
+    primaryAttackTarget: Phaser.Sprite;
 
     /*=============================
     **Constructors
@@ -36,6 +37,10 @@ export abstract class BrickAttack implements iAttacks{
     =============================*/
     attack(target?: Phaser.Sprite): void
     {
+        if (this.z_brick.animations.getAnimation('attack')) this.z_brick.animations.play('attack');
+
+        if (this.primaryAttackTarget === undefined && target !== undefined) this.primaryAttackTarget = target;
+
         this.launchProjectileAttack(target);
     }
 

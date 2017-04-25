@@ -123,6 +123,7 @@ export abstract class Brick extends Phaser.Sprite {
         killBrick.to({ x: 0, y: 0 }, 200, Phaser.Easing.Linear.None);
         killBrick.onComplete.addOnce(function () {
             this.kill();
+            this.BrickGroup.lastChildBehaviour();
         }, this);
         killBrick.start();
     }

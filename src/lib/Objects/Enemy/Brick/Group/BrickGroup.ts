@@ -6,6 +6,9 @@ import { BreakoutGroup } from '../../../Group/BreakoutGroup';
 //Children
 import { Brick } from '../Brick';
 import { BlueBrick } from '../BlueBrick';
+import { GreenBrick } from '../GreenBrick';
+import { GoldBrick } from '../GoldBrick';
+import { TealBrick } from '../TealBrick';
 
 //Projectiles
 import { BrickProjectileGroup } from '../Projectile/BrickProjectileGroup';
@@ -18,7 +21,8 @@ export class BrickGroup extends BreakoutGroup {
     private _brick: Brick;
     private _normalBrickProjectileGroup: BrickProjectileGroup;
     private _fastBrickProjectileGroup: BrickProjectileGroup;
-
+    private _movementTween: Phaser.Tween;
+    private _lastBrickAlive: boolean;
     /*=============================
     **Constructors
     =============================*/
@@ -28,7 +32,7 @@ export class BrickGroup extends BreakoutGroup {
         super(game);
         this._normalBrickProjectileGroup = new BrickProjectileGroup(game);
         this._fastBrickProjectileGroup = new BrickProjectileGroup(game);
-
+        this._lastBrickAlive = false;
     }
 
     /*=============================
@@ -80,12 +84,10 @@ export class BrickGroup extends BreakoutGroup {
 
     protected createBrick(key: string , xPosition : number, yPosition : number ) : void
     {
-        this.classType = BlueBrick;
-            /*if (key === "gold-brick") this.classType = GoldBrick;
+        if (key === "gold-brick") this.classType = GoldBrick;
         else if (key === "green-brick") this.classType = GreenBrick;
         else if (key === "teal-brick") this.classType = TealBrick;
-        else if (key === "blue-brick") this.classType = BlueBrick;
-        else this.classType = Phaser.Sprite;*/
+        else this.classType = BlueBrick;
 
         this._brick = this.create(xPosition, yPosition, key);
         this.z_game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._brick], 0.08, 0.08);
@@ -102,20 +104,24 @@ export class BrickGroup extends BreakoutGroup {
     {
         if (xCoordinate === undefined) xCoordinate = this.game.width * 0.15;
 
-        this.game.add.tween(this).to({ x: xCoordinate}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true).start();
-
+        this._movementTween = this.game.add.tween(this).to({ x: xCoordinate }, 2000, Phaser.Easing.Linear.None, true, 0, 2000, true);
+        this._movementTween.start();
     }
 
     lastChildBehaviour(): void
     {
-        if (this.countLiving() === 1)
+        if (this.countLiving() === 1 && !this._lastBrickAlive)
+        {
+            this._lastBrickAlive = true;
+            this._movementTween.stop();
             this._brick = this.getFirstAlive();
-        this._brick.LastGroupMemberReaction.reactToTheSituation();
+            this._brick.LastGroupMemberReaction.reactToTheSituation();
+        }
     }
 
     attackAsGroup(target : Phaser.Sprite): void
     {
-        if (this.countLiving() > 0)
+        if (this.countLiving() > 0 && !this._lastBrickAlive)
         {
             let livingEnemies: Array<Brick> = new Array<Brick>();
 
@@ -125,7 +131,9 @@ export class BrickGroup extends BreakoutGroup {
 
             let shooter: Brick = Phaser.ArrayUtils.getRandomItem(livingEnemies);
             shooter.Attack.attack(target);
-            
+
+            shooter = this.getFirstAlive(false);
+            shooter.Attack.attack(target);
         }
      
     }

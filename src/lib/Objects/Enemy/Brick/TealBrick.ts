@@ -2,13 +2,13 @@
 import { Brick } from './Brick';
 
 //Attributes and Behaviours
-import { LowBrickHealth } from './Health/LowBrickHealth';
-import { NoBrickShield } from './Shield/NoBrickShield';
-import { NormalBrickCollision } from './Collision/NormalBrickCollision';
-import { BrickAttackSingle } from './Attack/BrickAttackSingle';
-import { Panic } from './LastBrickReaction/Panic';
+import { MediumBrickHealth } from './Health/MediumBrickHealth';
+import { MediumBrickShield } from './Shield/MediumBrickShield';
+import { CounterAttackBrickCollision } from './Collision/CounterAttackBrickCollision';
+import { BrickAttackSpread } from './Attack/BrickAttackSpread';
+import { GoBerserk } from './LastBrickReaction/GoBerserk';
 
-export class BlueBrick extends Brick {
+export class TealBrick extends Brick {
 
     /*=============================
     **Fields**
@@ -22,8 +22,8 @@ export class BlueBrick extends Brick {
         key: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number) {
         super(game, x, y, key, frame);   
 
-        this.z_baseHealth = 2;
-        this.z_baseShield = 0;
+        this.z_baseHealth = 3;
+        this.z_baseShield = 2;
     }
 
     /*=============================
@@ -47,25 +47,25 @@ export class BlueBrick extends Brick {
 
     protected setAttackType(): void
     {
-        this.z_attack = new BrickAttackSingle(this);
+        this.z_attack = new BrickAttackSpread(this);
     }
     protected setCollisionType(): void
     {
-        this.z_brickCollision = new NormalBrickCollision(this);
+        this.z_brickCollision = new CounterAttackBrickCollision(this);
     }
 
     protected setHealthType() :void
     {
-        this.z_health = new LowBrickHealth(this);  
+        this.z_health = new MediumBrickHealth(this);  
     }
 
     protected setShieldType() :void
     {
-        this.z_shield = new NoBrickShield(this);
+        this.z_shield = new MediumBrickShield(this);
     }
     protected setLastGroupMemberReaction() :void
     {
-        this.z_lastGroupMemberReaction = new Panic(this);
+        this.z_lastGroupMemberReaction = new GoBerserk(this);
     }
 }
 

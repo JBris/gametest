@@ -30,7 +30,7 @@ export class BrickProjectileFast extends BrickProjectile{
 
     protected initAnimations(): void {
         this.animations.add('explode', [2, 3, 2, 3], 2);
-        this.animations.add('fly', [0, 1, 0, 1], 2, true);
+        this.animations.add('fly', [0, 1, 0, 1], 4, true);
        
     }
 }

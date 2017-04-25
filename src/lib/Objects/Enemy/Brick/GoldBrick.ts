@@ -3,12 +3,12 @@ import { Brick } from './Brick';
 
 //Attributes and Behaviours
 import { LowBrickHealth } from './Health/LowBrickHealth';
-import { NoBrickShield } from './Shield/NoBrickShield';
+import { LowBrickShield } from './Shield/LowBrickShield';
 import { NormalBrickCollision } from './Collision/NormalBrickCollision';
 import { BrickAttackSingle } from './Attack/BrickAttackSingle';
-import { Panic } from './LastBrickReaction/Panic';
+import { BeRude } from './LastBrickReaction/BeRude';
 
-export class BlueBrick extends Brick {
+export class GoldBrick extends Brick {
 
     /*=============================
     **Fields**
@@ -23,7 +23,7 @@ export class BlueBrick extends Brick {
         super(game, x, y, key, frame);   
 
         this.z_baseHealth = 2;
-        this.z_baseShield = 0;
+        this.z_baseShield = 1;
     }
 
     /*=============================
@@ -61,11 +61,11 @@ export class BlueBrick extends Brick {
 
     protected setShieldType() :void
     {
-        this.z_shield = new NoBrickShield(this);
+        this.z_shield = new LowBrickShield(this);
     }
     protected setLastGroupMemberReaction() :void
     {
-        this.z_lastGroupMemberReaction = new Panic(this);
+        this.z_lastGroupMemberReaction = new BeRude(this);
     }
 }
 

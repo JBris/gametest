@@ -66,7 +66,7 @@ export class StyleManager {
         this._game.add.tween(text).to({ alpha: 0 }, duration, Phaser.Easing.Linear.None, true);
     }
 
-    flashDamageText(text: string, xCoordinate:number, yCoordinate : number, damageType?: string): void
+    flashDamageText(text: string, xCoordinate:number, yCoordinate : number, colour?: string): void
     {
         //style text
         let damageText: Phaser.Text = this._game.add.text(xCoordinate, yCoordinate, text, null);
@@ -74,9 +74,9 @@ export class StyleManager {
         damageText.fontSize = "300%";
 
         //colour text
-        if (damageType === "health" || damageType === undefined) damageType = "#ff80bf";
-        else if (damageType === "shield") damageType = "#b30059";
-        damageText.addColor(damageType, 0); 
+        if (colour === "health" || colour === undefined) colour = "#ff80bf";
+        else if (colour === "shield") colour = "#b30059";
+        damageText.addColor(colour, 0); 
         this.fadeText(damageText, 1000); 
     }
 
