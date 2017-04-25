@@ -100,23 +100,18 @@ export class BrickGroup extends BreakoutGroup {
         this._fastBrickProjectileGroup.createGroup('fire', 20, 0);
     } 
 
+    getAmmunition(ammoType: string): Phaser.Group
+    {
+        if (ammoType === "normal") return this._normalBrickProjectileGroup;
+        if (ammoType === "fast") return this._fastBrickProjectileGroup;
+    }
+
     moveAsGroup(xCoordinate?: number): void
     {
         if (xCoordinate === undefined) xCoordinate = this.game.width * 0.15;
 
         this._movementTween = this.game.add.tween(this).to({ x: xCoordinate }, 2000, Phaser.Easing.Linear.None, true, 0, 2000, true);
         this._movementTween.start();
-    }
-
-    lastChildBehaviour(): void
-    {
-        if (this.countLiving() === 1 && !this._lastBrickAlive)
-        {
-            this._lastBrickAlive = true;
-            this._movementTween.stop();
-            this._brick = this.getFirstAlive();
-            this._brick.LastGroupMemberReaction.reactToTheSituation();
-        }
     }
 
     attackAsGroup(target : Phaser.Sprite): void
@@ -136,6 +131,20 @@ export class BrickGroup extends BreakoutGroup {
             shooter.Attack.attack(target);
         }
      
+    }
+
+    lastChildBehaviour(): void {
+        if (this.countLiving() === 1 && !this._lastBrickAlive) {
+            this._lastBrickAlive = true;
+            this._movementTween.stop();
+            this._brick = this.getFirstAlive();
+            this._brick.LastGroupMemberReaction.reactToTheSituation();
+        }
+        if (this.countLiving() === 0) this.emptyGroupAlert();
+    }
+
+    emptyGroupAlert(): void {
+        this.z_game.BreakoutWorld.stageManager.EnemyManager.introduceBoss();
     }
 
    

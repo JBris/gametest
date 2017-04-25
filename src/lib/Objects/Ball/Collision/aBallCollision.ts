@@ -69,7 +69,7 @@ export abstract class aBallCollision implements iCollidable, iDamagesHealth, iDa
             let totalShieldDamage = this.shieldDamageValue + this.z_ball.BaseShieldDamage;
             collidedWithSprite.receiveCollisionDamage(totalHealthDamage, totalShieldDamage);
         }
-        //TODO if (collidedWithType === "projectile"); 
+       
     }
 
     protected ballAgainstPaddleVelocityChange(paddleVelocityX): void

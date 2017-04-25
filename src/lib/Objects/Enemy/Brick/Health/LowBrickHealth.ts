@@ -17,6 +17,7 @@ export class LowBrickHealth extends BrickHealth {
     {
         super(brick);
         this.totalHealthValue = 1;
+        if (this.z_brick.BaseHealth !== undefined) this.totalHealthValue += this.z_brick.BaseHealth;
         this.currentHealthValue = this.totalHealthValue;
     }
 

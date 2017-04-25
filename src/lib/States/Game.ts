@@ -7,6 +7,7 @@ import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
 import { Ball } from '../Objects/Ball/Ball';
 import { Paddle } from '../Objects/Paddle/Paddle';
 import { Brick } from '../Objects/Enemy/Brick/Brick';
+import { BrickProjectile } from '../Objects/Enemy/Brick/Projectile/BrickProjectile';
 
 //Groups
 import { BreakoutGroup } from '../Objects/Group/BreakoutGroup';
@@ -123,18 +124,58 @@ export class Game extends Phaser.State {
     }
 
     update(): void {
-        
-        this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle,null, this);
+        let brickAmmunition: Phaser.Group;
+
+        //==============================================================//
+        //Ball
+        //==============================================================//
+        //Ball-to-paddle
+        this.game.physics.arcade.collide(this._ball, this._paddle, this.ballCollidePaddle, null, this);
+
+        //Ball-to-brick
         this.game.physics.arcade.collide(this._ball, this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup, this.ballCollideBrick, null, this);
+
+        //Ball-to-projectile
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("normal");
+        this.game.physics.arcade.overlap(this._ball, brickAmmunition, this.ballCollideProjectile, null, this);
+
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("fast");
+        this.game.physics.arcade.overlap(this._ball, brickAmmunition, this.ballCollideProjectile, null, this);
+       
+        //==============================================================//
+        //Projectile
+        //==============================================================//
+
+        //Projectile-to-brick
+        this.game.physics.arcade.collide(this._paddle.AmmoPool, this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup, this.projectileToBrick, null, this);
+
+        //Projectile-to-projectile
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("normal");
+        this.game.physics.arcade.collide(this._paddle.AmmoPool, brickAmmunition, this.projectileToProjectile, null, this);
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("fast");
+        this.game.physics.arcade.collide(this._paddle.AmmoPool, brickAmmunition, this.projectileToProjectile, null, this);
+
         this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
-        this.game.physics.arcade.collide(this._paddle, this._projectiles, this.projectileCollidesPaddle, null, this);
+
+        //==============================================================//
+        //Paddle
+        //==============================================================//
+        //Paddle-to-projectile
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("normal");
+        this.game.physics.arcade.collide(this._paddle, brickAmmunition, this.projectileCollidesPaddle, null, this);
+
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("fast");
+        this.game.physics.arcade.collide(this._paddle, brickAmmunition, this.projectileCollidesPaddle, null, this);
+
         this.game.physics.arcade.collide(this._paddle, this._drops, this.paddleGetsDrop, null, this);
 
 
+        //Enemy attacks
         if (this._currentlyPlaying) {
             this._paddle.PaddleMovement.move();       
             if (this.game.time.now > this._firingTimer) {
-                this.enemyFires();
+                this._bricks.attackAsGroup(this._paddle);
+                this._firingTimer = this.game.time.now + 3500;
             }
 
         }
@@ -197,7 +238,7 @@ export class Game extends Phaser.State {
         this._music.destroy();
         this.camera.resetFX();
         this.camera.fade(0x000000, 2000);
-
+        this.game.tweens.removeAll();
         let laugh: Phaser.Sound = this.sound.add('evil-laugh-short', 1, false);
         laugh.onStop.addOnce(this.launchMainMenu, this);
         laugh.play();
@@ -255,7 +296,7 @@ export class Game extends Phaser.State {
     }
 
 
-    ballCollideBrick(ball: Ball, brick: Brick): void // TODO: Add collidable
+    ballCollideBrick(ball: Ball, brick: Brick): void // 
     {
         this._ball.BallCollision.collide("brick", brick.BrickCollision);
         brick.BrickCollision.collide('ball', ball.BallCollision, 0, this._paddle);
@@ -274,10 +315,23 @@ export class Game extends Phaser.State {
             drop.body.gravity.y = 100;
          
         }
+    }
 
-       // if (this._bricks.countLiving() <= 0) {
-         //   this.introduceBoss();
-       // }
+    ballCollideProjectile(ball: Phaser.Sprite, projectile: BrickProjectile): void
+    {
+        projectile.collide("ball");
+    }
+
+    projectileToProjectile(leadingProjectile: iCollidable, collidedProjectile: iCollidable): void
+    {
+        leadingProjectile.collide("projectile");
+        collidedProjectile.collide("projectile");
+    }
+
+    projectileToBrick(projectile: iCollidable, brick: Brick): void
+    {
+        projectile.collide("brick", brick.BrickCollision);
+        brick.BrickCollision.collide("projectile");
     }
 
     ballCollideBoss(ball: Phaser.Sprite, boss: Phaser.Sprite): void {
@@ -287,9 +341,9 @@ export class Game extends Phaser.State {
         this.prepareRelaunchGame();        
     }
 
-    projectileCollidesPaddle(paddle : Phaser.Sprite, bullet: Phaser.Sprite) : void
+    projectileCollidesPaddle(paddle: Phaser.Sprite, bullet: BrickProjectile) : void
     {
-        bullet.kill();
+        bullet.collide("paddle");
         this._paddle.PaddleCollision.collide("projectile");
     }
 
@@ -337,18 +391,6 @@ export class Game extends Phaser.State {
     }
 
 
-    enemyFires(): void
-    {
-        this._bricks.attackAsGroup(this._paddle);
-
-        this._projectile = this._projectiles.getFirstExists(false);
-     
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._projectile], 0.08, 0.08);
-        this._firingTimer = this.game.time.now + 5000;
-
-    
-
-    }
 
     introduceBoss(): void
     {

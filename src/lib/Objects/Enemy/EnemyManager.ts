@@ -40,6 +40,11 @@ export class EnemyManager {
     /*=============================
     **Methods**
     =============================*/
+
+    //=======================================================//
+    //Random Seeds
+    //=======================================================//
+
     seedEnemyList(seedText: string): void {
 
         let parsedBrickSeed: Object = JSON.parse(seedText);
@@ -60,6 +65,15 @@ export class EnemyManager {
     randomiseEnemySeed(): void
     {
         this._game.BreakoutWorld.stageManager.shuffleList(this._enemyList);
+
+    }
+
+    //=======================================================//
+    //Boss
+    //=======================================================//
+
+    introduceBoss(): void
+    {
 
     }
 }

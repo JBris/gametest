@@ -17,6 +17,7 @@ export class MediumBrickShield extends BrickShield {
     {
         super(brick);
         this.totalShieldValue = 5;
+        if (this.z_brick.BaseShield !== undefined) this.totalShieldValue += this.z_brick.BaseShield;
         this.currentShieldValue = this.totalShieldValue;
     }
 

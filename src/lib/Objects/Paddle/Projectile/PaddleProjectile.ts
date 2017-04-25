@@ -17,7 +17,8 @@ export abstract class PaddleProjectile extends Phaser.Sprite implements iCollida
     protected z_projectileSpeed: number = 0;
     shieldDamageValue: number = 0;
     healthDamageValue: number = 0;
-    
+    private _soundDebouncer: number = 0;
+
     /*=============================
     **Constructors
     =============================*/
@@ -68,20 +69,18 @@ export abstract class PaddleProjectile extends Phaser.Sprite implements iCollida
         { this.killProjectile(); }
     }
 
-    killProjectile(): void
-    {
+    killProjectile(): void {
+
         if (this.animations.getAnimation('explode'))
             this.animations.play('explode');
 
-        if (this.game.cache.checkSoundKey('ball-to-brick')) this.game.sound.play('ball-to-brick');
+        if (this.game.cache.checkSoundKey('ball-to-brick') && this._soundDebouncer < this.game.time.now)
+            this.game.sound.play('ball-to-brick');
 
-        let killProjectile: Phaser.Tween = this.game.add.tween(this.scale);
-        killProjectile.to({ x: 0, y: 0 }, 400, Phaser.Easing.Linear.None);
-        killProjectile.onComplete.addOnce(function () {
-            this.kill();
-        }, this);
+        this.game.time.events.add(300, function ()
+        { this.kill(); }, this)
 
-        killProjectile.start();
+        this._soundDebouncer = this.game.time.now + 1000;
     }
 
     protected abstract initAnimations(): void;
