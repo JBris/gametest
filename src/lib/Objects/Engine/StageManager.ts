@@ -1,5 +1,6 @@
 import { Breakout } from '../../../Breakout';
 
+//Managers
 import { EnemyManager } from '../Enemy/EnemyManager';
 
 export class StageManager

@@ -4,8 +4,8 @@ import { Brick } from './Brick';
 //Attributes and Behaviours
 import { MediumBrickHealth } from './Health/MediumBrickHealth';
 import { MediumBrickShield } from './Shield/MediumBrickShield';
-import { CounterAttackBrickCollision } from './Collision/CounterAttackBrickCollision';
 import { BrickAttackSpread } from './Attack/BrickAttackSpread';
+import { CounterAttackBrickCollision } from './Collision/CounterAttackBrickCollision';
 import { GoBerserk } from './LastBrickReaction/GoBerserk';
 
 export class TealBrick extends Brick {
@@ -43,6 +43,11 @@ export class TealBrick extends Brick {
         this.animations.add('die', [2, 3, 2, 3], 2);
         this.animations.add('attack', [4, 5, 4, 5, 0], 2);
         this.animations.add('angry', [4, 5, 0], 2);
+    }
+
+    setDropPool(): void {
+        this.z_dropsItems = false;
+        this.z_dropPool = this.BrickGroup.EmptyDropGroup;
     }
 
     protected setAttackType(): void

@@ -11,10 +11,6 @@ export class EnemyManager {
     =============================*/
     private _game: Breakout;
     private _brickGroup: iActsAsGroup;
-    private _enemyProjectileGroup: iActsAsGroup;
-    //private _bossProjectileGroup: iActsAsGroup;
-    //private _lemonGroup: iActsAsGroup;
-    //private _ammoBoxGroup: iActsAsGroup;
 
     private _enemyList: Array<string>;
 
@@ -42,7 +38,7 @@ export class EnemyManager {
     =============================*/
 
     //=======================================================//
-    //Random Seeds
+    //Brick
     //=======================================================//
 
     seedEnemyList(seedText: string): void {
@@ -72,9 +68,13 @@ export class EnemyManager {
     //Boss
     //=======================================================//
 
+    getBoss(boss?: string): void {
+        if (boss === undefined) boss = this._game.BreakoutWorld.stageManager.getLevelBoss();
+    }
+
     introduceBoss(): void
     {
-
+        
     }
 }
 

@@ -34,7 +34,7 @@ export class BrickAttackSpread extends BrickAttack{
     =============================*/
 
     protected launchProjectileAttack(target?: Phaser.Sprite): void {
-        this.z_brick.game.time.events.repeat(100, 3, this.fireTrippleShot,this,target);
+        this.z_brick.game.time.events.repeat(100, 2, this.fireTrippleShot,this,target);
 
     }
 

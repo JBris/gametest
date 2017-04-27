@@ -45,6 +45,12 @@ export class BlueBrick extends Brick {
         this.animations.add('angry', [4, 5, 0], 2);
     }
 
+    setDropPool(): void
+    {
+        this.z_dropsItems = false;
+        this.z_dropPool = this.BrickGroup.EmptyDropGroup;
+    }
+
     protected setAttackType(): void
     {
         this.z_attack = new BrickAttackSingle(this);

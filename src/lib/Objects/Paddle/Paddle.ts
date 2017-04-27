@@ -1,5 +1,6 @@
 import { Breakout } from '../../../Breakout';
 
+//Behaviour
 import { iMovable } from '../Behaviour/iMovable';
 import { iCollidable } from '../Behaviour/iCollidable';
 import { iStunnable } from '../Behaviour/iStunnable';
@@ -9,6 +10,7 @@ import { iAttacks } from '../Behaviour/iAttacks';
 import { iActsAsGroup } from '../Behaviour/iActsAsGroup';
 import { PaddleProjectileGroup } from './Projectile/PaddleProjectileGroup';
 
+//Params
 import { SpriteParameterList } from '../Factory/SpriteParameterList';
 
 export abstract class Paddle extends Phaser.Sprite {

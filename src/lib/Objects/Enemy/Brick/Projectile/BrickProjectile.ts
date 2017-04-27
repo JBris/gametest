@@ -57,7 +57,7 @@ export abstract class BrickProjectile extends Phaser.Sprite implements iCollidab
     protected initProjectile(): void
     {
         this.game.physics.enable(this, Phaser.Physics.ARCADE);
-        this.body.setSize(this.body.width * 0.35, this.body.height * 0.35);
+        this.body.setSize(this.body.width * 0.2, this.body.height * 0.2);
     }
 
     protected abstract initAnimations(): void;

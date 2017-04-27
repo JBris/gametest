@@ -13,7 +13,7 @@ export class BrickProjectileFast extends BrickProjectile{
     constructor(game: Phaser.Game, x: number, y: number,
         key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number) {
         super(game, x, y, key, frame);
-        this.z_projectileSpeed = 900;
+        this.z_projectileSpeed = 700;
  
     }
 

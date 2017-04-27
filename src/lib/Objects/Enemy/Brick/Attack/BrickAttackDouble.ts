@@ -4,7 +4,7 @@ import { Brick } from '../Brick';
 //Parent
 import { BrickAttack } from './BrickAttack';
 
-export class BrickAttackTripple extends BrickAttack{
+export class BrickAttackDouble extends BrickAttack{
 
     /*=============================
     **Fields**
@@ -31,7 +31,7 @@ export class BrickAttackTripple extends BrickAttack{
     =============================*/
 
     protected launchProjectileAttack(target?: Phaser.Sprite): void {
-        this.z_brick.game.time.events.repeat(150, 3, this.fireTrippleShot,this,target);
+        this.z_brick.game.time.events.repeat(150, 2, this.fireTrippleShot,this,target);
 
     }
 

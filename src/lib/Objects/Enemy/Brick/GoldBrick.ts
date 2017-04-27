@@ -45,6 +45,11 @@ export class GoldBrick extends Brick {
         this.animations.add('angry', [4, 5, 0], 2);
     }
 
+    setDropPool(): void {
+        this.z_dropsItems = true;
+        this.z_dropPool = this.BrickGroup.LemonGroup;
+    }
+
     protected setAttackType(): void
     {
         this.z_attack = new BrickAttackSingle(this);

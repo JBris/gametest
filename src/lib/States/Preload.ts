@@ -158,7 +158,6 @@ export class Preload extends Phaser.State {
 
         this._game.BreakoutWorld.assetLoader.loadSound('ding', 'mp3', 'ogg');
         this._game.BreakoutWorld.assetLoader.loadSound('bullet-fire', 'mp3', 'ogg');
-        this._game.BreakoutWorld.assetLoader.loadSound('gun-cock', 'mp3', 'ogg');
 
         //bosses
         this._game.BreakoutWorld.assetLoader.loadSound('noble-woman-laugh', 'mp3', 'ogg');

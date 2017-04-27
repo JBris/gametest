@@ -47,11 +47,20 @@ export class BrickProjectileGroup extends BreakoutGroup {
         this.initGroupValues();
     }
 
+    setClassTypeToNormal(): void
+    {
+        this.classType = BrickProjectileNormal;
+    }
+
+    setClassTypeToFast(): void {
+        this.classType = BrickProjectileFast;
+    }
+
     attackAsGroup(target: Phaser.Sprite): void
     {
         this.forEachExists(function (projectile, target)
         {
-            this.game.physics.arcade.moveToObject(projectile, target, 650);
+            this.game.physics.arcade.moveToObject(projectile, target, 500);
         }, this);
     }
 }

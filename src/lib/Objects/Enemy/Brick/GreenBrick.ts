@@ -4,8 +4,8 @@ import { Brick } from './Brick';
 //Attributes and Behaviours
 import { MediumBrickHealth } from './Health/MediumBrickHealth';
 import { LowBrickShield } from './Shield/LowBrickShield';
-import { NormalBrickCollision } from './Collision/NormalBrickCollision';
-import { BrickAttackTripple } from './Attack/BrickAttackTripple';
+import { DropItemOnCollision } from './Collision/DropItemOnCollision';
+import { BrickAttackDouble } from './Attack/BrickAttackDouble';
 import { RunToCornerAndShoot } from './LastBrickReaction/RunToCornerAndShoot';
 
 export class GreenBrick extends Brick {
@@ -45,13 +45,18 @@ export class GreenBrick extends Brick {
         this.animations.add('angry', [4, 5, 0], 2);
     }
 
+    setDropPool(): void {
+        this.z_dropsItems = true;
+        this.z_dropPool = this.BrickGroup.AmmoBoxGroup;
+    }
+
     protected setAttackType(): void
     {
-        this.z_attack = new BrickAttackTripple(this);
+        this.z_attack = new BrickAttackDouble(this);
     }
     protected setCollisionType(): void
     {
-        this.z_brickCollision = new NormalBrickCollision(this);
+        this.z_brickCollision = new DropItemOnCollision(this);
     }
 
     protected setHealthType() :void

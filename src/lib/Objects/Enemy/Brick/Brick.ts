@@ -9,6 +9,7 @@ import { iLastGroupMember } from '../../Behaviour/iLastGroupMember';
 
 //Group
 import { BrickGroup } from './Group/BrickGroup';
+import { DropGroup } from '../../Drop/Group/DropGroup';
 
 export abstract class Brick extends Phaser.Sprite {
 
@@ -17,6 +18,7 @@ export abstract class Brick extends Phaser.Sprite {
     =============================*/
     protected z_game: Breakout;
     protected z_brickGroup: BrickGroup;
+    protected z_dropPool: DropGroup;
     protected z_attack: iAttacks;
     protected z_brickCollision: iCollidable;
     protected z_health: iHasHealth;
@@ -25,6 +27,10 @@ export abstract class Brick extends Phaser.Sprite {
 
     protected z_baseHealth: number = 1;
     protected z_baseShield: number = 0;
+    protected z_dropsItems: boolean = false;
+
+    private _dropDebouncer: number;
+
     /*=============================
     **Constructors
     =============================*/
@@ -40,6 +46,8 @@ export abstract class Brick extends Phaser.Sprite {
         this.setHealthType();
         this.setShieldType();
         this.setLastGroupMemberReaction();
+
+        this._dropDebouncer = 0;
     }
 
     /*=============================
@@ -51,6 +59,9 @@ export abstract class Brick extends Phaser.Sprite {
 
     get BrickGroup(): BrickGroup
     { return this.z_brickGroup; }
+
+    get DropPool(): DropGroup
+    { return this.z_dropPool; }
 
     get Attack(): iAttacks
     { return this.z_attack; }
@@ -73,12 +84,18 @@ export abstract class Brick extends Phaser.Sprite {
     get BaseShield(): number
     { return this.z_baseShield; }
 
+    get DropsItems(): boolean
+    { return this.z_dropsItems; }
+
     //setters
     set Game(val: Breakout)
     { this.z_game = val; }
 
     set BrickGroup(val: BrickGroup)
     { this.z_brickGroup = val; }
+
+    set DropPool(val: DropGroup)
+    { this.z_dropPool = val; }
 
     set Attack(val: iAttacks)
     { this.z_attack = val; }
@@ -101,6 +118,9 @@ export abstract class Brick extends Phaser.Sprite {
     set BaseShield(val: number)
     { this.z_baseShield = val; }
 
+    set DropsItems(val: boolean)
+    { this.z_dropsItems = val; }
+
     /*=============================
     **Methods**
     =============================*/
@@ -113,6 +133,12 @@ export abstract class Brick extends Phaser.Sprite {
 
     killBrick(): void
     {
+        //drops
+        if (this.z_dropsItems && this._dropDebouncer < this.game.time.now)
+            this.z_dropPool.spawnDrop(this.x, this.y);
+
+        this._dropDebouncer = this.game.time.now + 1000;
+
         //kill animation
         if (this.animations.getAnimation('die')) this.animations.play('die');
 
@@ -123,17 +149,21 @@ export abstract class Brick extends Phaser.Sprite {
         killBrick.to({ x: 0, y: 0 }, 200, Phaser.Easing.Linear.None);
         killBrick.onComplete.addOnce(function () {
             this.kill();
-            this.BrickGroup.lastChildBehaviour();
+            this.BrickGroup.responseToChildDeath(this.x, this.y);
         }, this);
         killBrick.start();
     }
 
-    protected abstract setBrickAnimations();
-    protected abstract setAttackType();
-    protected abstract setCollisionType();
-    protected abstract setHealthType();
-    protected abstract setShieldType();
-    protected abstract setLastGroupMemberReaction();
+    protected abstract setBrickAnimations(): void;
+    protected abstract setBrickAnimations(): void;
+    abstract setDropPool(): void;
+
+    //behaviours
+    protected abstract setAttackType(): void;
+    protected abstract setCollisionType(): void;
+    protected abstract setHealthType(): void;
+    protected abstract setShieldType(): void;
+    protected abstract setLastGroupMemberReaction(): void;
 }
 
 

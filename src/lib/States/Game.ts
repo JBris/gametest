@@ -8,6 +8,7 @@ import { Ball } from '../Objects/Ball/Ball';
 import { Paddle } from '../Objects/Paddle/Paddle';
 import { Brick } from '../Objects/Enemy/Brick/Brick';
 import { BrickProjectile } from '../Objects/Enemy/Brick/Projectile/BrickProjectile';
+import { Drop } from '../Objects/Drop/Drop';
 
 //Groups
 import { BreakoutGroup } from '../Objects/Group/BreakoutGroup';
@@ -63,6 +64,9 @@ export class Game extends Phaser.State {
     private _multiplierText: Phaser.Text;
     private _commentText: Phaser.Text;
     private _bossText: Phaser.Text;
+
+    //strings
+    private _dropType: string;
 
     /*=============================
     **Constructors
@@ -136,10 +140,10 @@ export class Game extends Phaser.State {
         this.game.physics.arcade.collide(this._ball, this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup, this.ballCollideBrick, null, this);
 
         //Ball-to-projectile
-        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("normal");
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup("normalProjectile");
         this.game.physics.arcade.overlap(this._ball, brickAmmunition, this.ballCollideProjectile, null, this);
 
-        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("fast");
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup("fastProjectile");
         this.game.physics.arcade.overlap(this._ball, brickAmmunition, this.ballCollideProjectile, null, this);
        
         //==============================================================//
@@ -150,9 +154,9 @@ export class Game extends Phaser.State {
         this.game.physics.arcade.collide(this._paddle.AmmoPool, this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup, this.projectileToBrick, null, this);
 
         //Projectile-to-projectile
-        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("normal");
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup("normalProjectile");
         this.game.physics.arcade.collide(this._paddle.AmmoPool, brickAmmunition, this.projectileToProjectile, null, this);
-        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("fast");
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup("fastProjectile");
         this.game.physics.arcade.collide(this._paddle.AmmoPool, brickAmmunition, this.projectileToProjectile, null, this);
 
         this.game.physics.arcade.collide(this._ball, this._boss, this.ballCollideBoss, null, this);
@@ -161,14 +165,21 @@ export class Game extends Phaser.State {
         //Paddle
         //==============================================================//
         //Paddle-to-projectile
-        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("normal");
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup("normalProjectile");
         this.game.physics.arcade.collide(this._paddle, brickAmmunition, this.projectileCollidesPaddle, null, this);
 
-        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getAmmunition("fast");
+        brickAmmunition = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup("fastProjectile");
         this.game.physics.arcade.collide(this._paddle, brickAmmunition, this.projectileCollidesPaddle, null, this);
 
-        this.game.physics.arcade.collide(this._paddle, this._drops, this.paddleGetsDrop, null, this);
-
+        //==============================================================//
+        //Drops
+        //==============================================================//
+        this._dropType = "lemonDrop";
+        let drops: Phaser.Group = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup(this._dropType);
+        this.game.physics.arcade.collide(this._paddle, drops, this.paddleGetsDrop, null, this);
+        this._dropType = "ammoBoxDrop";
+        drops = this._game.BreakoutWorld.stageManager.EnemyManager.BrickGroup.getChildGroup(this._dropType);
+        this.game.physics.arcade.collide(this._paddle, drops, this.paddleGetsDrop, null, this);
 
         //Enemy attacks
         if (this._currentlyPlaying) {
@@ -239,6 +250,7 @@ export class Game extends Phaser.State {
         this.camera.resetFX();
         this.camera.fade(0x000000, 2000);
         this.game.tweens.removeAll();
+        this._bricks.clearGroup();
         let laugh: Phaser.Sound = this.sound.add('evil-laugh-short', 1, false);
         laugh.onStop.addOnce(this.launchMainMenu, this);
         laugh.play();
@@ -263,7 +275,7 @@ export class Game extends Phaser.State {
     relaunchGame(): void {
         this._background.destroy();
         this._music.destroy();
-
+        this._bricks.clearGroup();
         this._game.PlayerList.MyPlayerList[0].level += 1;
         this._game.BreakoutWorld.stageManager.CurrentStage += 1;
 
@@ -273,10 +285,6 @@ export class Game extends Phaser.State {
         }
         else this.game.state.start("Game", true, false, this._game); 
     }
-
-   //===============================================================================================================//
-   //Enemy behaviour
-   //===============================================================================================================//
 
    //===============================================================================================================//
    //Collisions
@@ -303,18 +311,6 @@ export class Game extends Phaser.State {
 
         this.updateScore(10);
         this._ballTouchedPaddle = false;
-
-        let rndNum: number = this.game.rnd.integerInRange(0, 3);
-        if (rndNum === 1) {
-            let drop: Phaser.Sprite = this._drops.getFirstExists(false);
-            drop.body.setSize(drop.body.width * 0.35, drop.body.height * 0.35);
-            this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [drop], 0.07, 0.07);
-            drop.reset(brick.body.x, brick.body.y);
-            drop.visible = true;
-            this.game.physics.enable(drop, Phaser.Physics.ARCADE);
-            drop.body.gravity.y = 100;
-         
-        }
     }
 
     ballCollideProjectile(ball: Phaser.Sprite, projectile: BrickProjectile): void
@@ -347,50 +343,20 @@ export class Game extends Phaser.State {
         this._paddle.PaddleCollision.collide("projectile");
     }
 
-    paddleGetsDrop(paddle: Phaser.Sprite, drop: Phaser.Sprite): void
+    paddleGetsDrop(paddle: Paddle, drop: Drop): void
     {
-        drop.kill();
-        this._paddle.Attack.attack();
-       
+        drop.collide("paddle");
+        if (this._dropType === "ammoBoxDrop") drop.BonusValue.giveBonus(paddle.Attack);
+        if (this._dropType === "lemonDrop") {
+            let addedScore: number = this._game.BreakoutWorld.scoreCalculator.calculatePoints(
+                this._ballTouchedPaddle, drop.PointValue);
+            drop.BonusValue.giveBonus(this._game.PlayerList.MyPlayerList[0],addedScore);
+        }
     }
-
-
-
 
    //===============================================================================================================//
    //Group behaviour
    //===============================================================================================================//
-
-
-    loadProjectiles(): void
-    {
-        // The enemy's bullets
-        this._projectiles = this.game.add.group();
-        this.game.add.group();
-        this._projectiles.enableBody = true;
-        this._projectiles.physicsBodyType = Phaser.Physics.ARCADE;
-        this._projectiles.createMultiple(30, 'bullet-enemy', 0);
-        this._projectiles.visible = true;
-        this._projectiles.setAll('anchor.x', 0.5);
-        this._projectiles.setAll('anchor.y', 1);
-        this._projectiles.setAll('outOfBoundsKill', true);
-        this._projectiles.setAll('checkWorldBounds', true);
-    }
-
-    loadDrops() : void {
-        // Player drops
-        this._drops = this.game.add.group();
-        this._drops.enableBody = true;
-        this._drops.physicsBodyType = Phaser.Physics.ARCADE;
-        this._drops.createMultiple(30, 'ammo-box', 0);
-        this._drops.visible = true;
-        this._drops.setAll('anchor.x', 0.5);
-        this._drops.setAll('anchor.y', 1);
-        this._drops.setAll('outOfBoundsKill', true);
-        this._drops.setAll('checkWorldBounds', true);
-    }
-
-
 
     introduceBoss(): void
     {
@@ -518,17 +484,8 @@ export class Game extends Phaser.State {
         let randomBoss: string = this._game.BreakoutWorld.stageManager.getLevelBoss();
         this._boss = this.game.add.sprite(0 + this.game.world.width * 0.1, 0 - 0.5 * this.game.world.height,
             randomBoss, 0);
-        this._boss.anchor.set(0.5, 0.5);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._boss], 0.15, 0.15);
-        this.game.physics.enable(this._boss, Phaser.Physics.ARCADE);
-        this._boss.body.immovable = true;
-        this._boss.body.bounce.set(1);
 
-        //projectiles
-        this.loadProjectiles();
-
-        //drops
-        this.loadDrops();
     }
 
 }
