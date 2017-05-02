@@ -30,7 +30,7 @@ export abstract class Boss extends Phaser.Sprite {
 
     protected z_baseHealth: number = 1;
     protected z_baseShield: number = 0;
-    protected z_initialSpawnPositionX: number = 1;
+    protected z_initialSpawnPositionX: number = 0;
     protected z_initialSpawnPositionY: number = 0;
 
     /*=============================
@@ -92,6 +92,11 @@ export abstract class Boss extends Phaser.Sprite {
     get BaseShield(): number
     { return this.z_baseShield; }
 
+    get InitialSpawnPositionX(): number
+    { return this.z_initialSpawnPositionX; }
+
+    get InitialSpawnPositionY(): number
+    { return this.z_initialSpawnPositionY; }
 
     //setters
     set Game(val: Breakout)
@@ -129,6 +134,12 @@ export abstract class Boss extends Phaser.Sprite {
     set BaseShield(val: number)
     { this.z_baseShield = val; }
 
+    set InitialSpawnPositionX(val: number)
+    { this.z_initialSpawnPositionX = val; }
+
+    set InitialSpawnPositionY(val: number)
+    { this.z_initialSpawnPositionY = val; }
+
     /*=============================
     **Methods**
     =============================*/
@@ -137,7 +148,7 @@ export abstract class Boss extends Phaser.Sprite {
         this.body.bounce.set(1);
         this.anchor.set(0.5, 0.5);
         this.body.immovable = true;
-        this.body.setSize(this.body.width * 0.4, this.body.height * 0.4);
+        this.body.setSize(this.body.width * 0.9, this.body.height * 0.9);
     }
 
     //Styling

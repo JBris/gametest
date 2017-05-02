@@ -64,7 +64,6 @@ export class Game extends Phaser.State {
     private _livesText: Phaser.Text;
     private _multiplierText: Phaser.Text;
     private _commentText: Phaser.Text;
-    private _bossText: Phaser.Text;
 
     //strings
     private _dropType: string;
@@ -358,29 +357,6 @@ export class Game extends Phaser.State {
         }
     }
 
-   //===============================================================================================================//
-   //Group behaviour
-   //===============================================================================================================//
-
-    introduceBoss(): void
-    {
-        //boss.Speak();
-        //this.game.sound.play(this._game.BreakoutWorld.stageManager.BossSoundList[this._levelNumber - 1], 1, false);
-        let moveDown : Phaser.Tween = this.game.add.tween(this._boss).to({ y: 0 + 0.25 * this.game.world.height }, 3000, Phaser.Easing.Linear.None);
-        let moveBackAndForth: Phaser.Tween = this.game.add.tween(this._boss).to({ x: this.game.width * 0.9 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-        moveDown.chain(moveBackAndForth);
-        moveDown.start();
-
-        this._bossText = this._game.BreakoutWorld.styleManager.positionTextCenter("Ho Ho Ho! Another Challenger?");
-        this._bossText.addColor("#19cb65", 0);
-        this._bossText.fontSize = "300%";
-        this._game.BreakoutWorld.styleManager.fadeText(this._bossText, 3000);
-        this._boss.animations.add("float", [0,0,0,, 1, 1, ,1], 1, true).play();
-
-
-    }
-
-
     //===============================================================================================================//
     //UI
     //===============================================================================================================//
@@ -518,11 +494,7 @@ export class Game extends Phaser.State {
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._ball], 0.08, 0.08);
 
         //boss
-        let randomBoss: string = this._game.BreakoutWorld.stageManager.getLevelBoss();
-        this._boss = this.game.add.sprite(0 + this.game.world.width * 0.1, 0 - 0.5 * this.game.world.height,
-            randomBoss, 0);
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._boss], 0.15, 0.15);
-
+        this._boss = this._game.BreakoutWorld.stageManager.EnemyManager.spawnBoss();
     }
 
 }

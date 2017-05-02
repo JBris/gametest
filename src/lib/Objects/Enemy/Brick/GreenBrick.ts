@@ -5,7 +5,7 @@ import { Brick } from './Brick';
 import { MediumBrickHealth } from './Health/MediumBrickHealth';
 import { LowBrickShield } from './Shield/LowBrickShield';
 import { DropItemOnCollision } from './Collision/DropItemOnCollision';
-import { BrickAttackDouble } from './Attack/BrickAttackDouble';
+import { BrickAttackFlurry } from './Attack/BrickAttackFlurry';
 import { RunToCornerAndShoot } from './LastBrickReaction/RunToCornerAndShoot';
 
 export class GreenBrick extends Brick {
@@ -52,7 +52,7 @@ export class GreenBrick extends Brick {
 
     protected setAttackType(): void
     {
-        this.z_attack = new BrickAttackDouble(this);
+        this.z_attack = new BrickAttackFlurry(this);
     }
     protected setCollisionType(): void
     {

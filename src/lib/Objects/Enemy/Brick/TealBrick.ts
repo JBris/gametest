@@ -2,8 +2,8 @@
 import { Brick } from './Brick';
 
 //Attributes and Behaviours
-import { MediumBrickHealth } from './Health/MediumBrickHealth';
-import { MediumBrickShield } from './Shield/MediumBrickShield';
+import { LowBrickHealth } from './Health/LowBrickHealth';
+import { NoBrickShield } from './Shield/NoBrickShield';
 import { BrickAttackSpread } from './Attack/BrickAttackSpread';
 import { CounterAttackBrickCollision } from './Collision/CounterAttackBrickCollision';
 import { GoBerserk } from './LastBrickReaction/GoBerserk';
@@ -61,12 +61,12 @@ export class TealBrick extends Brick {
 
     protected setHealthType() :void
     {
-        this.z_health = new MediumBrickHealth(this);  
+        this.z_health = new LowBrickHealth(this);  
     }
 
     protected setShieldType() :void
     {
-        this.z_shield = new MediumBrickShield(this);
+        this.z_shield = new NoBrickShield(this);
     }
     protected setLastGroupMemberReaction() :void
     {

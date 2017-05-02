@@ -3,7 +3,7 @@ import { Brick } from './Brick';
 
 //Attributes and Behaviours
 import { LowBrickHealth } from './Health/LowBrickHealth';
-import { LowBrickShield } from './Shield/LowBrickShield';
+import { NoBrickShield } from './Shield/NoBrickShield';
 import { NormalBrickCollision } from './Collision/NormalBrickCollision';
 import { BrickAttackSingle } from './Attack/BrickAttackSingle';
 import { BeRude } from './LastBrickReaction/BeRude';
@@ -66,7 +66,7 @@ export class GoldBrick extends Brick {
 
     protected setShieldType() :void
     {
-        this.z_shield = new LowBrickShield(this);
+        this.z_shield = new NoBrickShield(this);
     }
     protected setLastGroupMemberReaction() :void
     {

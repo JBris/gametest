@@ -4,7 +4,7 @@ import { Brick } from '../Brick';
 //Parent
 import { BrickAttack } from './BrickAttack';
 
-export class BrickAttackDouble extends BrickAttack{
+export class BrickAttackFlurry extends BrickAttack{
 
     /*=============================
     **Fields**
