@@ -10,9 +10,13 @@ export class EnemyManager {
     **Fields**
     =============================*/
     private _game: Breakout;
-    private _brickGroup: iActsAsGroup;
 
+    //bricks
+    private _brickGroup: iActsAsGroup;
     private _enemyList: Array<string>;
+
+    //bosses
+    private _boss: Phaser.Sprite;
 
     /*=============================
     **Constructors**
@@ -74,7 +78,10 @@ export class EnemyManager {
 
     introduceBoss(): void
     {
-        
+        let randomBoss: string = this._game.BreakoutWorld.stageManager.getLevelBoss();
+        this._boss = this._game.add.sprite(0 + this._game.world.width * 0.1, 0 - 0.5 * this._game.world.height,
+            randomBoss, 0);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this._game, [this._boss], 0.15, 0.15);
     }
 }
 

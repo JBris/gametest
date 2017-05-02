@@ -3,6 +3,9 @@ import { BreakoutPlayer } from '../Objects/Player/BreakoutPlayer'
 import { BreakoutLogo } from '../Objects/Logo/BreakoutLogo';
 import { Title } from '../Objects/Logo/Title';
 
+//Params
+import { ButtonParameterList } from '../Objects/Factory/ButtonParameterList';
+
 export class Options extends Phaser.State
 {
     /*=============================
@@ -12,7 +15,7 @@ export class Options extends Phaser.State
     private _background: Phaser.Image;
     private _music: Phaser.Sound;
 
-    private _backButton: Phaser.Button;
+    private _homeButton: Phaser.Button;
 
     //strings
     private _fontSize = "250%";
@@ -61,11 +64,11 @@ export class Options extends Phaser.State
         this._music.play();
 
         //buttons
-        this._backButton = this.game.add.button(this.game.world.width - 0.1 * this.game.world.width, this.game.world.height - 0.1 * this.game.world.height,
-            'home-button', this.launchMainMenu, this, 1, 0, 1, 0);
-
-        this._backButton.anchor.set(1, 1);
-        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._backButton], 0.1, 0.1);
+        let buttonParameterList: ButtonParameterList = new ButtonParameterList(this.game, this.game.world.width - 0.1 * this.game.world.width,
+            this.game.world.height - 0.1 * this.game.world.height, 'home-button', this.launchMainMenu, this, 1, 0, 1, 0);
+        this._homeButton = this._game.BreakoutWorld.factoryManager.CreateButton.createProduct("home", buttonParameterList);
+        this._homeButton.anchor.set(1, 1);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._homeButton], 0.1, 0.1);
 
         //text
         //Lives

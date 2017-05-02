@@ -3,6 +3,9 @@ import { BreakoutPlayer } from '../Objects/Player/BreakoutPlayer'
 import { BreakoutLogo } from '../Objects/Logo/BreakoutLogo';
 import { Title } from '../Objects/Logo/Title';
 
+//Params
+import { ButtonParameterList } from '../Objects/Factory/ButtonParameterList';
+
 export class MainMenu extends Phaser.State
 {
     /*=============================
@@ -69,18 +72,22 @@ export class MainMenu extends Phaser.State
         this._music.fadeIn(6000);
 
         //buttons
-        this._playButton = this.game.add.button(this._title.x - (this.game.world.width * 0.3), this._title.y,
-            'play-button', this.prepareBeginGame, this, 1, 0, 1, 0);
 
+        let buttonParameterList: ButtonParameterList = new ButtonParameterList(this.game,
+            this._title.x - (this.game.world.width * 0.3), this._title.y,
+            'play-button', this.prepareBeginGame, this, 1, 0, 1, 0);
+        this._playButton = this._game.BreakoutWorld.factoryManager.CreateButton.createProduct("play", buttonParameterList);
         this._playButton.anchor.set(0.5, 1);
 
-        this._optionsButton = this.game.add.button(this._title.x + (this.game.world.width * 0.3), this._title.y,
+        buttonParameterList.setParameters(this._title.x + (this.game.world.width * 0.3), this._title.y,
             'options-button', this.options, this, 1, 0, 1, 0);
+        this._optionsButton = this._game.BreakoutWorld.factoryManager.CreateButton.createProduct("options", buttonParameterList);
+        this._optionsButton.anchor.set(0.5, 1);
 
-       this._optionsButton.anchor.set(0.5, 1);
+        buttonParameterList.setParameters(this._title.x + (this.game.world.width * 0.3),
+            this._title.y + this.game.world.height * 0.3, 'off-button', this.endGame, this, 0, 1, 0, 1);
 
-       this._offButton = this.game.add.button(this._title.x + (this.game.world.width * 0.3),
-           this._title.y + this.game.world.height * 0.3, 'off-button', this.endGame, this, 0, 1, 0, 1);
+        this._offButton = this._game.BreakoutWorld.factoryManager.CreateButton.createProduct("ogg", buttonParameterList);
 
        this._offButton.anchor.set(0.5, 1);
 
