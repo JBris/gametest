@@ -2,6 +2,7 @@ import { Breakout } from '../../Breakout';
 
 //Params
 import { SpriteParameterList } from '../Objects/Factory/SpriteParameterList';
+import { ButtonParameterList } from '../Objects/Factory/ButtonParameterList';
 
 //Objects
 import { Ball } from '../Objects/Ball/Ball';
@@ -41,7 +42,7 @@ export class Game extends Phaser.State {
     //Buttons
     private _playButton: Phaser.Button;
     private _pauseButton: Phaser.Button;
-    private _restartButton: Phaser.Button;
+    private _homeButton: Phaser.Button;
    
     //Objects
     private _ball: Ball;
@@ -200,7 +201,10 @@ export class Game extends Phaser.State {
 
     displayPlayButton(): void {
         //start
-        this._playButton = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'play-button', this.startGame, this, 1, 0, 1, 0);
+        let parameterList: ButtonParameterList = new ButtonParameterList(this.game,
+            this.game.world.centerX, this.game.world.centerY, 'play-button', this.startGame, this, 1, 0, 1, 0);
+
+        this._playButton = this._game.BreakoutWorld.factoryManager.CreateButton.createProduct("play", parameterList);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._playButton], 0, 0);
         this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._playButton], 0.15, 0.15, 500, false);
         this._playButton.anchor.set(0.5, 0.5);
@@ -378,8 +382,38 @@ export class Game extends Phaser.State {
 
 
     //===============================================================================================================//
-    //update UI
+    //UI
     //===============================================================================================================//
+
+    pauseGame(): void
+    {
+        //start
+        let parameterList: ButtonParameterList = new ButtonParameterList(this.game,
+            this.game.world.width - 0.1 * this.game.world.width, this._pauseButton.y + 0.2 * this.game.height,
+            'home-button', this.setUpGameOver, this, 1, 0, 1, 0);
+
+        this._homeButton = this._game.BreakoutWorld.factoryManager.CreateButton.createProduct("home", parameterList);
+        this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._homeButton],0.05, 0.05);
+        this._game.BreakoutWorld.scalingManager.scaleGameElementsOverTime(this.game, [this._homeButton], 0.05, 0.05, 50, false);
+        this._homeButton.anchor.set(1, 0);
+        this.game.time.events.add(100, function () { this.game.paused = true; }, this);
+    }
+
+    unpauseGame(event : any): void
+    {
+        if (this.game.paused) {
+            let xLowerBound: number = this._homeButton.centerX - this._homeButton.width / 2;
+            let xUpperBound: number = this._homeButton.centerX + this._homeButton.width / 2;
+            let yLowerBound: number = this._homeButton.centerY - this._homeButton.height / 2;
+            let yUpperBound: number = this._homeButton.centerY + this._homeButton.height / 2;
+
+            this._homeButton.destroy();
+            this.game.paused = false;
+
+            if (event.x > xLowerBound && event.x < xUpperBound && event.y > yLowerBound && event.y < yUpperBound)
+                this.setUpGameOver();            
+        }
+    }
 
     updateScore(baseScore : number)
     {
@@ -447,12 +481,15 @@ export class Game extends Phaser.State {
     {
         //buttons
         //pause
-        this._pauseButton = this.game.add.button(this.game.world.width - 0.1 * this.game.world.width, 0 + 0.1 * this.game.world.height, 'pause-button', null, null, 1, 0, 1, );
+        let parameterList: ButtonParameterList = new ButtonParameterList(this.game,
+            this.game.world.width - 0.1 * this.game.world.width, 0 + 0.1 * this.game.world.height, 'pause-button', null, null, 1, 0, 1);
+
+        this._pauseButton = this._game.BreakoutWorld.factoryManager.CreateButton.createProduct("pause",parameterList);
         this._pauseButton.anchor.set(1, 0);
         this._game.BreakoutWorld.scalingManager.scaleGameElements(this.game, [this._pauseButton], 0.05, 0.05);
         this._pauseButton.inputEnabled = true;
-        this._pauseButton.events.onInputUp.add(function () { this.game.paused = true; }, this);
-        this.game.input.onDown.add(function () { if (this.game.paused) this.game.paused = false }, this);
+        this._pauseButton.events.onInputUp.add(this.pauseGame, this);
+        this.game.input.onDown.add(this.unpauseGame, this, 0, self);
     }
 
     loadSprites(): void
